@@ -1,0 +1,26 @@
+<!-- findYourRoom Sign In
+    Serena Fan 
+    CS 304 -->
+
+{% extends "select-template.html" %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+
+{% block content %}
+
+<h1>Sign In</h1>
+
+  <form method="post" action="">
+      <p><label for="userid">Email: <input type="text" name="email"></label></p>
+      <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
+      <p><button type="submit">submit</button></p>
+  </form>
+
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    {% endblock %}
