@@ -21,7 +21,7 @@ def roomExists(conn, RID, RoomNum)
 def updateAvgRating(conn, RID, RoomNum, avgRating)
 	'''Execute SQL statement to update avgRating'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('UPDATE movie SET avgRating=%s WHERE RID=%s AND RoomNum = %s',[avgRating,RID,RoomNum]
+    curs.execute('INSERT INTO movie VALUES avgRating=%s WHERE RID=%s AND RoomNum = %s',[avgRating,RID,RoomNum]
  
 #check if the table associated with the room exists already 
 def reviewExists(conn, RID, RoomNum, review, pros, cons)
@@ -33,14 +33,13 @@ def reviewExists(conn, RID, RoomNum, review, pros, cons)
 def updateReview(conn, RID, RoomNum, review)
 	'''Execute SQL statement to add Review'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('UPDATE review SET review=%s,pros=%s,cons=%s WHERE RID=%s AND RoomNum = %s',[review, pros, cons, RID, RoomNum])
-    return curs.fetchone()
+    curs.execute('INSERT INTO review VAlUES review=%s,pros=%s,cons=%s WHERE RID=%s AND RoomNum = %s',[review, pros, cons, RID, RoomNum])
 
 #this have to be updated 
-def addPhotos(conn, RID, RoomNum, pht)
+def addPhotos(conn, RID, RoomNum, size, path)
 	'''Execute SQL statement to update images associated with the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT * FROM ratings WHERE uid=%s AND tt=%s',[uid,tt])
+    curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE RID=%s AND RoomNum = %s',[size, path, RID, RoomNum]) 
 
 #currently only filtering based on res hall name and average rating. 
 def getListofRooms(conn, RID, rating):
