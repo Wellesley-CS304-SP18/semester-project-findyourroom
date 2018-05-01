@@ -56,37 +56,33 @@ def updateAvgRating(conn, dormID, RoomNum, avgRating):
 def reviewExists(conn, dormID, roomNum, review, pros, cons):
     '''Execute SQL statement to check if the review for that room exists'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT * FROM review WHERE RID=%s AND RoomNum=%s',[dormID,roomNum])
+    curs.execute('SELECT * FROM review WHERE dormID=%s AND roomNumber=%s',[dormID,roomNum])
     return curs.fetchone()
 
-<<<<<<< HEAD
+
 def updateReview(conn, dormID, roomNum, review):
-=======
-#add review
-def updateReview(conn, RID, RoomNum, review):
->>>>>>> 6d2bf239ca79d1a45b63a5eb7eed9e2b6ada78f3
     '''Execute SQL statement to add Review'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('INSERT INTO review VAlUES review=%s,pros=%s,cons=%s WHERE RID=%s AND RoomNum = %s',[review, pros, cons, RID, RoomNum])
+    curs.execute('INSERT INTO review VAlUES review=%s,pros=%s,cons=%s WHERE dormID=%s AND roomNumber = %s',[review, pros, cons, RID, RoomNum])
 
 #this have to be updated 
-def addPhotos(conn, RID, RoomNum, size, path):
+def addPhotos(conn, dormID, roomNumber, size, path):
     '''Execute SQL statement to update images associated with the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE dormID=%s AND roomNumber = %s',[size, path, RID, RoomNum]) 
+    curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE dormID=%s AND roomNumber = %s',[size, path, dormID, roomNumber]) 
 
 #currently only filtering based on res hall name and average rating. 
 def getListofRooms(conn, dormID, rating):
     '''Execute SQL statement to get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT * from room WHERE dormID=%s AND avgRating = %s',[dormID, rating])
-    return curs.fetchall
+    return curs.fetchall()
 
 def getListOfDorms(conn):
     '''Execute SQL statement to get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT * from dorm WHERE dormID=%s',[dormID])
-    return curs.fetchall
+    curs.execute("select dormName from dorm where dormName != 'NULL'")
+    return curs.fetchall()
 
 #need to have more argument for user to filter /if so probably need to add more boolean to each dorm such as east/west side, has dinning hall, has gym etc
 #alpha version : delete comment 
