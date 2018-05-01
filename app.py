@@ -4,7 +4,7 @@
 	findYourRoom
 '''
 
-#notes to renee: has not been tested, bcrypt/salting and locking not done. otherwise signup and signin are completely fleshed out. 
+#notes to renee: has not been tested, bcrypt/salting not done. otherwise signup and signin are completely fleshed out
 
 import dbconn2
 import os,sys,random
