@@ -1,26 +1,21 @@
 <!-- findYourRoom Sign In
-    Serena Fan 
+    Mana Muchaku, Renee Huang, Serena Fan 
     CS 304 -->
 
-{% extends "select-template.html" %}
+{% extends "base.html" %}
 
-{% block head %}
-	{{ super() }}
-{% endblock %}
+{% block main_content %}
 
-
-
-{% block content %}
-
-<h1>Sign In</h1>
+<h1>Login to For Rooms</h1>
 
   <form method="post" action="">
-      <p><label for="userid">Email: <input type="text" name="email"></label></p>
+      <p><label for="email">Email: <input type="text" name="email"></label></p>
       <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
       <p><button type="submit">submit</button></p>
   </form>
 
-
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <!-- JS code would go here -->
 
-    {% endblock %}
+{% endblock %}

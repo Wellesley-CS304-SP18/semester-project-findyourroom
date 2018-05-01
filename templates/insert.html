@@ -1,0 +1,23 @@
+<!-- findYourRoom Sign Up
+    Renee Huang
+    CS 304 -->
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+<h1>Insert Room</h1>
+
+  <form method="post" action="">
+      <p><label for="userid">Email: <input type="text" name="email"></label></p>
+      <p><label for="passwd">Password: <input type="password" name="password1"></label></p>
+      <p><label for="passwd">Confirm your password: <input type="password" name="password2"></label></p>
+      <p><label for="passwd">BID: <input type="text" name="bid"></label></p>
+      <p><label for="passwd">Class Year: <input type="text" name="classyear"></label></p>
+      <p><button type="submit">submit</button></p>
+  </form>
+
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+{% endblock %}
