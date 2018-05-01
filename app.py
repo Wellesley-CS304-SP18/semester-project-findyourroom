@@ -4,7 +4,7 @@
 	findYourRoom
 '''
 
-#notes to renee: has not been tested, bcrypt/salting and locking not done. otherwise signup and signin are completely fleshed out. 
+#notes to renee: has not been tested, bcrypt/salting not done. otherwise signup and signin are completely fleshed out
 
 import dbconn2
 import os,sys,random
@@ -99,6 +99,7 @@ def login():
 				resp = make_response(render_template('signin-template.html'))
 				resp.set_cookie("email",email)
 				return resp'''
+<<<<<<< HEAD
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
@@ -139,3 +140,7 @@ if __name__ == '__main__':
 	port = os.getuid()
 	print('Running on port ' + str(port))
 	app.run('0.0.0.0', port)
+=======
+			
+			
+>>>>>>> fbb832fc5f43190727d84c340478618bbfe85f1a
