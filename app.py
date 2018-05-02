@@ -8,11 +8,13 @@
 import dbconn2
 import os,sys,random
 import functions, bcrypt
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session
 import functions
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
+
+my_sess_dir = '/home/cs304/pub/sessions/'
 
 #show basic navigation 
 #redirect here "when you have no place better to go"
@@ -47,11 +49,13 @@ def signup():
 			else:
 				print ("else is happening") # this is printing
 				#signup successful, add information to table
-				functions.insertinfo(conn, email, password, bid, classyear) # this isn't happening because of global form error "password"?
+				functions.insertinfo(conn, email, password1, bid, classyear) # this isn't happening because of global form error "password"?
 				session['email'] = email
 				session['logged_in'] = True
 				session['visits'] = 1
-				return redirect( url_for('user', email=email) )
+				#lead user back to home page or to search page
+				#return redirect( url_for('insert', email=email) )
+				return redirect(url_for('insert',email=email))
 		except Exception as err:
 			flash('form submission error '+str(err))
 			return redirect( url_for('signup') )
