@@ -3,49 +3,54 @@
 	Description : functions for findYourRoom 
 	By : Serena Fan, Mana Muchaku
 '''
-#notes to renee: has not been tested, need to replace !!nameoftable!! with name of table that stores user info
-
-
-#check if username exists in the table
-def emailcorrect(conn, email):
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select * from !!nameoftable!! where email=%s", [email]) 
-    rows = curs.fetchall()
-    return len(rows)==1
-    
-#check if password matches username, return true if passwords match, false if not
-def passwordcorrect(conn, email, password1):
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select password from !!nameoftable!! where email=%s",[email])
-    password2 = curs.fetchall()
-    return password1 == password2
-	
-#check if the username chosen by user already exists, return dict/row
-def usernameexists(conn, email):
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT email FROM !!nameoftable!! WHERE email = %s', [email])
-    row = curs.fetchone()
-    return row
-
-#insert user information into the table, returns nothing
-def insertinfo(conn, email, password, bid, classyear): 
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('INSERT into !!nameoftable!!(email, password, bid, classyear) VALUES(%s,%s,%s,%s)',
-							 [email, password, bid, classyear])
-
-# Mana Muchaku 
-# CS304- FindYourRoom
-# 2018.04.29
-#!/usr/local/bin/python2.7
-
 
 import sys
 import MySQLdb
 import dbconn2
 
-# ================================================================
-# The functions that do most of the work.  
+def get_dsn(db='yourroom_db'):
+    dsn = dbconn2.read_cnf()
+    dsn['db'] = db
+    return dsn
 
+def getConn(dsn):
+    return dbconn2.connect(dsn)
+
+
+#check if username exists in the table
+def emailcorrect(conn, email):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute("select * from user where email=%s", [email]) 
+    rows = curs.fetchall()
+    return len(rows)==1
+    
+#check if password is correct, return true if passwords match, false if not
+def passwordcorrect(conn, email, password1): 
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute("select pwd from user where email=%s",[email])
+    passwordDict = curs.fetchone() #passwordDict returns dictionary
+    password2 = passwordDict['pwd'] #extract password from passwordDict
+    return password1 == password2 #compare if user input password matches existing password for that email
+	
+#check if the username chosen by user already exists, return dict/row
+def usernameexists(conn, email): #this works
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('SELECT email FROM user WHERE email = %s', [email])
+    row = curs.fetchone()
+    return row
+
+#insert user information into the table, returns nothing
+def insertinfo(conn, email, password, bid, classyear): 
+	print ("insert info is happening")
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT into user(email, pwd, BID, classYear) VALUES(%s,%s,%s,%s)',
+							 [email, password, bid, classyear])
+
+
+
+
+
+#check if the room exists
 def roomExists(conn, dormID, roomNumber):
     '''Execute SQL statement to check if the room exists'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -65,6 +70,7 @@ def reviewExists(conn, RID, RoomNum, review, pros, cons):
     curs.execute('SELECT * FROM review WHERE RID=%s AND RoomNum=%s',[RID,RoomNum])
     return curs.fetchone()
 
+#add review
 def updateReview(conn, RID, RoomNum, review):
     '''Execute SQL statement to add Review'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -96,6 +102,6 @@ if __name__ == '__main__':
         print "Usage: {name} nm".format(name=sys.argv[0])
     else:
         DSN = dbconn2.read_cnf()
-        DSN['db'] = 'mmuchaku_db'     # the database we want to connect to
+        DSN['db'] = 'yourroom_db'     
         dbconn2.connect(DSN)
         print lookupByNM(sys.argv[1])

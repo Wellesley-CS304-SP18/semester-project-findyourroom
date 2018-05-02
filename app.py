@@ -4,12 +4,12 @@
 	findYourRoom
 '''
 
-#notes to renee: has not been tested, bcrypt/salting not done. otherwise signup and signin are completely fleshed out
 
 import dbconn2
 import os,sys,random
 import functions, bcrypt
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify
+import functions
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
@@ -30,25 +30,24 @@ def signup():
 		try:
 			#get user registration info
 			email = request.form['email']
-			passwd1 = request.form['password1']
-			passwd2 = request.form['password2']
+			password1 = request.form['password1']
+			password2 = request.form['password2']
 			bid = request.form['bid']
 			classyear = request.form['classyear']
-			dsn = functions.get_dsn()
+			dsn = functions.get_dsn(db='yourroom_db') #!
 			conn = functions.getConn(dsn)
-			if passwd1 != passwd2:
+			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
-			#hashed = passwd1 #what is this
-			#print passwd1, type(passwd1) #what is this
 			row = functions.usernameexists(conn, email)
 			
-			if row is not None:
+			if row is not None: 
 				flash('That user is already taken. Please choose a different one.')
 				return redirect( url_for('signup') )
 			else:
+				print ("else is happening") # this is printing
 				#signup successful, add information to table
-				functions.insertinfo(conn, email, password, bid, classyear)
+				functions.insertinfo(conn, email, password, bid, classyear) # this isn't happening because of global form error "password"?
 				session['email'] = email
 				session['logged_in'] = True
 				session['visits'] = 1
@@ -59,6 +58,7 @@ def signup():
         	
 
 #Route for signing in a user
+#all functions used here work!
 @app.route('/login/', methods=["GET", "POST"])
 def login():
 	#GET Request 
@@ -67,18 +67,19 @@ def login():
 	else:
 		try:
 			email = request.form["email"]
-			password = request.form["passwd"]
-			dsn = functions.get_dsn()
+			password = request.form["password"]
+			dsn = functions.get_dsn(db='yourroom_db') #!
 			conn = functions.getConn(dsn)
 			emailsuccess = functions.emailcorrect(conn, email) 
 			if emailsuccess:
 				passwordsuccess = functions.passwordcorrect(conn, email, password) 
+				print passwordsuccess
 				if passwordsuccess:
 					flash('Successfully logged in as '+ email)
 					session['email'] = email
 					session['logged_in'] = True
 					session['visits'] = 1 #fixed as 1?
-					return redirect( url_for('user', email=email) ) #does this need to change? change user to email?
+					return redirect( url_for('user', email=email) ) 
 				else: 
 					#no match between username and password 
 					flash('Your password is incorrect. Please try again.')
@@ -99,7 +100,7 @@ def login():
 				resp = make_response(render_template('signin-template.html'))
 				resp.set_cookie("email",email)
 				return resp'''
-<<<<<<< HEAD
+
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
@@ -140,7 +141,5 @@ if __name__ == '__main__':
 	port = os.getuid()
 	print('Running on port ' + str(port))
 	app.run('0.0.0.0', port)
-=======
+
 			
-			
->>>>>>> fbb832fc5f43190727d84c340478618bbfe85f1a
