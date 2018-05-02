@@ -7,12 +7,12 @@
 #notes to renee: has not been tested, bcrypt/salting not done. otherwise signup and signin are completely fleshed out
 
 import dbconn2
-import os,sys,random
+import os,sys,random, datetime
 import functions, bcrypt
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify
+from flask import Flask, render_template, flash, request, redirect, url_for, session, jsonify
 app = Flask(__name__)
 app.secret_key = "secret_key"
-
+my_sess_dir = '/home/cs304/pub/sessions/'
 
 #show basic navigation 
 #redirect here "when you have no place better to go"
@@ -99,29 +99,53 @@ def login():
 				resp = make_response(render_template('signin-template.html'))
 				resp.set_cookie("email",email)
 				return resp'''
-<<<<<<< HEAD
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
 def insert():
-	if request.method == 'GET':
-		return render_template('insert.html')
-	else: 
-		# post method
-		roomnum = request.form['roomNumber']
-		dormid = request.form['dormID']
-		# check if room already exists
-		row = roomExists(conn, dormID, roomNumber)
-
-		# room already exists
-		if row is not None: 
-			flash('This room already exists in database.')
-			return redirect (url_for('insert'))
-		else:
-			# room doesn't exist yet, 
-			flash('Room succesfully added to database.')
-			return redirect (url_for('insert'))
-
+		# GET request
+    if request.method == 'GET':
+	        dsn = functions.get_dsn()
+	        conn = functions.getConn(dsn)
+	        data = functions.getListOfDorms(conn)
+	        return render_template('insert.html', data=data)
+    else: #post method
+	    try:
+	    	roomNumber = request.form['roomNumber']
+	    	print "roomnumber: ", roomNumber
+		dormID = request.form['menu-dorm']
+		print "dormID: ", dormID
+		dsn = functions.get_dsn()
+		conn = functions.getConn(dsn)
+		data = functions.getListOfDorms(conn)
+		if dormID is None and roomNumber is None:
+			flash('Please choose a dorm and room number.')
+			return render_template('insert.html', data=data)
+		elif dormID is None:
+			flash('Please choose a dorm.')
+			return render_template('insert.html', data=data)
+	        elif roomNumber is None:
+			flash('Please choose a room number.')
+			return render_template('insert.html', data=data)
+		else: 
+			# room number and dorm provided
+			msg = dormID + " " + roomNumber
+			row = functions.roomExists(conn, dormID, roomNumber)
+			if row is not None:
+				flash(msg + ' already exists')
+			else:
+				functions.addRoom(dormID, roomNumber)
+				flash(msg + ' succesfully  added.')
+				return render_template('insert.html', data=data)
+	    except Exception as err:
+		    flash('Sorry, an error occurred.')
+		    print err
+		    dsn = functions.get_dsn()
+		    conn = functions.getConn(dsn)
+		    data = functions.getListOfDorms(conn)
+		    return render_template('insert.html', data=data)
+	    
+	    
 #Route for signing in a user
 # @app.route('/update/', methods=["GET", "POST"])
 # def search():
@@ -133,14 +157,11 @@ def insert():
 # 	row roomExists(conn, RID, RoomNum)
 # 	if row is not None:
 
-
+	    
 
 if __name__ == '__main__':
 	app.debug = True
 	port = os.getuid()
 	print('Running on port ' + str(port))
 	app.run('0.0.0.0', port)
-=======
-			
-			
->>>>>>> fbb832fc5f43190727d84c340478618bbfe85f1a
+
