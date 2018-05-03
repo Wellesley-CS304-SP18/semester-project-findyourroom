@@ -58,10 +58,10 @@ def roomExists(conn, dormID, roomNumber):
     return curs.fetchone()
 
 #insert room
-def addRoom(dormID,roomNumber):#avg rating? ):
+def addRoom(conn, dormID,roomNumber):#avg rating? ):
     '''Execute SQL statement to insert room into db'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('INSERT INTO room (dormID, roomNumber) VALUES (dormID=%s, roomNumber=%s)', [dormID, roomNumber])
+    curs.execute('INSERT INTO room (dormID, roomNumber) VALUES (%s, %s)', [dormID, roomNumber])
  
     
 #make sure to compute avgRating before putting in argument 
