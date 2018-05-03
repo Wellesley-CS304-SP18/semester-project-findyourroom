@@ -109,7 +109,7 @@ def login():
 				resp.set_cookie("email",email)
 				return resp'''
 
-
+# to-do: make sure values inserted are a valid room number
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
 def insert():
