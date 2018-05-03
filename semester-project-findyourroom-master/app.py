@@ -178,39 +178,11 @@ def search():
 			return render_template('search.html', dormarray = functions.getListOfDorms(conn))
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
-			dormList = request.form.getlist("BAT")
-			print dormList
-	 
-	# 		BAT = request.form.getlist("BAT")
-	# 		BEB = request.form.getlist("BEB")
-	# 		CAZ = request.form.getlist("CAZ")
-	# 		CER = request.form.getlist("CER")
-	# 		CLA = request.form.getlist("CLA")
-	# 		DOW = request.form.getlist("DOW")
-	# 		FRE = request.form.getlist("FRE")
-	# 		FHC = request.form.getlist("FHC")
-	# 		HEM = request.form.getlist("HEM")
-	# 		INS = request.form.getlist("INS")
-	# 		LAK = request.form.getlist("LAK")
-	# 		MAC = request.form.getlist("MAC")
-	# 		MUN = request.form.getlist("MUN")
-	# 		ORC = request.form.getlist("ORC")
-	# 		POM = request.form.getlist("POM")
-	# 		SEV = request.form.getlist("SEV")
-	# 		SHA = request.form.getlist("SHA")
-	# 		SMW = request.form.getlist("SMW")
-	# 		STO = request.form.getlist("STO")
-	# 		TCE = request.form.getlist("TCE")
-	# 		TCW = request.form.getlist("TCW")
-	# 
-	# 		print BAT
-	# 		print BEB
-	# for all possible check box , check if they are clicked and then if so run the function and then add to roomList 
-	#
-
-		
-			dormName = request.form['dorm']
-			roomList = functions.getListOfRoomsbyDorm(conn, functions.getdormID(conn,dormName))
+			counter = -1
+	 		roomList = []
+	 		for dorm in request.form.getlist("dorm"):
+	 			counter += 1
+	 			roomList += functions.getListOfRoomsbyDorm(conn, dormList[counter])
 		
 			if not roomList:
 				flash("No Result Matches Your Request!")
