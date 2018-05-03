@@ -1,0 +1,22 @@
+<!--
+	Filename : result.html
+	Serena Fan, Renee Huang, Mana Muchaku 
+	findYourRoom
+-->
+
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1>Search Result</h1>
+
+	{% for item in roomArray %}
+   		<li>{{item['dormName']}} {{item['roomNumber']}}</li>
+   	{% endfor %}
+
+
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+{% endblock %}
+    
+
