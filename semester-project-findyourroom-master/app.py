@@ -37,8 +37,6 @@ def signup():
 			bid = request.form['bid']
 			classyear = request.form['classyear']
 			
-			
-			
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
@@ -105,8 +103,7 @@ def login():
 # to-do: work on cookies 		
 #@app.route('/logout/')
 #def logout():
-			
-# to-do: make sure values inserted are a valid room number
+
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
 def insert():
