@@ -8,9 +8,13 @@ import sys
 import MySQLdb
 import dbconn2
 
+<<<<<<< HEAD
 ### database connection functions ###
 
 def get_dsn(db='rhuang_db'):
+=======
+def get_dsn(db='yourroom_db'):
+>>>>>>> ff411bda8f46b1b553009f2cef787d9c4e5f8509
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -26,15 +30,16 @@ def emailcorrect(conn, email):
     rows = curs.fetchall()
     return len(rows)==1
     
-#check if password matches username, return true if passwords match, false if not
-def passwordcorrect(conn, email, password1):
+#check if password is correct, return true if passwords match, false if not
+def passwordcorrect(conn, email, password1): 
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select password from user where email=%s",[email])
-    password2 = curs.fetchall()
-    return password1 == password2
+    curs.execute("select pwd from user where email=%s",[email])
+    passwordDict = curs.fetchone() #passwordDict returns dictionary
+    password2 = passwordDict['pwd'] #extract password from passwordDict
+    return password1 == password2 #compare if user input password matches existing password for that email
 	
 #check if the username chosen by user already exists, return dict/row
-def usernameexists(conn, email):
+def usernameexists(conn, email): #this works
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT email FROM user WHERE email = %s', [email])
     row = curs.fetchone()
@@ -42,9 +47,10 @@ def usernameexists(conn, email):
 
 #insert user information into the table, returns nothing
 def insertinfo(conn, email, password, bid, classyear): 
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('INSERT into user(email, pwd, BID, classyear) VALUES(%s,%s,%s,%s)',
-							 [email, password, bid, classYear])
+	print ("insert info is happening")
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT into user(email, pwd, BID, classYear) VALUES(%s,%s,%s,%s)',
+							 [email, password, bid, classyear])
 
 
 
