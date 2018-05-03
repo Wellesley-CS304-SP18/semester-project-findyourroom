@@ -122,32 +122,33 @@ def insert():
 	        return render_template('insert.html', data=data)
     else: #post method
 	    try:
-	    	roomNumber = request.form['roomNumber']
-	    	print "roomnumber: ", roomNumber
-		dormID = request.form['menu-dorm']
-		print "dormID: ", dormID
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
-		data = functions.getListOfDorms(conn)
-		if dormID is None and roomNumber is None:
-			flash('Please choose a dorm and room number.')
-			return render_template('insert.html', data=data)
-		elif dormID is None:
-			flash('Please choose a dorm.')
-			return render_template('insert.html', data=data)
-	        elif roomNumber is None:
-			flash('Please choose a room number.')
-			return render_template('insert.html', data=data)
-		else: 
-			# room number and dorm provided
-			msg = dormID + " " + roomNumber
-			row = functions.roomExists(conn, dormID, roomNumber)
-			if row is not None:
-				flash(msg + ' already exists')
-			else:
-				functions.addRoom(dormID, roomNumber)
-				flash(msg + ' succesfully  added.')
-				return render_template('insert.html', data=data)
+		    dsn = functions.get_dsn()
+		    conn = functions.getConn(dsn)
+		    data = functions.getListOfDorms(conn)
+		    roomNumber = request.form['roomNumber']
+		    # print "roomnumber: ", roomNumber
+		    dormID = request.form['menu-dorm']
+		    # print "dormID: ", dormID
+		    if dormID == "none" and not roomNumber:
+			    flash('Please choose a dorm and room number.')
+			    return render_template('insert.html', data=data)
+		    elif dormID == "none":
+			    flash('Please choose a dorm.')
+			    return render_template('insert.html', data=data)
+		    elif not roomNumber:
+			    flash('Please choose a room number.')
+			    return render_template('insert.html', data=data)
+		    else: 
+			    # room number and dorm provided
+			    msg = dormID + " " + roomNumber
+			    row = functions.roomExists(conn, dormID, roomNumber)
+			    if row is not None:
+				    flash(msg + ' already exists')
+				    return render_template('insert.html', data=data)
+			    else:
+				    functions.addRoom(conn, dormID, roomNumber)
+				    flash(msg + ' succesfully  added.')
+				    return render_template('insert.html', data=data)
 	    except Exception as err:
 		    flash('Sorry, an error occurred.')
 		    print err
