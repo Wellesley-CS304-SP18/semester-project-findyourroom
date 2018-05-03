@@ -94,7 +94,13 @@ def login():
 		except Exception as err:
 			flash('form submission error ' + str(err))
 			return redirect( url_for('login') )       
-                    
+	
+#to be worked on for alpha			
+#@app.route('/logout/')
+#def logout():
+   # remove the username from the session if it is there
+#   session.pop('email', None)
+#   return redirect(url_for('/'))
 			
 			#cookie notes for future
 			'''
