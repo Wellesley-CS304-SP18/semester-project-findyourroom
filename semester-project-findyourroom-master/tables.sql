@@ -10,10 +10,12 @@ CREATE TABLE dorm(
 	specialdorm tinyint(1) NOT NULL, /*if the dorm has language requirement etc */ 
 	gym tinyint(1) NOT NULL,		/*0 if no gym, 1 if there's a gym*/
 	dinningHall tinyint(1) NOT NULL /*0 if no dinninghall, 1 if there's a dinninghall*/
-);
+	)
+	-- table constraints follow                                              
+       ENGINE = InnoDB;
 
 /*update the gym part*/
-INSERT INTO dorm (dormID, dormName, location, dormType, specialdorm, gym, dinningHall)  VALUES ("BAT", "Bates", "West", "Dorm", 0, 0, 1); 
+INSERT INTO dorm (dormID, dormName, location, dormType, specialdorm, gym, dinningHall)  VALUES ("BAT", "Bates", "East", "Dorm", 0, 0, 1); 
 INSERT INTO dorm (dormID, dormName, location, dormType, specialdorm, gym, dinningHall)  VALUES ("BEB", "Beebe", "West", "Dorm", 0, 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, specialdorm, gym, dinningHall)  VALUES ("CAZ", "Cazenove", "West", "Dorm", 0, 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, specialdorm, gym, dinningHall)  VALUES ("CER", "Cervantes", "West", "Dorm", 0, 0, 0);
@@ -42,9 +44,11 @@ CREATE TABLE room(
 	roomNumber char(3) NOT NULL, 
 	roomType enum("Single", "Double", "Suite", "Triple", "First Year"),
 	avgRating decimal(3,2),
-	FOREIGN KEY (dormID) REFERENCES dorm(dormID), 
+	FOREIGN KEY (dormID) REFERENCES dorm(dormID) ON DELETE CASCADE, 
 	PRIMARY KEY (roomNumber,dormID)
-);
+	)
+	-- table constraints follow                                              
+       ENGINE = InnoDB;
 
 INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("MUN", "234", "Single");
 INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("MUN", "334", "Single");
@@ -56,20 +60,32 @@ INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("DOW", "001", "Triple")
 INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("STO", "334", "Single");
 INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("HEM", "125", "Single");
 INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TCW", "125", "Double");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TWE", "504", "First Year");
+INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TCE", "504", "First Year");
 
+DROP TABLE IF EXISTS user;
+CREATE TABLE user(
+	BID char(9) NOT NULL PRIMARY KEY, 
+	email varchar(30) NOT NULL,  
+	pwd varchar(20) NOT NULL,
+	classYear int(4)NOT NULL
+	)
+	-- table constraints follow                                              
+       ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS review;
 CREATE TABLE review(
 	dormID char(3) NOT NULL,
 	roomNumber char(3) NOT NULL,
 	BID char(9) NOT NULL,
-	rating tinyint(5), 
+	rating tinyint(5) NOT NULL, 
 	comment varchar(200) NOT NULL,
 	reviewType enum("pro", "con") NOT NULL, 
-	FOREIGN KEY (dormID) REFERENCES dorm(dormID),
-	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber)
-);
+	FOREIGN KEY (dormID) REFERENCES dorm(dormID) ON DELETE CASCADE,
+	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber) ON DELETE CASCADE, 
+	FOREIGN KEY (BID) REFERENCES user(BID) ON DELETE CASCADE
+	)
+	-- table constraints follow                   
+	ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS photo;
 CREATE TABLE photo(
@@ -78,15 +94,10 @@ CREATE TABLE photo(
 	BID char(9) NOT NULL,
 	length int(5) NOT NULL, 
 	path varchar(100) NOT NULL,
-	FOREIGN KEY (dormID) REFERENCES dorm(dormID),
-	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber)
-);
+	FOREIGN KEY (dormID) REFERENCES dorm(dormID) ON DELETE CASCADE,
+	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber) ON DELETE CASCADE, 
+	FOREIGN KEY (BID) REFERENCES user(BID) ON DELETE CASCADE
+	)
+	-- table constraints follow                                              
+       ENGINE = InnoDB;
 	
-DROP TABLE IF EXISTS user;
-CREATE TABLE user(
-	email varchar(30) NOT NULL PRIMARY KEY, 
-	pwd varchar(20) NOT NULL,
-	BID char(9) NOT NULL, 
-	classYear int(4)NOT NULL
-);
-
