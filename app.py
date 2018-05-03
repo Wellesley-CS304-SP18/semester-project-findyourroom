@@ -46,7 +46,6 @@ def signup():
 				flash('That user is already taken. Please choose a different one.')
 				return redirect( url_for('signup') )
 			else:
-				print ("else is happening") # this is printing
 				#signup successful, add information to table
 				functions.insertinfo(conn, email, password1, bid, classyear) # this isn't happening because of global form error "password"?
 				session['email'] = email
