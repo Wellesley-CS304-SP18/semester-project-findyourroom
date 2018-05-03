@@ -146,7 +146,7 @@ def insert():
 					# room number and dorm provided
 					msg = dormID + " " + roomNumber
 					row = functions.roomExists(conn, dormID, roomNumber, roomType)
-					if row is not None:
+					if row:
 						flash(msg + ' already exists')
 						return render_template('insert.html', data=data)
 					else:
