@@ -119,7 +119,7 @@ def getListOfRoomsbyFilter(conn, location, dormType, roomType):
 def getListOfDorms(conn):
     '''Execute SQL statement to get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select dormName from dorm where dormName != 'NULL'")
+    curs.execute("select dormName, dormID from dorm where dormName != 'NULL'")
     return curs.fetchall()
 
 def getdormID(conn,dormName):
