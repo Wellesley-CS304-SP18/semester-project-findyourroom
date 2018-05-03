@@ -69,7 +69,7 @@ def login():
 	#GET Request 
 	if request.method == "GET":
 		return render_template('login-template.html')
-	else:
+	else: 
 		try:
 			email = request.form["email"]
 			password = request.form["password"]
@@ -98,7 +98,7 @@ def login():
 			return redirect( url_for('login') )       
                     
 			
-			#do we need to set cookie?
+			#cookie notes for future
 			'''
 				#set cookie
 				flash("Login succeeded")
