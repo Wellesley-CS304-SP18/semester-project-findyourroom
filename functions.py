@@ -8,13 +8,7 @@ import sys
 import MySQLdb
 import dbconn2
 
-<<<<<<< HEAD
-### database connection functions ###
-
-def get_dsn(db='rhuang_db'):
-=======
 def get_dsn(db='yourroom_db'):
->>>>>>> ff411bda8f46b1b553009f2cef787d9c4e5f8509
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
