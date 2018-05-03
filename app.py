@@ -151,18 +151,67 @@ def insert():
 		    return render_template('insert.html', data=data)
 	    
 	    
-#Route for signing in a user
-# @app.route('/update/', methods=["GET", "POST"])
-# def search():
-# 	# check if room exists
-# 	if request.method == 'GET':
-# 		return render_template('update.html')
-# 	else:
-# 		# POST
-# 	row roomExists(conn, RID, RoomNum)
-# 	if row is not None:
-
-	    
+# Search Room Options
+@app.route('/search/', methods=["GET", "POST"])
+def search():
+	conn = dbconn2.connect(DSN)
+	if request.method == 'GET':
+		return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+	
+	elif request.form['submit'] == 'dorm':
+		dormName = request.form['dorm']
+		roomList = functions.getListOfRoomsbyDorm(conn, functions.getdormID(conn,dormName))
+		
+		if not roomList:
+			flash("No Result Matches Your Request!")
+			return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+		else:
+			return render_template('result.html', roomArray = roomList)
+	
+	elif request.form['submit'] == "filter":
+		print "request filter submit"
+		location = request.form['location']
+   		dormType = request.form['dormType']
+     	roomType = request.form['roomType']
+    	special = request.form['special']
+    	gym = request.form['gym']
+     	dinningHall = request.form['dinningHall']
+     	rating = request.form['rating']
+     	
+     	print "location = " + location 
+     	print "dormtype = " + dormType
+     	print "roomType = " + roomType
+     	print "special = " + special
+     	print "gym = " + gym
+     	print "dinningHall = " + dinningHall
+     	print "rating = " + rating
+  		
+     	#if the user select all, then how shoould i reflect that on the sql?
+     # 	
+#      	if rating == "All":
+#      		rating = 0
+#      	elif rating == "over1":
+#      		rating = 1
+#      	elif rating == "over2":
+#      		rating = 2
+#      	elif rating == "over3":
+#      		rating = 3
+#      	elif rating == "over4":
+#      		rating = 4
+#      	elif rating == "over5":
+#      		rating = 5
+    	
+    	roomList = functions.getListOfRoomsbyFilter(conn, location, dormType,roomType)
+    	#special, gym, dinningHall, rating)
+    	print roomList
+    
+    	if not roomList:
+      		flash("No Result Matches Your Request!")
+      		return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+    	else:
+    		return render_template('result.html', roomArray = roomList)
+	
+          
 
 if __name__ == '__main__':
 	app.debug = True
