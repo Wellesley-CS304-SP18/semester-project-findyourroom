@@ -1,0 +1,42 @@
+<!--
+	Filename : insert.html
+	Serena Fan, Renee Huang, Mana Muchaku 
+	findYourRoom
+-->
+
+
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+<h1>Insert Room</h1>
+
+  <form method="post" action="">
+      <p><label for="roomNumber">Room Number: <input type="text" name="roomNumber"></label></p>
+      
+    Dorm:
+    <select name="menu-dorm">
+    	<option value="none">Choose One</option>
+     	 {% for item in data %}
+    		<option value="{{item['dormName']}}">{{item['dormName']}}</option>
+     	 {% endfor %}   
+    </select>   
+
+	Room Type:
+    <select name="menu-room-type">
+    	<option value="none">Choose One</option>
+      	<option value ="Single">Single</option>
+      	<option value ="Double">Double</option>
+      	<option value ="Triple">Triple</option>
+      	<option value ="Suite">Suite</option>
+      	<option value ="First Year">First Year</option>
+    </select>
+    
+    <p><input type="submit" name="submit" value="insert">
+  </form>
+
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+{% endblock %}
