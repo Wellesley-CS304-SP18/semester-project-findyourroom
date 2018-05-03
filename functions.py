@@ -90,21 +90,35 @@ def addPhotos(conn, dormID, roomNumber, size, path):
     curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE dormID=%s AND roomNumber = %s',[size, path, dormID, roomNumber]) 
 
 #currently only filtering based on res hall name and average rating. 
-def getListofRooms(conn, dormID, rating):
-    '''Execute SQL statement to get all the list of rooms based on user preference'''
+#add rating filter later
+def getListOfRoomsbyDorm(conn, dormID):
+    '''Execute SQL statement to get all the list of rooms based on dormID'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT * from room WHERE dormID=%s AND avgRating = %s',[dormID, rating])
+    curs.execute('SELECT dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
     return curs.fetchall()
 
+#currently filtering only through location, dormType and roomType
+# special, gym, dinninghall and rating will be added later 
+def getListOfRoomsbyFilter(conn, location, dormType, roomType):
+    '''Execute SQL statement to get all the list of rooms based on user preference'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor) 
+    curs.execute('SELECT dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
+    return curs.fetchall()
+   
 def getListOfDorms(conn):
     '''Execute SQL statement to get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select dormID, dormName from dorm where dormName != 'NULL'")
+    curs.execute("select dormName from dorm where dormName != 'NULL'")
     return curs.fetchall()
 
-#need to have more argument for user to filter /if so probably need to add more boolean to each dorm such as east/west side, has dinning hall, has gym etc
-#alpha version : delete comment 
-
+def getdormID(conn,dormName):
+    '''Execute SQL statement to get dormID of all rooms'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute("select dormID from dorm where dormName = %s", [dormName])
+    dormDic = curs.fetchone()
+    dormid = dormDic['dormID']
+    return dormid
+    
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
