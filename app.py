@@ -23,6 +23,7 @@ def index():
 	return render_template('index.html')
 
 #Route for signing up a user
+#in alpha/beta versions implement bcrypt and cookie
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
 	#GET Request 
@@ -62,7 +63,7 @@ def signup():
         	
 
 #Route for signing in a user
-#all functions used here work!
+#in alpha/beta versions implement logging out
 @app.route('/login/', methods=["GET", "POST"])
 def login():
 	#GET Request 
@@ -83,7 +84,7 @@ def login():
 					session['email'] = email
 					session['logged_in'] = True
 					session['visits'] = 1 #fixed as 1?
-					return redirect( url_for('user', email=email) ) 
+					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
 					flash('Your password is incorrect. Please try again.')
