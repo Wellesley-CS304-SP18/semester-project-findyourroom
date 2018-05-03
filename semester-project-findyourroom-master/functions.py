@@ -19,7 +19,7 @@ def get_dsn(db='yourroom_db'):
 def getConn(dsn):
     return dbconn2.connect(dsn)
 
-# Functions for login/sign-up page 
+# Functions for login page 
 # ================================================================
 
 def emailcorrect(conn, email):
@@ -38,6 +38,10 @@ def passwordcorrect(conn, email, password1):
 	password2 = passwordDict['pwd'] #extract password from passwordDict
 	return password1 == password2 #compare if user input password matches existing password for that email
 	
+	
+# Functions for signup page 
+# ================================================================
+
 #return dict/row
 def usernameexists(conn, email): 
 	'''Execute SQL statement to check if the username chosen by user already exists'''
