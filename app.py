@@ -161,7 +161,7 @@ def insert():
 @app.route('/search/', methods=["GET", "POST"])
 def search():
 	dsn = functions.get_dsn()
-	conn = functions.connect(dsn)
+	conn = functions.getConn(dsn)
 	if request.method == 'GET':
 		return render_template('search.html', dormarray = functions.getListOfDorms(conn))
 	
