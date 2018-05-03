@@ -59,13 +59,13 @@ def roomExists(conn, dormID, roomNumber, roomType):
     '''Execute SQL statement to check if the room exists'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT * FROM room WHERE dormID=%s AND roomNumber=%s AND roomType=%s',[dormID, roomNumber, roomType])
-    return curs.fetchone()
+    return not curs.fetchone()
 
 def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
     '''Execute SQL statement to insert room into db'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('INSERT INTO room (dormID, roomNumber, roomType) VALUES (%s, %s, %s)', [dormID, roomNumber, roomType])
-    
+   
 # Functions for inserting user review information 
 # ================================================================
 
