@@ -21,9 +21,6 @@ def index():
 #Route for signing up a user
 #in alpha/beta versions do the following :
 # to-do: implement bcrypt/session/cookies
-# to-do: check if the email is Wellesley email
-# to-do: check if BID is 9 digit if not give an error 
-# to-do: check if year is 4 digit if not give an error (maybe check if the year is plausible year) 
 
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
@@ -39,6 +36,8 @@ def signup():
 			password2 = request.form['password2']
 			bid = request.form['bid']
 			classyear = request.form['classyear']
+			
+			
 			
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
