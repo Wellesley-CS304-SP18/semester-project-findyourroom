@@ -160,7 +160,8 @@ def insert():
 # Search Room Options
 @app.route('/search/', methods=["GET", "POST"])
 def search():
-	conn = dbconn2.connect(DSN)
+	dsn = functions.get_dsn()
+	conn = functions.connect(dsn)
 	if request.method == 'GET':
 		return render_template('search.html', dormarray = functions.getListOfDorms(conn))
 	
