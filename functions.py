@@ -56,6 +56,13 @@ def roomExists(conn, dormID, roomNumber):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT * FROM room WHERE dormID=%s AND roomNumber=%s',[dormID, roomNumber])
     return curs.fetchone()
+
+#insert room
+def addRoom(dormID,roomNumber):#avg rating? ):
+    '''Execute SQL statement to insert room into db'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('INSERT INTO room (dormID, roomNumber) VALUES (dormID=%s, roomNumber=%s)', [dormID, roomNumber])
+ 
     
 #make sure to compute avgRating before putting in argument 
 def updateAvgRating(conn, dormID, RoomNum, avgRating):
@@ -92,7 +99,7 @@ def getListofRooms(conn, dormID, rating):
 def getListOfDorms(conn):
     '''Execute SQL statement to get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select dormName from dorm where dormName != 'NULL'")
+    curs.execute("select dormID, dormName from dorm where dormName != 'NULL'")
     return curs.fetchall()
 
 #need to have more argument for user to filter /if so probably need to add more boolean to each dorm such as east/west side, has dinning hall, has gym etc
@@ -107,7 +114,6 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         print "Usage: {name} nm".format(name=sys.argv[0])
     else:
-        DSN = dbconn2.read_cnf()
-        DSN['db'] = 'yourroom_db'     
-        dbconn2.connect(DSN)
-        print lookupByNM(sys.argv[1])
+        dsn = get_dsn()
+        conn = dbconn2.connect(dsn)
+
