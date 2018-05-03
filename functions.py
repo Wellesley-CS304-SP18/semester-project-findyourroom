@@ -47,9 +47,6 @@ def insertinfo(conn, email, password, bid, classyear):
 							 [email, password, bid, classyear])
 
 
-
-
-
 #check if the room exists
 def roomExists(conn, dormID, roomNumber):
     '''Execute SQL statement to check if the room exists'''

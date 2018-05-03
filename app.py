@@ -27,7 +27,8 @@ def signup():
 	#GET Request 
 	if request.method == "GET":
 		return render_template('signup-template.html')
-	else:#else POST request
+	#POST request
+	else:
 		try:
 			#get user registration info
 			email = request.form['email']
@@ -47,7 +48,7 @@ def signup():
 				return redirect( url_for('signup') )
 			else:
 				#signup successful, add information to table
-				functions.insertinfo(conn, email, password1, bid, classyear) # this isn't happening because of global form error "password"?
+				functions.insertinfo(conn, email, password1, bid, classyear) 
 				session['email'] = email
 				session['logged_in'] = True
 				session['visits'] = 1
