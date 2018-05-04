@@ -177,7 +177,8 @@ def search():
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
 			counter = -1
 	 		roomList = []
-	 		for dorm in request.form.getlist("dorm"):
+			dormList = request.form.getlist("dorm")
+	 		for dorm in dormList:
 	 			counter += 1
 	 			roomList += functions.getListOfRoomsbyDorm(conn, dormList[counter])
 		
