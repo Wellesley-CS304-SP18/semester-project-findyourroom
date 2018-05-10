@@ -107,9 +107,8 @@ def login():
 def insert():
 	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:	
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
-		data = functions.getListOfDorms(conn)	
+		conn = connFromDSN(functions)
+		data = dataFromDSN(functions)
 		if request.method == 'GET':
 				return render_template('insert.html', data=data)
 		else: 
@@ -151,9 +150,7 @@ def insert():
 			except Exception as err:
 				flash('Sorry, an error occurred.')
 				print err
-				dsn = functions.get_dsn()
-				conn = functions.getConn(dsn)
-				data = functions.getListOfDorms(conn)
+				data = dataFromDSN(functions)
 				return render_template('insert.html', data=data)
 	else: 
 		flash("Please log in!")
@@ -207,7 +204,16 @@ def search():
 	else: 
 		flash("Please log in!")
 		return redirect( url_for('login'))
-	
+
+# Function to get data from conn                                                           # ================================================================                          
+
+def dataFromDSN(fcn):
+	conn = connFromDSN(fcn)
+	return fcn.getListOfDorms(conn)	
+
+def connFromDSN(fcn):
+	dsn = fcn.get_dsn()
+	return fcn.getConn(dsn)
 
 # ================================================================        
 if __name__ == '__main__':
