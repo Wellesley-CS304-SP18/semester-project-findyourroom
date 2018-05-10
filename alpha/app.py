@@ -10,7 +10,6 @@ import functions, bcrypt
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session
 app = Flask(__name__)
 app.secret_key = "secret_key"
-my_sess_dir = '/home/cs304/pub/sessions/'
 
 #show basic navigation 
 @app.route('/')
@@ -51,7 +50,7 @@ def signup():
 				#session will be updated in the later version 
 				session['email'] = email
 				session['logged_in'] = True
-				session['visits'] = 1
+				session['BID'] = BID
 				
 				#lead user back to home page or to search page
 				return redirect(url_for('insert',email=email))
