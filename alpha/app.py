@@ -101,7 +101,7 @@ def login():
 @app.route('/logout/')
 def logout():
 	session['logged_in'] = False
-	return redirect(url_for('login')
+	return redirect(url_for('login'))
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
