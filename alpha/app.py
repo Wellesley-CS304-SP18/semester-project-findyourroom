@@ -13,7 +13,6 @@ app.secret_key = "secret_key"
 my_sess_dir = '/home/cs304/pub/sessions/'
 
 #show basic navigation 
-#redirect here "when you have no place better to go"
 @app.route('/')
 def index():
 	return render_template('index.html')
