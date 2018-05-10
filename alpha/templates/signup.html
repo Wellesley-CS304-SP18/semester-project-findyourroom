@@ -8,17 +8,13 @@
 
 {% block main_content %}
 
-<!--the following are done using regular expressions
-to-do: check if the email is Wellesley email DONE
-to-do: check if BID is 9 digit if not give an error  DONE
-to-do: check if year is 4 digit if not give an error (maybe check if the year is plausible year) 
--->
+
 
 <h1>Sign Up</h1>
 <h2>To sign up, please input your Wellesley email, password of choice, BID, and class year.</h2>
 
   <form method="post" action="">
-      <p><label>Email: <input type="text" name="email" pattern="[A-Za-z0-9._%+-]+@wellesley.edu" title ="input a wellesley email" ></label></p>
+      <p><label>Email: <input type="text" name="email" pattern="^[A-Za-z0-9._%+-]+@wellesley.edu$" title ="input a wellesley email" ></label></p>
       <p><label>Password: <input type="password" name="password1"></label></p>
       <p><label>Confirm your password: <input type="password" name="password2"></label></p>
       <p><label>BID: <input type="text" name="bid" pattern="[0-9]{9}" title ="input your 9 digit BID"></label></p>
