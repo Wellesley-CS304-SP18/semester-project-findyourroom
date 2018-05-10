@@ -206,7 +206,16 @@ def search():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 
-# Function to get data from conn                                                           # ================================================================                          
+# Review  Room Info                                                                                                            
+@app.route('/review/', methods=["GET", "POST"])
+def review():
+	# check if user logged in:                                                                                            
+	if "logged_in" in session and session["logged_in"] is True:
+		print "hi"
+
+
+# Function to get data from conn
+# ================================================================                          
 
 def dataFromDSN(fcn):
 	conn = connFromDSN(fcn)
