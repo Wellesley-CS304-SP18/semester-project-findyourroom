@@ -81,7 +81,7 @@ def login():
 					#session will be updated in the later 
 					session['email'] = email
 					session['logged_in'] = True
-					session['visits'] = 1 #fixed as 1?
+					session['BID'] = BID
 					
 					return redirect( url_for('insert', email=email) ) 
 				else: 
@@ -97,10 +97,11 @@ def login():
 			return redirect( url_for('login') )       
 	
 	
-# to-do: work on logout feature
-# to-do: work on cookies 		
-#@app.route('/logout/')
-#def logout():
+	
+@app.route('/logout/')
+def logout():
+	session['logged_in'] = False
+	return redirect(url_for('login')
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
