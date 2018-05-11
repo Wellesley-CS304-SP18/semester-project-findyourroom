@@ -113,6 +113,10 @@ def login():
 def logout():
 	session['logged_in'] = False
 	return redirect(url_for('login'))
+	
+@app.route('/account/',  methods=["GET", "POST"]))
+def account():
+	 return render_template('account.html', roomarray = functions.pullRooms(conn,BID))
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])

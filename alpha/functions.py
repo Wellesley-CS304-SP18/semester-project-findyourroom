@@ -39,7 +39,7 @@ def getBID(conn, email):
 
 #return dict/row
 def usernameexists(conn, email): 
-	'''Execute SQL statement to check if the username chosen by user already exists'''
+	'''check if the username chosen by user already exists, returns'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	row = curs.fetchone()
@@ -47,9 +47,17 @@ def usernameexists(conn, email):
 
 #returns nothing 
 def insertinfo(conn, email, password, bid, classyear): 
-	'''Execute SQL statement to insert user information into the table'''
+	'''insert user information into the table, '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into user(email, pwd, BID, classYear) VALUES(%s,%s,%s,%s)', [email, password, bid, classyear])
+
+# Functions for account  page 
+# ================================================================
+def pullReviews(conn, BID):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT dormID, roomNumber, rating, comment, reviewtype FROM review if BID=%s', [BID])
+	return curs.fetchall()
+
 
 def inserthashed(conn, BID, hashed):
 	'''Execute SQL statement to insert user hash password information into the table'''
