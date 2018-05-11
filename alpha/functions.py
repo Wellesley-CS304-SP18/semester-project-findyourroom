@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='yourroom_db'):
+def get_dsn(db='rhuang_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -128,7 +128,7 @@ def getListOfRoomsbyDorm(conn, dormID):
 def getListOfRoomsbyFilter(conn, location, dormType, roomType):
     '''Execute SQL statement to get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
+    curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
     return curs.fetchall()
 
 def getListOfDorms(conn):
