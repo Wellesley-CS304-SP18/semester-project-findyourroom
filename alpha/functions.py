@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='rhuang_db'):
+def get_dsn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -29,26 +29,19 @@ def emailcorrect(conn, email):
 	rows = curs.fetchall()
 	return len(rows)==1
     
-#return true if passwords match, false if not
-def passwordcorrect(conn, email, password1): 
-	'''Execute SQL statement to heck if password is correct'''
-	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute("select pwd from user where email=%s",[email])
-	passwordDict = curs.fetchone() #passwordDict returns dictionary
-	password2 = passwordDict['pwd'] #extract password from passwordDict
-	return password1 == password2 #compare if user input password matches existing password for that email
 # get bid from email and password, we have already checked that email & password exists/is correct
 def getBID(conn, email, password):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute("select BID from user where email=%s and pwd = %s", [email, password])
-    row = curs.fetchone()
+    row = curs.fetchone()    
     return row['BID']
+
 # Functions for signup page 
 # ================================================================
 
 #return dict/row
 def usernameexists(conn, email): 
-	'''Execute SQL statement to check if the username chosen by user already exists'''
+	'''check if the username chosen by user already exists, returns'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	row = curs.fetchone()
@@ -56,10 +49,30 @@ def usernameexists(conn, email):
 
 #returns nothing 
 def insertinfo(conn, email, password, bid, classyear): 
-	'''Execute SQL statement to insert user information into the table'''
+	'''insert user information into the table, '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into user(email, pwd, BID, classYear) VALUES(%s,%s,%s,%s)', [email, password, bid, classyear])
 
+# Functions for account  page 
+# ================================================================
+def pullReviews(conn, BID):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT dormID, roomNumber, rating, comment, reviewtype FROM review if BID=%s', [BID])
+	return curs.fetchall()
+
+
+def inserthashed(conn, BID, hashed):
+	'''Execute SQL statement to insert user hash password information into the table'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT into userpass(BID ,hashed) VALUES(%s,%s)',[BID, hashed])
+	
+def gethashed(conn, BID):
+	'''Execute SQL statement to get hash password'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT hashed FROM userpass WHERE BID = %s',[BID])
+	return curs.fetchone() 
+	
+	
 # Functions for insert room page 
 # ================================================================
 
@@ -117,20 +130,19 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
 # Functions for search room page 
 # ================================================================
 
-# To-do : add average rating to the filter
 def getListOfRoomsbyDorm(conn, dormID):
     '''Execute SQL statement to get all the list of rooms based on dormID'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
     return curs.fetchall()
-
+    
 # To-do : add special, gym, dinninghall and rating to the filter 
-def getListOfRoomsbyFilter(conn, location, dormType, roomType):
+def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall,rating): 
     '''Execute SQL statement to get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
     curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
     return curs.fetchall()
-
+    
 def getListOfDorms(conn):
     '''Execute SQL statement to get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)

@@ -9,6 +9,13 @@
 {% block main_content %}
 
 
-
 <h1>Account Details</h1>
-<h2>To sign up, please input your Wellesley email, password of choice, BID, and class year.</h2>
+<h2>On this page you can see all the rooms you have reviewed. </h2>
+
+<form>
+<ul>Your reviews:
+	{% for item in roomarray %}
+	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="update" name="update-btn" value="Update"> <input type="delete" name="delete-btn" value="Delete">
+	{% endfor %}
+</ul>
+</form>

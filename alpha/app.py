@@ -38,6 +38,7 @@ def signup():
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
+			hashed = bcypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
 			row = functions.usernameexists(conn, email)
 			
 			if row is not None: 
@@ -46,6 +47,7 @@ def signup():
 			else:
 				#signup successful, add information to table
 				functions.insertinfo(conn, email, password1, bid, classyear)
+				functions. inserthash(conn, bid, hashed)
 				
 				#session will be updated in the later version 
 				session['email'] = email
@@ -71,11 +73,20 @@ def login():
 			conn = functions.getConn(dsn)
 			email = request.form["email"]
 			password = request.form["password"]
+			bid = functions.getBID(conn, email) 
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
 			if emailsuccess:
-				passwordsuccess = functions.passwordcorrect(conn, email, password) 
-				if passwordsuccess:
+				row = functions.gethashed(conn, BID)
+				
+				if row is None:
+					# Same response as wrong password, so no information about what went wrong
+					flash('login incorrect. Try again or join')
+					return redirect( url_for('login'))
+				else:
+					hashed = row['hashed']
+					
+				if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed: 
 					flash('Successfully logged in as '+ email)
 					
 					#session will be updated in the later 
@@ -102,6 +113,10 @@ def login():
 def logout():
 	session['logged_in'] = False
 	return redirect(url_for('login'))
+	
+@app.route('/account/',  methods=["GET", "POST"])
+def account():
+	 return render_template('account.html', roomarray = functions.pullRooms(conn,BID))
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
@@ -159,28 +174,23 @@ def insert():
 	    
 	    
 # Search Room Options
-# to-do: add special, gym, dinninghall, rating to the filter 
+# to-do: rating to the filter check
 @app.route('/search/', methods=["GET", "POST"])
 def search():
-	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:
 		dsn = functions.get_dsn()
 		conn = functions.getConn(dsn)
+		dormarray = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
-			return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+			return render_template('search.html', dormarray = dormarray)
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
-			counter = -1
-	 		roomList = []
-			dormList = request.form.getlist("dorm")
-	 		for dorm in dormList:
-	 			counter += 1
-	 			roomList += functions.getListOfRoomsbyDorm(conn, dormList[counter])
-		
+	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").getNext())
+	
 			if not roomList:
 				flash("No Result Matches Your Request!")
-				return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
 	
@@ -188,17 +198,17 @@ def search():
 			location = request.form['location']
 			dormType = request.form['dormType']
 			roomType = request.form['roomType']
-			# Below to be added later 
-				# special = request.form['special']
-				# gym = request.form['gym']
-				# dinningHall = request.form['dinningHall']
-				# rating = request.form['rating']
+			gym = request.form['gym']
+			dinningHall = request.form['dinningHall']
+			rating = request.form['rating']
 	 
-			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType,roomType)
+			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
+			
+			#currently getting all room without ratings too
    
 			if not roomList:
 				flash("No Result Matches Your Request!")
-				return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
 
