@@ -177,13 +177,13 @@ def insert():
 # to-do: add special, gym, dinninghall, rating to the filter 
 @app.route('/search/', methods=["GET", "POST"])
 def search():
-	# check if user logged in:
+	dormarray = functions.getListOfDorms(conn)
 	if "logged_in" in session and session["logged_in"] is True:
 		dsn = functions.get_dsn()
 		conn = functions.getConn(dsn)
 		
 		if request.method == 'GET':
-			return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+			return render_template('search.html', dormarray = dormarray)
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
 			counter = -1
@@ -195,7 +195,7 @@ def search():
 		
 			if not roomList:
 				flash("No Result Matches Your Request!")
-				return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
 	
@@ -213,7 +213,7 @@ def search():
    
 			if not roomList:
 				flash("No Result Matches Your Request!")
-				return render_template('search.html', dormarray = functions.getListOfDorms(conn))
+				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
 
