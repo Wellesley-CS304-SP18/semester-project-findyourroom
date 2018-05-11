@@ -38,7 +38,7 @@ def signup():
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
-			hashed = bcypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
+			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
 			row = functions.usernameexists(conn, email)
 			
 			if row is not None: 
@@ -111,6 +111,7 @@ def login():
 	
 @app.route('/logout/')
 def logout():
+# todo: reset/clear all other values in session too
 	session['logged_in'] = False
 	return redirect(url_for('login'))
 	
