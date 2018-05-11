@@ -8,7 +8,37 @@
 
 {% block main_content %}
 
-
+<!--hi mana -->
 
 <h1>Account Details</h1>
-<h2>To sign up, please input your Wellesley email, password of choice, BID, and class year.</h2>
+<h2>On this page you can see all the rooms you have inserted and reviewed.</h2>
+
+<!-- functionality: delete and edit current reviews, look at rooms this person inserted and reviewed -->
+
+<ul>Your inserted rooms:
+	<li>
+</ul>
+
+<ul>Your reviews:
+	
+</ul>
+
+<div id="content">
+	<h1>Select Movie</h1>
+	{% for room in rooms %}
+	<li value="{{room['dormID']}}">{{movie['title']}}</li>
+	{% endfor %}
+	
+	
+
+    <form method=POST action={{url_for("select")}}>
+        <label for="menu-tt">Movies without release dates or directors:</label>
+        <select name="menu-tt">
+          <option value="none">Choose One</option>
+          <!--Fills out the drop down menu with incomplete movies-->
+          {% for movie in movies %}
+    	  <option value="{{movie['tt']}}">{{movie['title']}}</option>
+    	  {% endfor %}
+    	  </select>
+    	<input type="submit" name="submit-btn" value="Search">
+    </form>
