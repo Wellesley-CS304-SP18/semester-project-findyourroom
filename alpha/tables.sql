@@ -72,6 +72,15 @@ CREATE TABLE user(
 	-- table constraints follow                                              
        ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS userpass;
+CREATE TABLE userpass(
+	BID varchar(30) NOT NULL, 
+	hashed char(50) NOT NULL,
+	FOREIGN KEY (BID) REFERENCES user(BID) ON DELETE CASCADE
+	)
+	-- table constraints follow                                              
+       ENGINE = InnoDB;
+
 DROP TABLE IF EXISTS review;
 CREATE TABLE review(
 	dormID char(3) NOT NULL,

@@ -29,15 +29,10 @@ def emailcorrect(conn, email):
 	rows = curs.fetchall()
 	return len(rows)==1
     
-#return true if passwords match, false if not
-def passwordcorrect(conn, email, password1): 
-	'''Execute SQL statement to heck if password is correct'''
+def getBID(conn, email): 
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute("select pwd from user where email=%s",[email])
-	passwordDict = curs.fetchone() #passwordDict returns dictionary
-	password2 = passwordDict['pwd'] #extract password from passwordDict
-	return password1 == password2 #compare if user input password matches existing password for that email
-	
+	curs.execute("select BID from user where email=%s",[email])
+	return curs.fetchone() 
 	
 # Functions for signup page 
 # ================================================================
@@ -64,6 +59,18 @@ def pullReviews(conn, BID):
 	return curs.fetchall()
 
 
+def inserthashed(conn, BID, hashed):
+	'''Execute SQL statement to insert user hash password information into the table'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT into userpass(BID ,hashed) VALUES(%s,%s)',[BID, hashed])
+	
+def gethashed(conn, BID):
+	'''Execute SQL statement to get hash password'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT hashed FROM userpass WHERE BID = %s',[BID])
+	return curs.fetchone() 
+	
+	
 # Functions for insert room page 
 # ================================================================
 
