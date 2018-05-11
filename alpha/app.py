@@ -38,6 +38,7 @@ def signup():
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
+			hashed = bcypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
 			row = functions.usernameexists(conn, email)
 			
 			if row is not None: 
@@ -46,6 +47,7 @@ def signup():
 			else:
 				#signup successful, add information to table
 				functions.insertinfo(conn, email, password1, bid, classyear)
+				functions. inserthash(conn, bid, hashed)
 				
 				#session will be updated in the later version 
 				session['email'] = email
@@ -71,11 +73,20 @@ def login():
 			conn = functions.getConn(dsn)
 			email = request.form["email"]
 			password = request.form["password"]
+			bid = functions.getBID(conn, email) 
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
 			if emailsuccess:
-				passwordsuccess = functions.passwordcorrect(conn, email, password) 
-				if passwordsuccess:
+				row = functions.gethashed(conn, BID)
+				
+				if row is None:
+					# Same response as wrong password, so no information about what went wrong
+					flash('login incorrect. Try again or join')
+					return redirect( url_for('login'))
+				else:
+					hashed = row['hashed']
+					
+				if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed: 
 					flash('Successfully logged in as '+ email)
 					
 					#session will be updated in the later 
