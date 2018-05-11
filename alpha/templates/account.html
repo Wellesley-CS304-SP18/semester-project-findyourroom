@@ -10,16 +10,12 @@
 
 
 <h1>Account Details</h1>
-<h2>On this page you can see all the rooms you have reviewed. Click on a room to edit or delete your review</h2>
+<h2>On this page you can see all the rooms you have reviewed. </h2>
 
-<!-- functionality: delete and edit current reviews, look at rooms this person inserted and reviewed -->
-
-<ul>Your reviews :
+<form>
+<ul>Your reviews:
 	{% for item in roomarray %}
-		<li> {{item['dormID']}} {{item['roomNumber']}} 
-		{% endfor %}
+	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="update" name="update-btn" value="Update"> <input type="delete" name="delete-btn" value="Delete">
+	{% endfor %}
 </ul>
-
-
-
-	
+</form>
