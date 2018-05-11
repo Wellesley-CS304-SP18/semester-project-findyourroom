@@ -114,7 +114,7 @@ def logout():
 	session['logged_in'] = False
 	return redirect(url_for('login'))
 	
-@app.route('/account/',  methods=["GET", "POST"]))
+@app.route('/account/',  methods=["GET", "POST"])
 def account():
 	 return render_template('account.html', roomarray = functions.pullRooms(conn,BID))
 
@@ -174,25 +174,20 @@ def insert():
 	    
 	    
 # Search Room Options
-# to-do: add special, gym, dinninghall, rating to the filter 
+# to-do: rating to the filter check
 @app.route('/search/', methods=["GET", "POST"])
 def search():
-	dormarray = functions.getListOfDorms(conn)
 	if "logged_in" in session and session["logged_in"] is True:
 		dsn = functions.get_dsn()
 		conn = functions.getConn(dsn)
+		dormarray = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
 			return render_template('search.html', dormarray = dormarray)
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
-			counter = -1
-	 		roomList = []
-			dormList = request.form.getlist("dorm")
-	 		for dorm in dormList:
-	 			counter += 1
-	 			roomList += functions.getListOfRoomsbyDorm(conn, dormList[counter])
-		
+	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").getNext())
+	
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)

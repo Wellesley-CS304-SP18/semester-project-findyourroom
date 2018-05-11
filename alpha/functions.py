@@ -117,13 +117,12 @@ def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
 # Functions for search room page 
 # ================================================================
 
-# To-do : add average rating to the filter
 def getListOfRoomsbyDorm(conn, dormID):
     '''Execute SQL statement to get all the list of rooms based on dormID'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
     return curs.fetchall()
-
+    
 # To-do : add special, gym, dinninghall and rating to the filter 
 def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall,rating): 
     '''Execute SQL statement to get all the list of rooms based on user preference'''
