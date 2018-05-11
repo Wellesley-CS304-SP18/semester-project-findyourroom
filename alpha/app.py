@@ -207,7 +207,9 @@ def search():
 			dinningHall = request.form['dinningHall']
 			rating = request.form['rating']
 	 
-			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall)
+			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
+			
+			#currently getting all room without ratings too
    
 			if not roomList:
 				flash("No Result Matches Your Request!")
