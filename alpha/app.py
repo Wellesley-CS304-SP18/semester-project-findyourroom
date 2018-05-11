@@ -7,7 +7,7 @@
 import dbconn2
 import os,sys,random, datetime
 import functions, bcrypt
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
@@ -50,7 +50,7 @@ def signup():
 				#session will be updated in the later version 
 				session['email'] = email
 				session['logged_in'] = True
-				session['BID'] = BID
+				session['BID'] = bid
 				
 				#lead user back to home page or to search page
 				return redirect(url_for('insert',email=email))
@@ -81,8 +81,8 @@ def login():
 					#session will be updated in the later 
 					session['email'] = email
 					session['logged_in'] = True
-					session['BID'] = BID
-					
+					bidRow = functions.getBID(conn, email, password)					
+					session['BID'] = bidRow['BID']
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
@@ -207,12 +207,39 @@ def search():
 		return redirect( url_for('login'))
 
 # Review  Room Info                                                                                                            
-@app.route('/review/', methods=["GET", "POST"])
-def review():
-	# check if user logged in:                                                                                            
+@app.route('/review/<dormID>/<roomNumber>', methods=["GET", "POST"])
+def review(dormID, roomNumber):
+	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		print "hi"
+		conn = connFromDSN(functions)
+                data = dataFromDSN(functions)
+		if request.method == "GET":
+			return render_template('review.html')
+		if request.method == "POST":
+			# get review from form
+			room_rating = request.form['stars']
+			comment = request.form['comment']
+			pro_or_con = request.form['stars2']
+			print "session: ", session['BID']['BID']
+			BID = session['BID']['BID']#how many times am i using this? may not need it as var  
+			
+			roomMsg = dormID +" " +roomNumber
+			# check if review exists in database by bid
+			row = functions.reviewExists(conn, dormID, roomNumber, BID)
+			if row is not None: 
 
+				functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+				flash ("You have updated your review for " + roomMsg)
+				# next, give them option to update review
+				return render_template('review.html')
+			# insert review into database
+			else: 
+				print "dormId: ", dormID
+				print "roomNumber", roomNumber
+				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+				# flash to tell review succesfully written to database
+				flash ("Review succesfully written for " + roomMsg)
+				return render_template('review.html')
 
 # Function to get data from conn
 # ================================================================                          

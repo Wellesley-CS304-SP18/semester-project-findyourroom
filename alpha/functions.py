@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='rhuang_db'):
+def get_dsn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -37,8 +37,12 @@ def passwordcorrect(conn, email, password1):
 	passwordDict = curs.fetchone() #passwordDict returns dictionary
 	password2 = passwordDict['pwd'] #extract password from passwordDict
 	return password1 == password2 #compare if user input password matches existing password for that email
-	
-	
+# get bid from email and password, we have already checked that email & password exists/is correct
+def getBID(conn, email, password):
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute("select BID from user where email=%s and pwd = %s", [email, password])
+    row = curs.fetchone()
+    return row['BID']
 # Functions for signup page 
 # ================================================================
 
@@ -79,25 +83,36 @@ def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
 #     '''Execute SQL statement to update avgRating'''
 #     curs = conn.cursor(MySQLdb.cursors.DictCursor)
 #     curs.execute('INSERT INTO movie VALUES avgRating=%s WHERE dormID=%s AND roomNumber = %s',[avgRating,RID,RoomNum])
-#  
+  
 # check if the review table associated with the room exists already 
-# def reviewExists(conn, dormID, roomNum, review, pros, cons):
-#     '''Execute SQL statement to check if the review for that room exists'''
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('SELECT * FROM review WHERE dormID=%s AND roomNumber=%s',[dormID,roomNum])
-#     return curs.fetchone()
-# 
-# update review 
-# def updateReview(conn, dormID, roomNum, review):
-#     '''Execute SQL statement to add Review'''
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('INSERT INTO review VAlUES review=%s,pros=%s,cons=%s WHERE dormID=%s AND roomNumber = %s',[review, pros, cons, RID, RoomNum])
-# 
+def reviewExists(conn, dormID, roomNum, BID):
+    '''Execute SQL statement to check if the review for that room exists'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('SELECT * FROM review WHERE dormID=%s AND roomNumber=%s AND BID = %s',[dormID,roomNum, BID])
+    return curs.fetchone()
+ 
+# insert review 
+def insertReview(conn, dormID, roomNumber, comment, rating, BID):
+     '''Execute SQL statement to add Review'''
+     curs = conn.cursor(MySQLdb.cursors.DictCursor)
+     # add pros and cons later
+     curs.execute('INSERT INTO review (dormID, roomNumber, BID, rating, comment) VALUES (%s, %s, %s, %s, %s)', [dormID, roomNumber, comment, rating, BID]);
+
+# update review, add photos functionality
+def updateReview(conn, dormID, roomNumber, comment, rating, BID):
+    '''Execute SQL statement to update review'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('UPDATE review SET dormID=%s, roomNumber=%s, BID=%s, comment=%s, rating=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
+
+
 # add photos 
 # def addPhotos(conn, dormID, roomNumber, size, path):
 #     '''Execute SQL statement to update images associated with the room'''
 #     curs = conn.cursor(MySQLdb.cursors.DictCursor)
 #     curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE dormID=%s AND roomNumber = %s',[size, path, dormID, roomNumber]) 
+
+
+
 
 # Functions for search room page 
 # ================================================================

@@ -11,7 +11,7 @@
 <h1>Search Result</h1>
 
 	{% for item in roomArray %}
-   		<li><a href="{{url_for('review', dormID = item['dormID'], roomNumber = item['roomNumber'])}}">{{item['dormName']}} {{item['roomNumber']}}</li>
+   		<li>{{item['dormName']}} {{item['roomNumber']}}</li>
    	{% endfor %}
 
 
