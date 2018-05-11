@@ -117,10 +117,10 @@ def getListOfRoomsbyDorm(conn, dormID):
     return curs.fetchall()
 
 # To-do : add special, gym, dinninghall and rating to the filter 
-def getListOfRoomsbyFilter(conn, location, dormType, roomType):
+def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall): 
     '''Execute SQL statement to get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
+    curs.execute('SELECT dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND gym =%s AND dinningHall =%s', [location, dormType, roomType, gym, dinnignHall])
     return curs.fetchall()
 
 def getListOfDorms(conn):
