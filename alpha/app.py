@@ -232,19 +232,22 @@ def review(dormID, roomNumber):
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
 			print "session: ", session['BID']['BID']
-			BID = session['BID']['BID']#how many times am i using this? may not need it as var  
-			
-			roomMsg = dormID +" " +roomNumber
-			# check if review exists in database by bid
-			row = functions.reviewExists(conn, dormID, roomNumber, BID)
-			if row is not None: 
-
-				functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
-				flash ("You have updated your review for " + roomMsg)
-				# next, give them option to update review
-				return render_template('review.html')
+			BID = session['BID']['BID']#how many times am i using this? may not need it as var
+			file = request.files['file']
+        	sfname = 'static/images/'+str(secure_filename(f.filename))
+        	file.save(sfname)
+        	
+        	roomMsg = dormID +" " +roomNumber
+        	# check if review exists in database by bid
+        	row = functions.reviewExists(conn, dormID, roomNumber, BID)
+        	
+        	if row is not None:
+        		functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+        		flash ("You have updated your review for " + roomMsg)
+        		# next, give them option to update review
+        		return render_template('review.html')
 			# insert review into database
-			else: 
+        	else: 
 				print "dormId: ", dormID
 				print "roomNumber", roomNumber
 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
