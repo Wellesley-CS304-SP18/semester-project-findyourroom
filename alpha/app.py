@@ -131,6 +131,7 @@ def account():
 		print session['BID']
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	else:
+		#START HERE. IT"S NOT BEING REALIZED WHEN DELETE BUTTON IS CLICKED 
 		if request.form['submit']=='delete':
 			print 'you clicked on delete'
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
