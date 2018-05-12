@@ -36,6 +36,7 @@ def getBID(conn, email):
     row = curs.fetchone()    
     return row['BID']
 
+
 # Functions for signup page 
 # ================================================================
 

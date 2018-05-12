@@ -97,8 +97,11 @@ def login():
 					#session will be updated in the later 
 					session['email'] = email
 					session['logged_in'] = True
-					bidRow = functions.getBID(conn, email, password)					
-					session['BID'] = bidRow['BID']
+					bidRow = functions.getBID(conn, email)	
+					print bidRow 				
+					#session['BID'] = bidRow['BID']
+					session['BID'] = bidRow
+					
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
