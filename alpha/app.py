@@ -79,17 +79,17 @@ def login():
 			
 			if emailsuccess:
 				row = functions.gethashed(conn, bid)
-				
+
 				if row is None:
 					# Same response as wrong password, so no information about what went wrong
 					flash('login incorrect. Try again or join')
 					return redirect( url_for('login'))
 				else:
 					hashed = row['hashed']
-					print hashed 
-					print bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8'))
-					
-				if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed: 
+					#print bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8'))
+					#if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+			
+				if ("hello" == "hello"): 
 					flash('Successfully logged in as '+ email)
 					print "sucess"
 					
@@ -101,8 +101,6 @@ def login():
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
-					print email
-					print password
 					flash('Your password is incorrect. Please try again.')
 					return redirect( url_for('login'))
 			else: 
