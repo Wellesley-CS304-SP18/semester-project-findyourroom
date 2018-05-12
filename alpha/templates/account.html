@@ -15,7 +15,7 @@
 <form>
 <ul>Your reviews:
 	{% for item in roomarray %}
-	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="update" name="update" value="Update Review"> <input type="delete" name="delete" value="Delete Review">
+	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="submit" name="submit" value="update"> <input type="submit" name="submit" value="delete">
 	{% endfor %}
 </ul>
 </form>

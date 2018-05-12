@@ -130,17 +130,23 @@ def account():
 	if request.method == "GET":
 		print session['BID']
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-	
 	else:
-		dormID = request.form['dormID'] #will these two request.form lines work? 
-		roomNumber = request.form['roomNumber']
-		post_id = request.form.get('delete')
+		if request.form['submit']=='delete':
+			print 'you clicked on delete'
+			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
+			flash('Room was deleted successfully')
+			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+		
+	
+		#dormID = request.form['dormID'] #will these two request.form lines work? 
+		#roomNumber = request.form['roomNumber']
+		#post_id = request.form.get('delete')
 		#myBID= functions.getBID(conn,email,password) maybe use this instead of session["BID"] even though that SHOULD be universal
-    	if post_id is not None:
-    		functions.delete(conn, session['BID'],dormID,roomNumber)
-        	return render_template('account.html')
+    	#if post_id is not None:
+    	#	functions.delete(conn, session['BID'],dormID,roomNumber)
+        #	return render_template('account.html')
 	 
-#paste deleted stuff here
+#paste deleted stuff for update here
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
