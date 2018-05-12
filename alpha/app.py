@@ -91,7 +91,7 @@ def login():
 					
 				if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed: 
 					flash('Successfully logged in as '+ email)
-					print "sucess"
+					print "success"
 					
 					#session will be updated in the later 
 					session['email'] = email
@@ -116,11 +116,27 @@ def login():
 	
 @app.route('/logout/')
 def logout():
-
 	session['logged_in'] = False
 	session.clear()
 	return render_template('login.html')
 	
+	
+@app.route('/account/', methods=["GET","POST"])
+def account():
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	if request.method == "GET":
+		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+	
+	else:
+		dormID = request.form['dormID'] #will these two request.form lines work? 
+		roomNumber = request.form['roomNumber']
+		post_id = request.form.get('delete')
+		#myBID= functions.getBID(conn,email,password) maybe use this instead of session["BID"] even though that SHOULD be universal
+    	if post_id is not None:
+    		functions.delete(conn, session['BID'],dormID,roomNumber)
+        	return render_template('account.html')
+	 
 #paste deleted stuff here
 
 # Insert Room Info
