@@ -15,7 +15,10 @@
 <form>
 <ul>Your reviews:
 	{% for item in roomarray %}
-	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="update" name="update-btn" value="Update"> <input type="delete" name="delete-btn" value="Delete">
+	<li> {{item['dormID']}} {{item['roomNumber']}} <button onclick="window.location.href='/update/'">Update</button> <input type="delete" name="delete" value="delete">
 	{% endfor %}
 </ul>
 </form>
+
+<!-- make the update button lead to update page but filled already with the information of the room the user clicked on -->
+<!-- make delete button execute a query that removes that review from the review table-->

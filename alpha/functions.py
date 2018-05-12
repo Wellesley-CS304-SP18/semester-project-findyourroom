@@ -57,8 +57,12 @@ def insertinfo(conn, email, password, bid, classyear):
 # ================================================================
 def pullReviews(conn, BID):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT dormID, roomNumber, rating, comment, reviewtype FROM review if BID=%s', [BID])
+	curs.execute('SELECT dormID, roomNumber FROM review if BID=%s', [BID])
 	return curs.fetchall()
+
+def deleteReview(conn, BID, dormID, roomNumber):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('DELETE FROM review WHERE dormID=%s, AND roomNumber=%s, AND BID=%s', [dormID, roomNumber, BID])
 
 
 def inserthashed(conn, BID, hashed):

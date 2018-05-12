@@ -114,11 +114,28 @@ def login():
 def logout():
 # todo: reset/clear all other values in session too
 	session['logged_in'] = False
-	return redirect(url_for('login'))
+	return render_template('login.html')
 	
-@app.route('/account/',  methods=["GET", "POST"])
+@app.route('/account/', methods=["GET","POST"])
 def account():
-	 return render_template('account.html', roomarray = functions.pullRooms(conn,BID))
+	if request.method = "GET":
+		return render_template('account.html', roomarray = functions.pullReviews(conn,BID))
+	
+	else:
+		dormID = request.form['dormID'] #will these two request.form lines work? 
+		roomNumber = request.form['roomNumber']
+		post_id = request.form.get('delete')
+		#myBID= functions.getBID(conn,email,password) maybe use this instead of session["BID"] even though that SHOULD be universal
+    	if post_id is not None:
+    		functions.delete(conn, session["BID"],dormID,roomNumber)
+        	return render_template('account.html')
+	 
+@app.route('/update/',  methods=["GET","POST"])
+def account():
+	if request.method == "GET":
+		return render_template('update.html')
+	else:
+	 
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
