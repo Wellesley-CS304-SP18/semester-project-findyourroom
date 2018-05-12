@@ -58,7 +58,7 @@ def insertinfo(conn, email, password, bid, classyear):
 # ================================================================
 def pullReviews(conn, BID):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT dormID, roomNumber FROM review if BID=%s', [BID])
+	curs.execute('SELECT dormID, roomNumber FROM review where BID=%s', [BID])
 	return curs.fetchall()
 
 def deleteReview(conn, BID, dormID, roomNumber):
