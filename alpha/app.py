@@ -89,6 +89,7 @@ def login():
 					#print bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8'))
 					#if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed:
 			
+				#just to be able to login
 				if ("hello" == "hello"): 
 					flash('Successfully logged in as '+ email)
 					print "success"
