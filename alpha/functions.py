@@ -30,9 +30,9 @@ def emailcorrect(conn, email):
 	return len(rows)==1
     
 # get bid from email and password, we have already checked that email & password exists/is correct
-def getBID(conn, email, password):
+def getBID(conn, email):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select BID from user where email=%s and pwd = %s", [email, password])
+    curs.execute("select BID from user where email=%s", [email])
     row = curs.fetchone()    
     return row['BID']
 
@@ -60,19 +60,17 @@ def pullReviews(conn, BID):
 	curs.execute('SELECT dormID, roomNumber, rating, comment, reviewtype FROM review if BID=%s', [BID])
 	return curs.fetchall()
 
-
-def inserthashed(conn, BID, hashed):
+def inserthash(conn, BID, hashed):
 	'''Execute SQL statement to insert user hash password information into the table'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into userpass(BID ,hashed) VALUES(%s,%s)',[BID, hashed])
-	
+
 def gethashed(conn, BID):
 	'''Execute SQL statement to get hash password'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT hashed FROM userpass WHERE BID = %s',[BID])
 	return curs.fetchone() 
-	
-	
+		
 # Functions for insert room page 
 # ================================================================
 
@@ -90,13 +88,11 @@ def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
 # Functions for inserting user review information 
 # ================================================================
 
-# update avgRating 
-# Note : make sure to compute avgRating before putting in argument 
-# def updateAvgRating(conn, dormID, RoomNum, avgRating):
-#     '''Execute SQL statement to update avgRating'''
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('INSERT INTO movie VALUES avgRating=%s WHERE dormID=%s AND roomNumber = %s',[avgRating,RID,RoomNum])
-  
+def updateRating(conn, rating, dormID, roomNumber):
+    '''Execute SQL statement to recalculate a movie's rating'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('UPDATE room SET avgRating = (SELECT AVG(rating) FROM review WHERE review.dormID=%s AND review.roomNumber=%s) WHERE room.dormID=%s AND room.roomNuber =%s',[dormID, roomNumber, dormID, roomNumbe])
+ 
 # check if the review table associated with the room exists already 
 def reviewExists(conn, dormID, roomNum, BID):
     '''Execute SQL statement to check if the review for that room exists'''
@@ -125,6 +121,20 @@ def addPhotos(conn, dormID, roomNumber, BID, path):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path) VALUES (%s, %s, %s, %s)',[dormID, roomNumber, BID, path]) 
    
+   
+# Functions for displaying roominfo
+# ================================================================
+def getroomInfo(conn, dormID, roomNumber):
+    '''Execute SQL statement to get the current average rating of a movie'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('SELECT roomType, avgRating, comment, reviewType FROM review INNER JOIN room on review.dormID = room.dormID AND review.roomNumber = room.roomNumber WHERE review.dormID=%s AND review.roomNumber=%s', [dormID, roomNumber])
+    return curs.fetchall()
+
+def getroomPhoto(conn, dormID, roomNumber):
+    '''Execute SQL statement to get the current average rating of a movie'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('SELECT path FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
+    return curs.fetchall()
 
 
 # Functions for search room page 

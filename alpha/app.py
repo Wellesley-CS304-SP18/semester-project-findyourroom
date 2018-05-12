@@ -26,7 +26,7 @@ def signup():
 	if request.method == "GET":
 		return render_template('signup.html')
 	else:	
-		try:
+		#try:
 			#get user registration info
 			dsn = functions.get_dsn()
 			conn = functions.getConn(dsn)
@@ -57,9 +57,9 @@ def signup():
 				
 				#lead user back to home page or to search page
 				return redirect(url_for('insert',email=email))
-		except Exception as err:
-			flash('form submission error '+str(err))
-			return redirect( url_for('signup') )
+		# except Exception as err:
+# 			flash('form submission error '+str(err))
+# 			return redirect( url_for('signup') )
         	
 
 #Route for signing in a user
@@ -78,7 +78,7 @@ def login():
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
 			if emailsuccess:
-				row = functions.gethashed(conn, BID)
+				row = functions.gethashed(conn, bid)
 				
 				if row is None:
 					# Same response as wrong password, so no information about what went wrong
@@ -86,9 +86,12 @@ def login():
 					return redirect( url_for('login'))
 				else:
 					hashed = row['hashed']
+					print hashed 
+					print bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8'))
 					
 				if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed: 
 					flash('Successfully logged in as '+ email)
+					print "sucess"
 					
 					#session will be updated in the later 
 					session['email'] = email
@@ -98,6 +101,8 @@ def login():
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
+					print email
+					print password
 					flash('Your password is incorrect. Please try again.')
 					return redirect( url_for('login'))
 			else: 
@@ -107,8 +112,7 @@ def login():
 		except Exception as err:
 			flash('form submission error ' + str(err))
 			return redirect( url_for('login') )       
-	
-	
+
 	
 @app.route('/logout/')
 def logout():
@@ -228,7 +232,7 @@ def review(dormID, roomNumber):
 		if request.method == "GET":
 			return render_template('review.html')
 		if request.method == "POST":
-			print "hello"
+
 			# get review from form
 			room_rating = request.form['stars']
 			comment = request.form['comment']
@@ -241,7 +245,7 @@ def review(dormID, roomNumber):
         	#if user uploaded an image save them into the photo folder
         	if request.files['pic'] is not None:
         		file = request.files['pic']
-        		sfname = 'static/images/'+str(secure_filename(file.filename))
+        		sfname = '../static/images/'+str(secure_filename(file.filename))
         		file.save(sfname)
         		functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
         		flash ("Photos succesfully updated " + roomMsg)
@@ -251,6 +255,8 @@ def review(dormID, roomNumber):
          	
          	if row is not None:
          		functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+         		#update the avgrating of the room. haven't tested yet
+         		functions.updateRating(conn, room_rating, dormID,roomNumber)
          		flash ("You have updated your review for " + roomMsg)
          		# next, give them option to update review
          		return render_template('review.html')
@@ -262,7 +268,39 @@ def review(dormID, roomNumber):
  				# flash to tell review succesfully written to database
  				flash ("Review succesfully written for " + roomMsg)
 				return render_template('review.html')
+	else: 
+		flash("Please log in!")
+		return redirect( url_for('login'))
 
+# Room Info page                                                                                                           
+@app.route('/room/<dormID>/<roomNumber>', methods=["GET", "POST"])
+def roomInfo(dormID, roomNumber):
+	# check if user logged in:                                       
+	if "logged_in" in session and session["logged_in"] is True:
+		conn = connFromDSN(functions)
+        data = dataFromDSN(functions)
+        if request.method == "GET":
+			rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
+			rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
+			
+			print rowInfo
+			print rowPhoto
+			print rowPhoto[0]
+			
+			if rowInfo is not None:
+				if rowPhoto is not None:
+					return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber)
+				else:
+					flash ("Currently no photo entry for this room")
+					return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
+			else:
+				flash ("Currently no review for this room")
+				return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
+	else: 
+		flash("Please log in!")
+		return redirect( url_for('login'))
+         		
+			
 # Function to get data from conn
 # ================================================================                          
 
