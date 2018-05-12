@@ -8,6 +8,7 @@ import dbconn2
 import os,sys,random, datetime
 import functions, bcrypt
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup
+from werkzeug import secure_filename
 app = Flask(__name__)
 app.secret_key = "secret_key"
 
@@ -227,32 +228,39 @@ def review(dormID, roomNumber):
 		if request.method == "GET":
 			return render_template('review.html')
 		if request.method == "POST":
+			print "hello"
 			# get review from form
 			room_rating = request.form['stars']
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
 			print "session: ", session['BID']['BID']
 			BID = session['BID']['BID']#how many times am i using this? may not need it as var
-			file = request.files['file']
-        	sfname = 'static/images/'+str(secure_filename(f.filename))
-        	file.save(sfname)
-        	
+			
         	roomMsg = dormID +" " +roomNumber
-        	# check if review exists in database by bid
-        	row = functions.reviewExists(conn, dormID, roomNumber, BID)
         	
-        	if row is not None:
-        		functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
-        		flash ("You have updated your review for " + roomMsg)
-        		# next, give them option to update review
-        		return render_template('review.html')
+        	#if user uploaded an image save them into the photo folder
+        	if request.files['pic'] is not None:
+        		file = request.files['pic']
+        		sfname = 'static/images/'+str(secure_filename(file.filename))
+        		file.save(sfname)
+        		functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+        		flash ("Photos succesfully updated " + roomMsg)
+        	
+         	# check if review exists in database by bid
+         	row = functions.reviewExists(conn, dormID, roomNumber, BID)
+         	
+         	if row is not None:
+         		functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+         		flash ("You have updated your review for " + roomMsg)
+         		# next, give them option to update review
+         		return render_template('review.html')
 			# insert review into database
-        	else: 
-				print "dormId: ", dormID
-				print "roomNumber", roomNumber
-				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
-				# flash to tell review succesfully written to database
-				flash ("Review succesfully written for " + roomMsg)
+         	else: 
+ 				print "dormId: ", dormID
+ 				print "roomNumber", roomNumber
+ 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+ 				# flash to tell review succesfully written to database
+ 				flash ("Review succesfully written for " + roomMsg)
 				return render_template('review.html')
 
 # Function to get data from conn

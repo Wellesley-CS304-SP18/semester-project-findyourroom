@@ -119,12 +119,12 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
 
 
 # add photos 
-# def addPhotos(conn, dormID, roomNumber, size, path):
-#     '''Execute SQL statement to update images associated with the room'''
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('INSERT INTO pic VALUES size = %s, path = %s, WHERE dormID=%s AND roomNumber = %s',[size, path, dormID, roomNumber]) 
-
-
+#do i need size here?
+def addPhotos(conn, dormID, roomNumber, BID, path):
+	'''Execute SQL statement to update images associated with the room'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path) VALUES (%s, %s, %s, %s)',[dormID, roomNumber, BID, path]) 
+   
 
 
 # Functions for search room page 
