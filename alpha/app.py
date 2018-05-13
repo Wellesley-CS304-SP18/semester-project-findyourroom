@@ -116,7 +116,7 @@ def login():
 def logout():
 	session['logged_in'] = False
 	session.clear()
-	return render_template('login.html')
+	return render_template('logout.html')
 	
 	
 @app.route('/account/', methods=["GET","POST"])
@@ -127,9 +127,8 @@ def account():
 		print session['BID']
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	elif request.method == "POST":
-		print "hi"
-		#START HERE. IT"S NOT BEING REALIZED WHEN DELETE BUTTON IS CLICKED 
 		if request.form['submit']=='delete':
+			
 			print 'you clicked on delete'
 			#if i finally get that working then will probably get error on not finding dormID or roomNUmber so then test this
 			dormID = request.form['dormID'] #will these two request.form lines work? 
@@ -141,13 +140,7 @@ def account():
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 		
 	
-		#dormID = request.form['dormID'] #will these two request.form lines work? 
-		#roomNumber = request.form['roomNumber']
-		#post_id = request.form.get('delete')
-		#myBID= functions.getBID(conn,email,password) maybe use this instead of session["BID"] even though that SHOULD be universal
-    	#if post_id is not None:
-    	#	functions.delete(conn, session['BID'],dormID,roomNumber)
-        #	return render_template('account.html')
+		
 	 
 #paste deleted stuff for update here
 
