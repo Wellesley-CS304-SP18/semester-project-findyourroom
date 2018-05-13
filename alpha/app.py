@@ -129,18 +129,35 @@ def account():
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
-			
+			print request.form
 			print 'you clicked on delete'
-			#if i finally get that working then will probably get error on not finding dormID or roomNUmber so then test this
-			dormID = request.form['dormID'] #will these two request.form lines work? 
+			dormID = request.form['dormID']  
 			roomNumber = request.form['roomNumber']
 			print dormID
 			print roomNumber
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
-			flash('Room was deleted successfully')
+			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+		if request.form['submit'] == 'update':
+			dormID = request.form['dormID']  
+			roomNumber = request.form['roomNumber']
+			session['dormID']=dormID
+			session['roomNumber']=roomNumber
+			return redirect( url_for('update'))
 	 
-#paste deleted stuff for update here
+@app.route('/update/', methods=["GET","POST"])
+def update():
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	if request.method == "GET":
+		return render_template('update.html', review = functions.updateReview(conn, session['BID'], session['dormID'],session['roomNumber'])
+	else if request.method == "POST":
+		room_rating = request.form['stars']
+		comment = request.form['comment']
+		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+		flash('Your Review has been updated')
+		return redirect( url_for('account'))
+
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])

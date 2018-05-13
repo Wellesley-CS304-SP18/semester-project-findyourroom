@@ -65,6 +65,11 @@ def deleteReview(conn, BID, dormID, roomNumber):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('DELETE FROM review WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
 
+def updateReview(conn, BID, dormID, roomNumber):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT dormID, roomNumber, rating, comment FROM review WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	return curs.fetchone()
+
 def inserthashed(conn, BID, hashed):
 	'''Execute SQL statement to insert user hash password information into the table'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
