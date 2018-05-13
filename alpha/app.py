@@ -75,10 +75,10 @@ def login():
 			conn = functions.getConn(dsn)
 			email = request.form["email"]
 			password = request.form["password"]
-			bid = functions.getBID(conn, email) 
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
-			if emailsuccess:
+			if functions.emailcorrect(conn, email) :
+				bid = functions.getBID(conn, email) 
 				row = functions.gethashed(conn, bid)
 
 				if row is None:
@@ -107,8 +107,9 @@ def login():
 				#the email does not exist
 				flash('The email you entered does not exist. Please try again.')
 				return redirect( url_for('login'))
+		
 		except Exception as err:
-			flash('form submission error ' + str(err))
+ 			flash('form submission error ' + str(err))
 			return redirect( url_for('login') )       
 
 	
@@ -138,9 +139,6 @@ def account():
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
 			flash('Room was deleted successfully')
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-		
-	
-		
 	 
 #paste deleted stuff for update here
 
@@ -233,9 +231,7 @@ def search():
 			rating = request.form['rating']
 	 
 			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
-			
-			#currently getting all room without ratings too
-   
+			   
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)
@@ -246,6 +242,9 @@ def search():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 
+#I think we should check if that user has alraedy put a review for that room.
+# if so then edit that page instead of uploading a new one?
+# is it repetitive though (having 2 ways of editing the comment - one throug the account and one throuhg this?)
 # Review  Room Info                                                                                                            
 @app.route('/review/<dormID>/<roomNumber>', methods=["GET", "POST"])
 def review(dormID, roomNumber):
@@ -283,11 +282,9 @@ def review(dormID, roomNumber):
          		functions.updateRating(conn, room_rating, dormID,roomNumber)
          		flash ("You have updated your review for " + roomMsg)
          		# next, give them option to update review
-         		return render_template('review.html')
+        
 			# insert review into database
          	else: 
- 				print "dormId: ", dormID
- 				print "roomNumber", roomNumber
  				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
  				# flash to tell review succesfully written to database
  				flash ("Review succesfully written for " + roomMsg)
