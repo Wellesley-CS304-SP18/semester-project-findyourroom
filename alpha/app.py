@@ -263,8 +263,8 @@ def review(dormID, roomNumber):
 			room_rating = request.form['stars']
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
-			print "session: ", session['BID']['BID']
-			BID = session['BID']['BID']#how many times am i using this? may not need it as var
+			print "session: ", session['BID']
+			BID = session['BID']#how many times am i using this? may not need it as var
 			
         	roomMsg = dormID +" " +roomNumber
         	
