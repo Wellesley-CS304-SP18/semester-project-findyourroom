@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS review;
 CREATE TABLE review(
 	dormID char(3) NOT NULL,
 	roomNumber char(3) NOT NULL,
-	BID char(9) NOT NULL,
+	BID char(8) NOT NULL,
 	rating tinyint(5) NOT NULL, 
 	comment varchar(200) NOT NULL,
 	reviewType enum("pro", "con") NOT NULL, 
@@ -99,7 +99,7 @@ DROP TABLE IF EXISTS photo;
 CREATE TABLE photo(
 	dormID char(3) NOT NULL,
 	roomNumber char(3) NOT NULL,
-	BID char(9) NOT NULL,
+	BID char(8) NOT NULL,
 	path varchar(100) NOT NULL,
 	FOREIGN KEY (dormID) REFERENCES dorm(dormID) ON DELETE CASCADE,
 	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber) ON DELETE CASCADE, 
