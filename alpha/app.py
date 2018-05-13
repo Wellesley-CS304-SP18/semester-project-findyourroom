@@ -48,7 +48,7 @@ def signup():
 			else:
 				#signup successful, add information to table
 				functions.insertinfo(conn, email, password1, bid, classyear)
-				functions. inserthash(conn, bid, hashed)
+				functions.inserthashed(conn, bid, hashed)
 				
 				#session will be updated in the later version 
 				session['email'] = email
@@ -86,15 +86,10 @@ def login():
 					return redirect( url_for('login'))
 				else:
 					hashed = row['hashed']
-					#print bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8'))
-					#if bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')) == hashed:
-			
-				#just to be able to login
-				if ("hello" == "hello"): 
-					flash('Successfully logged in as '+ email)
-					print "success"
 					
-					#session will be updated in the later 
+				#Checks if the password matches
+				if ((bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')))[:50]) == hashed:
+					flash('Successfully logged in as '+ email)
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
