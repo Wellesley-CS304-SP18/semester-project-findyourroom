@@ -130,10 +130,16 @@ def account():
 	if request.method == "GET":
 		print session['BID']
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-	else:
+	elif request.method == "POST":
+		print "hi"
 		#START HERE. IT"S NOT BEING REALIZED WHEN DELETE BUTTON IS CLICKED 
 		if request.form['submit']=='delete':
 			print 'you clicked on delete'
+			#if i finally get that working then will probably get error on not finding dormID or roomNUmber so then test this
+			dormID = request.form['dormID'] #will these two request.form lines work? 
+			roomNumber = request.form['roomNumber']
+			print dormID
+			print roomNumber
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
 			flash('Room was deleted successfully')
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
