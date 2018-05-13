@@ -217,11 +217,14 @@ def search():
 		
 		if request.method == 'GET':
 			return render_template('search.html', dormarray = dormarray)
-	
+		
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
+			dormList = request.form.getlist("dorm")
 			roomList =[]
-	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").next())
-	
+			for dorm in dormList:
+				if dorm is not None:
+					roomList += functions.getListOfRoomsbyDorm(conn, dorm)
+			
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)
