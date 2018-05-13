@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='mmuchaku_db'):
+def get_dsn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -64,7 +64,6 @@ def pullReviews(conn, BID):
 def deleteReview(conn, BID, dormID, roomNumber):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('DELETE FROM review WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
-
 
 def inserthashed(conn, BID, hashed):
 	'''Execute SQL statement to insert user hash password information into the table'''

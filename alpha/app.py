@@ -26,7 +26,7 @@ def signup():
 	if request.method == "GET":
 		return render_template('signup.html')
 	else:	
-		#try:
+		try:
 			#get user registration info
 			dsn = functions.get_dsn()
 			conn = functions.getConn(dsn)
@@ -56,10 +56,11 @@ def signup():
 				session['BID'] = bid
 				
 				#lead user back to home page or to search page
-				return redirect(url_for('insert',email=email))
-		# except Exception as err:
-# 			flash('form submission error '+str(err))
-# 			return redirect( url_for('signup') )
+				return redirect(url_for('insert',email=email))		
+			
+		except Exception as err:
+ 			flash('form submission error '+str(err))
+ 			return redirect( url_for('signup') )
         	
 
 #Route for signing in a user
@@ -218,7 +219,8 @@ def search():
 			return render_template('search.html', dormarray = dormarray)
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
-	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").getNext())
+			roomList =[]
+	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").next())
 	
 			if not roomList:
 				flash("No Result Matches Your Request!")
@@ -263,15 +265,15 @@ def review(dormID, roomNumber):
 			room_rating = request.form['stars']
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
-			print "session: ", session['BID']['BID']
-			BID = session['BID']['BID']#how many times am i using this? may not need it as var
+			print "session: ", session['BID']
+			BID = session['BID']#how many times am i using this? may not need it as var
 			
         	roomMsg = dormID +" " +roomNumber
         	
         	#if user uploaded an image save them into the photo folder
         	if request.files['pic'] is not None:
         		file = request.files['pic']
-        		sfname = '../static/images/'+str(secure_filename(file.filename))
+        		sfname = 'images/'+str(secure_filename(file.filename))
         		file.save(sfname)
         		functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
         		flash ("Photos succesfully updated " + roomMsg)
