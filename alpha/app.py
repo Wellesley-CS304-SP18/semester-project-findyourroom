@@ -267,6 +267,8 @@ def review(dormID, roomNumber):
 	if "logged_in" in session and session["logged_in"] is True:
 		conn = connFromDSN(functions)
         data = dataFromDSN(functions)
+        dormarray = functions.getListOfDorms(conn)
+        
         if request.method == "GET":
         	return render_template('review.html')
         else:
@@ -294,13 +296,13 @@ def review(dormID, roomNumber):
 				functions.updateRating(conn, room_rating, dormID,roomNumber)
 				flash ("You have updated your review for " + roomMsg)
          		# next, give them option to update review
-         		return render_template('review.html')
+         		return render_template('search.html', dormarray = dormarray)
         
 			# else insert a new review entry into database
 			else:
 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 				flash ("Review succesfully written for " + roomMsg)	
-				return render_template('review.html')
+				return render_template('search.html', dormarray = dormarray)
 
 	else: 
  		flash("Please log in!")
