@@ -7,7 +7,7 @@
 import dbconn2
 import os,sys,random, datetime
 import functions, bcrypt
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup, send_from_directory
 from werkzeug import secure_filename
 app = Flask(__name__)
 app.secret_key = "secret_key"
@@ -305,12 +305,18 @@ def review(dormID, roomNumber):
 				flash('Please fill in all the required form : Rating and Comment')
 				return render_template('review.html')
 		
+			print 'hello'
 			#if user uploaded an image save them into the photo folder
 			photofile = request.files['pic']
-			if 'pic' not in request.files:
+			print '0'
+			print photofile
+			print '1'
+			if 'pic' in request.files:
 				file = request.files['pic']
-				sfname = 'images/'+str(secure_filename(file.filename))
+				sfname =  secure_filename(file.filename)
 				file.save(sfname)
+				print sfname
+				print "adding photo"
 				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
 		
 			# check if review exists in database by bid
@@ -329,6 +335,15 @@ def review(dormID, roomNumber):
 	else:
 		flash("Please log in!")
 		return redirect( url_for('login'))
+
+@app.route('/images/<sfname>')
+def pic(sfname):
+	 f = secure_filename(sfname)
+	 print f 
+	 mime_type = f.split('.')[-1]
+	 image = send_from_directory('images',f)
+	 print image
+	 return image
 
 # Room Info page 
 @app.route('/room/<dormID>/<roomNumber>', methods=["GET"])
@@ -353,13 +368,15 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
-        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
+        		#this will be fixed in the bata version
+        		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
 
 	else: 
  		flash("Please log in!")
  		return redirect( url_for('login'))
 
+    
 # Function to get data from conn
 # ================================================================                          
 
