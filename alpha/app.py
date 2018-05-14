@@ -38,7 +38,7 @@ def signup():
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
 			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
-			row = functions.usernameexists(conn, email)
+			row = functions.emailexists(conn, email)
 			
 			if row is not None: 
 				flash('That user is already taken. Please choose a different one.')
