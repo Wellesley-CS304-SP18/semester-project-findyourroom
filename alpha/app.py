@@ -18,6 +18,8 @@ def index():
 	return render_template('index.html')
 
 #Route for signing up a user
+#in alpha/beta versions do the following :
+# to-do: implement bcrypt/session/cookies
 
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
@@ -38,7 +40,7 @@ def signup():
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
 			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
-			row = functions.emailexists(conn, email)
+			row = functions.usernameexists(conn, email)
 			
 			if row is not None: 
 				flash('That user is already taken. Please choose a different one.')
@@ -112,9 +114,8 @@ def login():
 	
 @app.route('/logout/')
 def logout():
-	#clear sessions
 	session['logged_in'] = False
-	session.clear() 
+	session.clear()
 	return render_template('logout.html')
 	
 	
@@ -160,18 +161,19 @@ def delete():
 	
 	 
 @app.route('/update/', methods=["GET","POST"])
-#update is incomplete
 def update():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
+	session['dormID']=dormID
+	session['roomNumber']=roomNumber
 	if request.method == "GET":
-		return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
 	elif request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
-		functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
+		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
 		flash('Your Review has been updated')
 		return redirect( url_for('account'))
 
@@ -302,19 +304,12 @@ def review(dormID, roomNumber):
 			except Exception as err:
 				flash('Please fill in all the required form : Rating and Comment')
 				return render_template('review.html')
-		
-			print 'hello'
+
 			#if user uploaded an image save them into the photo folder
-			photofile = request.files['pic']
-			print '0'
-			print photofile
-			print '1'
 			if 'pic' in request.files:
 				file = request.files['pic']
-				sfname =  secure_filename(file.filename)
-				file.save(sfname)
-				print sfname
-				print "adding photo"
+				sfname = 'images/'+str(secure_filename(file.filename))
+				file.save('static/images/'+str(secure_filename(file.filename)))
 				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
 		
 			# check if review exists in database by bid
@@ -334,13 +329,11 @@ def review(dormID, roomNumber):
 		flash("Please log in!")
 		return redirect( url_for('login'))
 
-@app.route('/images/<sfname>')
+@app.route('/static/<sfname>')
 def pic(sfname):
 	 f = secure_filename(sfname)
-	 print f 
 	 mime_type = f.split('.')[-1]
-	 image = send_from_directory('images',f)
-	 print image
+	 image = send_from_directory('static',f)
 	 return image
 
 # Room Info page 
