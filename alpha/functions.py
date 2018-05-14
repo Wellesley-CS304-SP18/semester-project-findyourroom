@@ -37,7 +37,6 @@ def getBID(conn, email):
 	row = curs.fetchone()
 	return row['BID']
 
-
 # Functions for signup page 
 # ================================================================
 
@@ -94,7 +93,7 @@ def roomExists(conn, dormID, roomNumber, roomType):
     curs.execute('SELECT * FROM room WHERE dormID=%s AND roomNumber=%s',[dormID, roomNumber])
     return curs.fetchone()
 
-def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
+def addRoom(conn, dormID,roomNumber, roomType):
     '''insert room into db'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('INSERT INTO room (dormID, roomNumber, roomType) VALUES (%s, %s, %s)', [dormID, roomNumber, roomType])
@@ -103,7 +102,7 @@ def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
 # ================================================================
 
 def updateRating(conn, rating, dormID, roomNumber):
-    '''recalculate a movie's rating'''
+    '''recalculate a room's average rating'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('UPDATE room SET avgRating = (SELECT AVG(rating) FROM review WHERE review.dormID=%s AND review.roomNumber=%s) WHERE room.dormID=%s AND room.roomNumber =%s',[dormID, roomNumber, dormID, roomNumber])
  
@@ -118,7 +117,6 @@ def reviewExists(conn, dormID, roomNum, BID):
 def insertReview(conn, dormID, roomNumber, comment, rating, BID):
      '''add Review'''
      curs = conn.cursor(MySQLdb.cursors.DictCursor)
-     # add pros and cons later
      curs.execute('INSERT INTO review (dormID, roomNumber, BID, rating, comment) VALUES (%s, %s, %s, %s, %s)', [dormID, roomNumber, comment, rating, BID]);
 
 # update review, add photos functionality
@@ -128,7 +126,7 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
     curs.execute('UPDATE review SET dormID=%s, roomNumber=%s, BID=%s, comment=%s, rating=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
 
 # add photos 
-#do i need size here?
+# to-do : implement alt
 def addPhotos(conn, dormID, roomNumber, BID, path):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -138,19 +136,19 @@ def addPhotos(conn, dormID, roomNumber, BID, path):
 # Functions for displaying roominfo
 # ================================================================
 def getroomInfo(conn, dormID, roomNumber):
-    '''get the current average rating of a movie'''
+    '''get informaiton of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT roomType, avgRating, comment FROM review INNER JOIN room on review.dormID = room.dormID AND review.roomNumber = room.roomNumber WHERE review.dormID=%s AND review.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
 
 def getroomPhoto(conn, dormID, roomNumber):
-    '''get the current average rating of a movie'''
+    '''get photo of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT path FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
     
 def getroomType(conn, dormID, roomNumber):
-    '''get the current average rating of a movie'''
+    '''get roomType of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT roomType FROM room WHERE room.dormID=%s AND room.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
@@ -175,7 +173,6 @@ def getListOfDorms(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute("select dormName, dormID from dorm where dormName != 'NULL'")
     return curs.fetchall()
-
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
