@@ -128,25 +128,44 @@ def account():
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
-			print request.form
-			dormID = request.form['dormID']  #
-			roomNumber = request.form['roomNumber'] #
-			print dormID
-			print roomNumber
-			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
-			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
-			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-		if request.form['submit'] == 'update':
-			dormID = request.form['dormID']  #
-			roomNumber = request.form['roomNumber'] #
-			session['dormID']=dormID
-			session['roomNumber']=roomNumber
+			return redirect( url_for('delete'))
+		elif request.form['submit'] == 'update':
 			return redirect( url_for('update'))
+# 			print request.form
+# 			dormID = request.form['dormID']  #
+# 			roomNumber = request.form['roomNumber'] #
+# 			print dormID
+# 			print roomNumber
+# 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
+# 			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
+# 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+# 		if request.form['submit'] == 'update':
+# 			dormID = request.form['dormID']  
+# 			roomNumber = request.form['roomNumber'] 
+# 			session['dormID']=dormID
+# 			session['roomNumber']=roomNumber
+# 			return redirect( url_for('update'))
+@app.route('/delete/', methods=["GET", "POST"])
+def delete():
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	dormID = request.form['dormID']  
+	roomNumber = request.form['roomNumber'] 
+	print dormID
+	print roomNumber
+	functions.deleteReview(conn, session['BID'],dormID,roomNumber)
+	flash(dormID + ' ' + roomNumber + 'was successfully deleted')
+	return redirect( url_for('account'))
+	
 	 
 @app.route('/update/', methods=["GET","POST"])
 def update():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
+	dormID = request.form['dormID']  
+	roomNumber = request.form['roomNumber'] 
+	session['dormID']=dormID
+	session['roomNumber']=roomNumber
 	if request.method == "GET":
 		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
 	elif request.method == "POST":
