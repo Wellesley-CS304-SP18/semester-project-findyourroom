@@ -345,7 +345,7 @@ def roomInfo(dormID, roomNumber):
         	rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
         	
         	if len(rowInfo) >= 1:
-        		roomType = rowInfo[0]['comment']
+        		roomType = rowInfo[0]['roomType']
         		avgRating = rowInfo[0]['avgRating']
         		if len(rowPhoto) >= 1:
         			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
