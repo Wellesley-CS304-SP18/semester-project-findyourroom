@@ -77,7 +77,7 @@ def login():
 			password = request.form["password"]
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
-			if functions.emailcorrect(conn, email) :
+			if emailsuccess:
 				bid = functions.getBID(conn, email) 
 				row = functions.gethashed(conn, bid)
 
@@ -107,9 +107,8 @@ def login():
 				#the email does not exist
 				flash('The email you entered does not exist. Please try again.')
 				return redirect( url_for('login'))
-		
 		except Exception as err:
- 			flash('form submission error ' + str(err))
+			flash('form submission error ' + str(err))
 			return redirect( url_for('login') )       
 
 	
@@ -129,18 +128,34 @@ def account():
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
-			
-			print 'you clicked on delete'
-			#if i finally get that working then will probably get error on not finding dormID or roomNUmber so then test this
-			dormID = request.form['dormID'] #will these two request.form lines work? 
-			roomNumber = request.form['roomNumber']
+			print request.form
+			dormID = request.form['dormID']  #
+			roomNumber = request.form['roomNumber'] #
 			print dormID
 			print roomNumber
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
-			flash('Room was deleted successfully')
+			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+		if request.form['submit'] == 'update':
+			dormID = request.form['dormID']  #
+			roomNumber = request.form['roomNumber'] #
+			session['dormID']=dormID
+			session['roomNumber']=roomNumber
+			return redirect( url_for('update'))
 	 
-#paste deleted stuff for update here
+@app.route('/update/', methods=["GET","POST"])
+def update():
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	if request.method == "GET":
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
+	elif request.method == "POST":
+		room_rating = request.form['stars']
+		comment = request.form['comment']
+		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+		flash('Your Review has been updated')
+		return redirect( url_for('account'))
+
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
@@ -208,14 +223,11 @@ def search():
 		
 		if request.method == 'GET':
 			return render_template('search.html', dormarray = dormarray)
-		
+	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
-			dormList = request.form.getlist("dorm")
 			roomList =[]
-			for dorm in dormList:
-				if dorm is not None:
-					roomList += functions.getListOfRoomsbyDorm(conn, dorm)
-			
+	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").next())
+	
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)
@@ -231,7 +243,9 @@ def search():
 			rating = request.form['rating']
 	 
 			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
-			   
+			
+			#currently getting all room without ratings too
+   
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)
@@ -280,11 +294,13 @@ def review(dormID, roomNumber):
 				functions.updateRating(conn, room_rating, dormID,roomNumber)
 				flash ("You have updated your review for " + roomMsg)
          		# next, give them option to update review
+         		return render_template('review.html')
         
 			# else insert a new review entry into database
 			else:
 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 				flash ("Review succesfully written for " + roomMsg)	
+				return render_template('review.html')
 
 	else: 
  		flash("Please log in!")
