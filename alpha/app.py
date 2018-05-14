@@ -79,7 +79,6 @@ def login():
 				row = functions.gethashed(conn, bid)
 
 				if row is None:
-					# Same response as wrong password, so no information about what went wrong
 					flash('login incorrect. Try again or join')
 					return redirect( url_for('login'))
 				else:
@@ -91,8 +90,6 @@ def login():
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
-					print bidRow 				
-					#session['BID'] = bidRow['BID']
 					session['BID'] = bidRow
 					
 					return redirect( url_for('insert', email=email) ) 
@@ -111,6 +108,7 @@ def login():
 #Route for logging out a user
 @app.route('/logout/')
 def logout():
+	#clear sessions
 	session['logged_in'] = False
 	session.clear()
 	return render_template('logout.html')
