@@ -1,0 +1,26 @@
+<!--
+	Filename : result.html
+	Serena Fan, Renee Huang, Mana Muchaku 
+	findYourRoom
+-->
+
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1>Search Result</h1>
+
+<form method="post" action="">
+	{% for item in roomArray %}
+		<ol>
+   		{{item['dormID']}} {{item['roomNumber']}}
+   		<a class="button" href="{{url_for('review', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">EDIT</a>
+   		<a class="button" href="{{url_for('roomInfo', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">VIEW</a>	
+   		</ol>
+	{% endfor %}
+</form>
+
+
+{% endblock %}
+    
+

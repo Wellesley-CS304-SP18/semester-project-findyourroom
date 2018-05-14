@@ -1,0 +1,25 @@
+<!--
+	Filename : roominfo.html
+	Renee Huang, Mana Muchaku, Serena Fan
+	findYourRoom
+-->
+
+{% extends "base.html" %}
+
+{% block main_content %}
+
+	<h1>Summary of {{dormID}} {{roomNumber}}</h1>
+	<p>Room Type : {{roomType}}</p>
+	<p>Average Rating : {{avgRating}}</p>
+
+{% for roominfo in roomlist %} 
+	<p>Comment : {{roominfo['comment']}}</p>
+{% endfor%}
+
+{% for photo in photolist %} 
+	<p>Photos :
+		<!-- alt will be a description. Will be updated for beta verson --> 
+		<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400"  alt="My Pic">
+	</p>
+{% endfor%}
+{% endblock %}

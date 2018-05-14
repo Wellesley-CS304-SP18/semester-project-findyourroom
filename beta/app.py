@@ -112,13 +112,33 @@ def logout():
 	return render_template('logout.html')
 	
 #Route for viewing user's existing reviews
-@app.route('/account/', methods=["GET"])
+@app.route('/account/', methods=["GET","POST"])
 def account():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
+	
 	if request.method == "GET":
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 		
+	elif request.method == "POST":
+		if request.form['submit']=='delete':
+			return redirect( url_for('delete'))
+		elif request.form['submit'] == 'update':
+			return redirect( url_for('update'))
+# 			print request.form
+# 			dormID = request.form['dormID']  #
+# 			roomNumber = request.form['roomNumber'] #
+# 			print dormID
+# 			print roomNumber
+# 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
+# 			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
+# 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+# 		if request.form['submit'] == 'update':
+# 			dormID = request.form['dormID']  
+# 			roomNumber = request.form['roomNumber'] 
+# 			session['dormID']=dormID
+# 			session['roomNumber']=roomNumber
+# 			return redirect( url_for('update'))
 
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
@@ -136,7 +156,24 @@ def delete():
 		flash('error {}'.format(err))
 		return redirect( url_for('account'))
 	
-# todo for beta: update!
+#route for updating review
+@app.route('/update/', methods=["GET","POST"])
+def update():
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	dormID = request.form['dormID']  
+	roomNumber = request.form['roomNumber'] 
+	
+	if request.method == "GET":
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
+		
+	elif request.method == "POST":
+		room_rating = request.form['stars']
+		comment = request.form['comment']
+		functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
+		flash('Your Review has been updated')
+		return redirect( url_for('account'))
+
 
 # Insert Room Info
 @app.route('/insert/', methods=["GET", "POST"])
