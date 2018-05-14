@@ -172,13 +172,6 @@ def getListOfDorms(conn):
     curs.execute("select dormName, dormID from dorm where dormName != 'NULL'")
     return curs.fetchall()
 
-def getdormID(conn,dormName):
-    '''Execute SQL statement to get dormID of all rooms'''
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select dormID from dorm where dormName = %s", [dormName])
-    dormDic = curs.fetchone()
-    dormid = dormDic['dormID']
-    return dormid
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,

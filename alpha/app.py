@@ -192,7 +192,6 @@ def insert():
 				    flash('Please choose a room number.')
 				    return render_template('insert.html', data=data)
 				else: 
-					# room number and dorm provided
 					msg = dormID + " " + roomNumber
 					row = functions.roomExists(conn, dormID, roomNumber, roomType)
 					if row is not None:
@@ -267,7 +266,8 @@ def search():
 def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		conn = connFromDSN(functions)
+		dsn = functions.get_dsn()
+		conn = functions.getConn(dsn)
 		data = dataFromDSN(functions)
 		dormarray = functions.getListOfDorms(conn)
 		
@@ -314,7 +314,8 @@ def review(dormID, roomNumber):
 def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		conn = connFromDSN(functions)
+		dsn = functions.get_dsn()
+		conn = functions.getConn(dsn)
 		data = dataFromDSN(functions)
         dormarray = functions.getListOfDorms(conn)
         if request.method == "GET":
