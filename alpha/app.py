@@ -128,8 +128,10 @@ def account():
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
+			print 'you went into delete'
 			return redirect( url_for('delete'))
 		elif request.form['submit'] == 'update':
+			print 'you went into update'
 			return redirect( url_for('update'))
 # 			print request.form
 # 			dormID = request.form['dormID']  #
