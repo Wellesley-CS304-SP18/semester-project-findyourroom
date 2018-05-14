@@ -163,14 +163,12 @@ def update():
 	conn = functions.getConn(dsn)
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
-	session['dormID']=dormID
-	session['roomNumber']=roomNumber
 	if request.method == "GET":
-		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
 	elif request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
-		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+		functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
 		flash('Your Review has been updated')
 		return redirect( url_for('account'))
 
@@ -352,7 +350,7 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		#this will be fixed in the bata version
+        		#this will be fixed in the beta version
         		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
 
