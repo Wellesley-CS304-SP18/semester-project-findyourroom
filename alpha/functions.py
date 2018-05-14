@@ -32,10 +32,10 @@ def emailcorrect(conn, email):
 # get bid from email and password, we have already checked that email & password exists/is correct
 def getBID(conn, email):
 	'''get user's BID'''
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select BID from user where email=%s", [email])
-    row = curs.fetchone()    
-    return row['BID']
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute("select BID from user where email=%s", [email])
+	row = curs.fetchone()
+	return row['BID']
 
 
 # Functions for signup page 

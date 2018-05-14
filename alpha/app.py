@@ -17,10 +17,8 @@ app.secret_key = "secret_key"
 def index():
 	return render_template('index.html')
 
-#Route for signing up a user
-#in alpha/beta versions do the following :
-# to-do: implement bcrypt/session/cookies
 
+#Route for signing up a user
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
 	if request.method == "GET":
@@ -64,7 +62,6 @@ def signup():
         	
 
 #Route for signing in a user
-#in alpha/beta versions implement logging out
 @app.route('/login/', methods=["GET", "POST"])
 def login():
 	if request.method == "GET":
@@ -111,14 +108,14 @@ def login():
 			flash('form submission error ' + str(err))
 			return redirect( url_for('login') )       
 
-	
+#Route for logging out a user
 @app.route('/logout/')
 def logout():
 	session['logged_in'] = False
 	session.clear()
 	return render_template('logout.html')
 	
-	
+#Route for viewing user's existing reviews
 @app.route('/account/', methods=["GET","POST"])
 def account():
 	dsn = functions.get_dsn()
@@ -147,6 +144,8 @@ def account():
 # 			session['dormID']=dormID
 # 			session['roomNumber']=roomNumber
 # 			return redirect( url_for('update'))
+
+#route for deleting review
 @app.route('/delete/', methods=["GET", "POST"])
 def delete():
 	dsn = functions.get_dsn()
@@ -159,7 +158,7 @@ def delete():
 	flash(dormID + ' ' + roomNumber + 'was successfully deleted')
 	return redirect( url_for('account'))
 	
-	 
+#route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
 	dsn = functions.get_dsn()
@@ -231,9 +230,8 @@ def insert():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 	    
-#maybe through roomnumber too?	    
-# Search Room Options
-# to-do: rating to the filter check
+    
+# Route for search room options
 @app.route('/search/', methods=["GET", "POST"])
 def search():
 	if "logged_in" in session and session["logged_in"] is True:
@@ -278,10 +276,7 @@ def search():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 
-#have to fix somepart like when the user does not put those to 
-#I think we should check if that user has alraedy put a review for that room.
-# if so then edit that page instead of uploading a new one?
-# is it repetitive though (having 2 ways of editing the comment - one throug the account and one throuhg this?)
+
 # Review  Room Info                                                                                                            
 @app.route('/review/<dormID>/<roomNumber>', methods=["GET", "POST"])
 def review(dormID, roomNumber):
