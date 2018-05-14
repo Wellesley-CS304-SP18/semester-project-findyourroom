@@ -196,7 +196,7 @@ def insert():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 	    
-	    
+#maybe through roomnumber too?	    
 # Search Room Options
 # to-do: rating to the filter check
 @app.route('/search/', methods=["GET", "POST"])
@@ -242,6 +242,7 @@ def search():
 		flash("Please log in!")
 		return redirect( url_for('login'))
 
+#have to fix somepart like when the user does not put those to 
 #I think we should check if that user has alraedy put a review for that room.
 # if so then edit that page instead of uploading a new one?
 # is it repetitive though (having 2 ways of editing the comment - one throug the account and one throuhg this?)
@@ -251,76 +252,76 @@ def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
 		conn = connFromDSN(functions)
-                data = dataFromDSN(functions)
-		if request.method == "GET":
-			return render_template('review.html')
-		if request.method == "POST":
-
+        data = dataFromDSN(functions)
+        if request.method == "GET":
+        	return render_template('review.html')
+        else:
 			# get review from form
 			room_rating = request.form['stars']
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
-			print "session: ", session['BID']
-			BID = session['BID']#how many times am i using this? may not need it as var
+			BID = session['BID']
+			roomMsg = dormID +" " +roomNumber		
+		
+			#if user uploaded an image save them into the photo folder
+			if request.files['pic'] is not None:
+				file = request.files['pic']
+				sfname = 'images/'+str(secure_filename(file.filename))
+				file.save(sfname)
+				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
 			
-        	roomMsg = dormID +" " +roomNumber
-        	
-        	#if user uploaded an image save them into the photo folder
-        	if request.files['pic'] is not None:
-        		file = request.files['pic']
-        		sfname = 'images/'+str(secure_filename(file.filename))
-        		file.save(sfname)
-        		functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
-        		flash ("Photos succesfully updated " + roomMsg)
-        	
-         	# check if review exists in database by bid
-         	row = functions.reviewExists(conn, dormID, roomNumber, BID)
-         	
-         	if row is not None:
-         		functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
-         		#update the avgrating of the room. haven't tested yet
-         		functions.updateRating(conn, room_rating, dormID,roomNumber)
-         		flash ("You have updated your review for " + roomMsg)
+			# check if review exists in database by bid
+			row = functions.reviewExists(conn, dormID, roomNumber, BID)
+			
+			#if user already has review for this room, then update the review 
+			if row is not None:
+				functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+				#update the avgrating of the room. haven't tested yet
+				functions.updateRating(conn, room_rating, dormID,roomNumber)
+				flash ("You have updated your review for " + roomMsg)
          		# next, give them option to update review
         
-			# insert review into database
-         	else: 
- 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
- 				# flash to tell review succesfully written to database
- 				flash ("Review succesfully written for " + roomMsg)
-				return render_template('review.html')
+			# else insert a new review entry into database
+			else:
+				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+				flash ("Review succesfully written for " + roomMsg)	
+
 	else: 
-		flash("Please log in!")
-		return redirect( url_for('login'))
+ 		flash("Please log in!")
+ 		return redirect( url_for('login'))
 
 # Room Info page                                                                                                           
-@app.route('/room/<dormID>/<roomNumber>', methods=["GET", "POST"])
+@app.route('/room/<dormID>/<roomNumber>', methods=["GET"])
 def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
 		conn = connFromDSN(functions)
         data = dataFromDSN(functions)
         if request.method == "GET":
-			rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
-			rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
-			
-			print rowInfo
-			print rowPhoto
-			print rowPhoto[0]
-			
-			if rowInfo is not None:
-				if rowPhoto is not None:
-					return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber)
-				else:
-					flash ("Currently no photo entry for this room")
-					return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
-			else:
-				flash ("Currently no review for this room")
-				return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
+        	try :
+        		rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
+        		print rowInfo
+        		rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
+        		print rowPhoto
+        		
+        		if rowInfo[0] is not None:
+        			if rowPhoto[0] is not None:
+        				return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber)
+        			else:
+        				flash ("Currently no photo entry for this room")
+        				return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
+        		else:
+        			flash ("Currently no review for this room")
+        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber) 	
+        						
+        	except Exception as err:
+        		flash ("Currently no review for this room")
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber) 	 
+        		
 	else: 
-		flash("Please log in!")
-		return redirect( url_for('login'))
-         		
+ 		flash("Please log in!")
+ 		return redirect( url_for('login'))
+          		
 			
 # Function to get data from conn
 # ================================================================                          

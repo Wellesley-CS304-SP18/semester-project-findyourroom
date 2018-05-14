@@ -20,16 +20,16 @@
 
 	<div id="navigation">
       <ul>
-        <li><a href="/">Home</a>
-        <li><a href="/signup/">Signup</a>
-        <li><a href="/login/">Login</a>
-        <li><a href="/insert/">Insert Rooms</a>
-        <li><a href="/search/">Search Rooms</a> 
-         <li><a href="/account/">View Your Account</a>
-        <li><a href="/logout/">Logout</a>
+        <li><a href="{{ url_for('index') }}">Home</a>
+        <li><a href="{{ url_for('signup') }}">Signup</a>
+        <li><a href="{{ url_for('login') }}">Login</a>
+        <li><a href="{{ url_for('insert') }}">Insert Rooms</a>
+        <li><a href="{{ url_for('search') }}">Search Rooms</a> 
+        <li><a href="{{ url_for('account') }}">View Your Account</a>
+        <li><a href="{{ url_for('logout') }}">Logout</a>
       </ul>
     </div>
-
+        
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <div id="messages">

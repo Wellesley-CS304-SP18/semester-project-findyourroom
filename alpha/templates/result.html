@@ -10,18 +10,14 @@
 
 <h1>Search Result</h1>
 
-	{% for item in roomArray %}
-   		<li><a href="{{url_for('review', dormID = item['dormID'], roomNumber = item['roomNumber'])}}"> Edit room : {{item['dormName']}} {{item['roomNumber']}}</li>
-   		<li><a href="{{url_for('roomInfo', dormID = item['dormID'], roomNumber = item['roomNumber'])}}">Room info : {{item['dormName']}} {{item['roomNumber']}}</li>
-
-   	{% endfor %}
-   	
 <form method="post" action="">
-<ol>Your reviews:
-	{% for item in roomarray %}
-	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="submit" name="submit" value="update"> <input type="submit" name="submit" value="delete" dormID="{{item['dormID']}}" roomNumber= "{{item['roomNumber']}}">
+	{% for item in roomArray %}
+		<ol>
+   		{{item['dormID']}} {{item['roomNumber']}}
+   		<a class="button" href="{{url_for('review', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">EDIT</a>
+   		<a class="button" href="{{url_for('roomInfo', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">VIEW</a>	
+   		</ol>
 	{% endfor %}
-</ol>
 </form>
 
 

@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='yourroom_db'):
+def get_dsn(db='mmuchaku_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
@@ -117,7 +117,6 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
     '''Execute SQL statement to update review'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('UPDATE review SET dormID=%s, roomNumber=%s, BID=%s, comment=%s, rating=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
-
 
 # add photos 
 #do i need size here?
