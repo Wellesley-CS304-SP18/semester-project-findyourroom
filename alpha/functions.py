@@ -101,7 +101,7 @@ def addRoom(conn, dormID,roomNumber, roomType):#avg rating?
 def updateRating(conn, rating, dormID, roomNumber):
     '''Execute SQL statement to recalculate a movie's rating'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('UPDATE room SET avgRating = (SELECT AVG(rating) FROM review WHERE review.dormID=%s AND review.roomNumber=%s) WHERE room.dormID=%s AND room.roomNuber =%s',[dormID, roomNumber, dormID, roomNumbe])
+    curs.execute('UPDATE room SET avgRating = (SELECT AVG(rating) FROM review WHERE review.dormID=%s AND review.roomNumber=%s) WHERE room.dormID=%s AND room.roomNumber =%s',[dormID, roomNumber, dormID, roomNumber])
  
 # check if the review table associated with the room exists already 
 def reviewExists(conn, dormID, roomNum, BID):
