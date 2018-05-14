@@ -297,13 +297,11 @@ def review(dormID, roomNumber):
 		
 			#if user already has review for this room, then update the review 
 			if row is not None:
-				functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
-				#update the avgrating of the room. haven't tested yet
-				functions.updateRating(conn, room_rating, dormID,roomNumber)
-				flash ("You have updated your review for " + roomMsg)
+				flash ("You have already reviwed this room! Please go to your account to edit!")
 				return redirect( url_for('search'))
 			else: # else insert a new review entry into database
 				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+				functions.updateRating(conn, room_rating, dormID,roomNumber)
 				flash ("Review succesfully written for " + roomMsg)	
 				return redirect( url_for('search'))
 		
@@ -317,33 +315,29 @@ def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
 		conn = connFromDSN(functions)
-        data = dataFromDSN(functions)
+		data = dataFromDSN(functions)
+        dormarray = functions.getListOfDorms(conn)
         if request.method == "GET":
-        	try :
-        		rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
-        		print rowInfo
-        		rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
-        		print rowPhoto
-        		
-        		if rowInfo[0] is not None:
-        			if rowPhoto[0] is not None:
-        				return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber)
-        			else:
-        				flash ("Currently no photo entry for this room")
-        				return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber)
+        	rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
+        	rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
+        	
+        	if len(rowInfo) >= 1:
+        		roomType = rowInfo[0]['comment']
+        		avgRating = rowInfo[0]['avgRating']
+        		if len(rowPhoto) >= 1:
+        			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         		else:
-        			flash ("Currently no review for this room")
-        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber) 	
-        						
-        	except Exception as err:
+        			flash ("Currently no photo entry for this room")
+        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
+        	else:
         		flash ("Currently no review for this room")
-        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber) 	 
-        		
+        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
+
 	else: 
  		flash("Please log in!")
  		return redirect( url_for('login'))
-          		
-			
+
 # Function to get data from conn
 # ================================================================                          
 

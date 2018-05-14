@@ -9,10 +9,10 @@
 {% block main_content %}
 
 	<h1>Summary of {{dormID}} {{roomNumber}}</h1>
+	<p>Room Type : {{roomType}}</p>
+	<p>Average Rating : {{avgRating}}</p>
 
 {% for roominfo in roomlist %} 
-	<p>Room Type : {{roominfo['roomType']}}</p>
-	<p>Average Rating : {{roominfo['avgRating']}}</p>
 	<p>Comment : {{roominfo['comment']}}</p>
 {% endfor%}
 

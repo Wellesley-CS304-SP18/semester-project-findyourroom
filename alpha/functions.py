@@ -136,7 +136,7 @@ def addPhotos(conn, dormID, roomNumber, BID, path):
 def getroomInfo(conn, dormID, roomNumber):
     '''Execute SQL statement to get the current average rating of a movie'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT roomType, avgRating, comment, reviewType FROM review INNER JOIN room on review.dormID = room.dormID AND review.roomNumber = room.roomNumber WHERE review.dormID=%s AND review.roomNumber=%s', [dormID, roomNumber])
+    curs.execute('SELECT roomType, avgRating, comment FROM review INNER JOIN room on review.dormID = room.dormID AND review.roomNumber = room.roomNumber WHERE review.dormID=%s AND review.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
 
 def getroomPhoto(conn, dormID, roomNumber):
@@ -144,8 +144,13 @@ def getroomPhoto(conn, dormID, roomNumber):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('SELECT path FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
-
-
+    
+def getroomType(conn, dormID, roomNumber):
+    '''Execute SQL statement to get the current average rating of a movie'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('SELECT roomType FROM room WHERE room.dormID=%s AND room.roomNumber=%s', [dormID, roomNumber])
+    return curs.fetchall()
+    
 # Functions for search room page 
 # ================================================================
 
