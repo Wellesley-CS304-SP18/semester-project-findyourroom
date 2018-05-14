@@ -129,16 +129,16 @@ def account():
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
 			print request.form
-			dormID = request.form['dormID']  
-			roomNumber = request.form['roomNumber']
+			dormID = request.form['dormID']  #
+			roomNumber = request.form['roomNumber'] #
 			print dormID
 			print roomNumber
 			functions.deleteReview(conn, session['BID'],dormID,roomNumber)
 			flash(dormID + ' ' + roomNumber + 'was successfully deleted')
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 		if request.form['submit'] == 'update':
-			dormID = request.form['dormID']  
-			roomNumber = request.form['roomNumber']
+			dormID = request.form['dormID']  #
+			roomNumber = request.form['roomNumber'] #
 			session['dormID']=dormID
 			session['roomNumber']=roomNumber
 			return redirect( url_for('update'))
@@ -148,7 +148,7 @@ def update():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
 	if request.method == "GET":
-		return render_template('update.html', review = functions.updateReview(conn, session['BID'], session['dormID'],session['roomNumber'])
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber'])
 	else if request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
