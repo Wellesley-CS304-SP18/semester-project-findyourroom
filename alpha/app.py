@@ -75,10 +75,10 @@ def login():
 			conn = functions.getConn(dsn)
 			email = request.form["email"]
 			password = request.form["password"]
-			bid = functions.getBID(conn, email) 
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
 			if emailsuccess:
+				bid = functions.getBID(conn, email) 
 				row = functions.gethashed(conn, bid)
 
 				if row is None:
