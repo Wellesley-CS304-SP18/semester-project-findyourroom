@@ -140,17 +140,21 @@ def account():
 # 			session['roomNumber']=roomNumber
 # 			return redirect( url_for('update'))
 
-#route for deleting review
-@app.route('/delete/', methods=["GET", "POST"])
+#route for deleting review	
+@app.route('/delete/', methods=["POST"])
 def delete():
-	dsn = functions.get_dsn()
-	conn = functions.getConn(dsn)
-	dormID = request.form['dormID']  
-	roomNumber = request.form['roomNumber'] 
-
-	functions.deleteReview(conn, session['BID'],dormID,roomNumber)
-	flash(dormID + ' ' + roomNumber + 'was successfully deleted')
-	return redirect( url_for('account'))
+	try:
+		dsn = functions.get_dsn()
+		conn = functions.getConn(dsn)
+		dormID = request.form['dormID']  
+		roomNumber = request.form['roomNumber'] 
+		functions.deleteReview(conn, session['BID'],dormID,roomNumber)
+		flash(dormID + ' ' + roomNumber + 'was successfully deleted')
+		return redirect( url_for('account'))
+	except Exception as err:
+		print 'Error: ',err
+		flash('error {}'.format(err))
+		return redirect( url_for('account'))
 	
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])

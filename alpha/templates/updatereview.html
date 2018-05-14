@@ -16,7 +16,7 @@
   {% for item in review %}
       <p><label>Rating:       
       	<!-- how to take {{item['rating']}} and preselect correctly  using checked="checked"-->  
-          <label>1 <input type="radio" name="stars" value="1"></label>
+          <label>1 <input type="radio" name="stars" value="1" {{%if item['rating']==1: 'checked="checked"'}}></label>
           
           <label>2 <input type="radio" name="stars" value="2"></label>
           
