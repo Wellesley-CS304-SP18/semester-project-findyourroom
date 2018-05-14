@@ -10,15 +10,28 @@
 
 
 <h1>Account Details</h1>
-<h2>On this page you can see all the rooms you have reviewed. </h2>
+<h3>On this page you can see all the rooms you have reviewed. </h3>
 
-<form method="post" action="">
-<ol>Your reviews:
+
+<ol>Your reviews: 
+	
 	{% for item in roomarray %}
-	<li> {{item['dormID']}} {{item['roomNumber']}} <input type="submit" name="submit" value="update"> <input type="submit" name="submit" value="delete" dormID="{{item['dormID']}}" roomNumber= "{{item['roomNumber']}}">
+	<li> <form method="post" action=""> {{item['dormID']}} {{item['roomNumber']}} </form>
+	<form action='/update/'>
+    <input type="hidden" name="dormID" value="{{item['dormID']}}">
+    <input type="hidden" name="roomNumber" value="{{item['roomNumber']}}">
+    <input type="submit" name="submit" value="update">
+	</form> 
+	<form action='/delete/'>
+    <input type="hidden" name="dormID" value="{{item['dormID']}}">
+    <input type="hidden" name="roomNumber" value="{{item['roomNumber']}}">
+    <input type="submit" name="submit" value="delete">
+	</form> </br>
 	{% endfor %}
 </ol>
-</form>
+
 {% endblock %}
 <!-- make the update button lead to update page but filled already with the information of the room the user clicked on -->
 <!-- make delete button execute a query that removes that review from the review table-->
+
+<!--<input type="submit" name="submit" value="delete" dormID="{{item['dormID']}}" roomNumber= "{{item['roomNumber']}}">-->
