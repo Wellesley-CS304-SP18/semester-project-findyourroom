@@ -368,6 +368,7 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
+        		#this will be fixed in the bata version
         		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
 
