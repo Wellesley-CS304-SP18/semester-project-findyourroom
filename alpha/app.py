@@ -114,8 +114,9 @@ def login():
 	
 @app.route('/logout/')
 def logout():
+	#clear sessions
 	session['logged_in'] = False
-	session.clear()
+	session.clear() 
 	return render_template('logout.html')
 	
 	
@@ -161,19 +162,18 @@ def delete():
 	
 	 
 @app.route('/update/', methods=["GET","POST"])
+#update is incomplete
 def update():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
-	session['dormID']=dormID
-	session['roomNumber']=roomNumber
 	if request.method == "GET":
-		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
 	elif request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
-		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+		functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
 		flash('Your Review has been updated')
 		return redirect( url_for('account'))
 
