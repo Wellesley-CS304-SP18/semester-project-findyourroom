@@ -17,11 +17,6 @@
 	
 	{% for item in roomarray %}
 	<li> <form method="post" action=""> {{item['dormID']}} {{item['roomNumber']}} </form>
-	<form method="POST" action='/update/'>
-    <input type="hidden" name="dormID" value="{{item['dormID']}}">
-    <input type="hidden" name="roomNumber" value="{{item['roomNumber']}}">
-    <input type="submit" name="submit" value="update">
-	</form> 
 	<form method="POST" action='/delete/'>
     <input type="hidden" name="dormID" value="{{item['dormID']}}">
     <input type="hidden" name="roomNumber" value="{{item['roomNumber']}}">
