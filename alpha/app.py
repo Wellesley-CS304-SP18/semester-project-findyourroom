@@ -17,7 +17,6 @@ app.secret_key = "secret_key"
 def index():
 	return render_template('index.html')
 
-
 #Route for signing up a user
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
@@ -37,9 +36,9 @@ def signup():
 			if password1 != password2:
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
+				
 			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
 			row = functions.emailexists(conn, email)
-			
 			if row is not None: 
 				flash('That user is already taken. Please choose a different one.')
 				return redirect( url_for('signup') )
@@ -59,8 +58,7 @@ def signup():
 		except Exception as err:
  			flash('form submission error '+str(err))
  			return redirect( url_for('signup') )
-        	
-
+  
 #Route for signing in a user
 @app.route('/login/', methods=["GET", "POST"])
 def login():
@@ -118,15 +116,14 @@ def logout():
 def account():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
+	
 	if request.method == "GET":
-		print session['BID']
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+		
 	elif request.method == "POST":
 		if request.form['submit']=='delete':
-			print 'you went into delete'
 			return redirect( url_for('delete'))
 		elif request.form['submit'] == 'update':
-			print 'you went into update'
 			return redirect( url_for('update'))
 # 			print request.form
 # 			dormID = request.form['dormID']  #
@@ -150,8 +147,7 @@ def delete():
 	conn = functions.getConn(dsn)
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
-	print dormID
-	print roomNumber
+
 	functions.deleteReview(conn, session['BID'],dormID,roomNumber)
 	flash(dormID + ' ' + roomNumber + 'was successfully deleted')
 	return redirect( url_for('account'))
@@ -163,8 +159,10 @@ def update():
 	conn = functions.getConn(dsn)
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
+	
 	if request.method == "GET":
 		return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
+		
 	elif request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
@@ -188,7 +186,7 @@ def insert():
 				roomType = request.form['menu-room-type']  
 				dormID = request.form['menu-dorm']
 		
-				 #updating if/else notifications for correct input
+				#updating if/else notifications for correct input
 				if dormID == "none" and roomType == 'none' and not roomNumber:
 				    flash('Please choose a dorm, room type, and room number.')
 				    return render_template('insert.html', data=data)
@@ -219,7 +217,6 @@ def insert():
 						return render_template('insert.html', data=data)
 			except Exception as err:
 				flash('Sorry, an error occurred.')
-				print err
 				data = dataFromDSN(functions)
 				return render_template('insert.html', data=data)
 	else: 
@@ -250,7 +247,8 @@ def search():
 			else:
 				return render_template('result.html', roomArray = roomList)
 	
-		elif request.form['submit'] == "filter": #if user search room through other filters  
+		#if user search room through other filters
+		elif request.form['submit'] == "filter":   
 			location = request.form['location']
 			dormType = request.form['dormType']
 			roomType = request.form['roomType']
@@ -260,8 +258,6 @@ def search():
 	 
 			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
 			
-			#currently getting all room without ratings too
-   
 			if not roomList:
 				flash("No Result Matches Your Request!")
 				return render_template('search.html', dormarray = dormarray)
@@ -350,7 +346,7 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		#this will be fixed in the beta version
+        		#To do : fix the roomType below
         		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
 
