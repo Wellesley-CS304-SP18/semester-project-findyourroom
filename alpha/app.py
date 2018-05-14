@@ -226,7 +226,9 @@ def search():
 	
 		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
 			roomList =[]
-	 		roomList += functions.getListOfRoomsbyDorm(conn, request.form.getlist("dorm").next())
+			for room in request.form.getlist("dorm"):
+				if room is not None:
+					roomList += functions.getListOfRoomsbyDorm(conn,room)
 	
 			if not roomList:
 				flash("No Result Matches Your Request!")
@@ -269,7 +271,7 @@ def review(dormID, roomNumber):
 		data = dataFromDSN(functions)
 		dormarray = functions.getListOfDorms(conn)
 		
-		if equest.method == "GET": 
+		if request.method == "GET": 
 			return render_template('review.html')
 		else:
 			room_rating = request.form['stars']
