@@ -266,49 +266,46 @@ def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
 		conn = connFromDSN(functions)
-        data = dataFromDSN(functions)
-        dormarray = functions.getListOfDorms(conn)
-        
-        if request.method == "GET":
-        	return render_template('review.html')
-        else:
-			# get review from form
+		data = dataFromDSN(functions)
+		dormarray = functions.getListOfDorms(conn)
+		
+		if equest.method == "GET": 
+			return render_template('review.html')
+		else:
 			room_rating = request.form['stars']
 			comment = request.form['comment']
 			pro_or_con = request.form['stars2']
 			BID = session['BID']
-			roomMsg = dormID +" " +roomNumber		
+			roomMsg = dormID +" " +roomNumber
 		
-			#if user uploaded an image save them into the photo folder
-			if request.files['pic'] is not None:
-				file = request.files['pic']
-				sfname = 'images/'+str(secure_filename(file.filename))
-				file.save(sfname)
-				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+		#if user uploaded an image save them into the photo folder
+		if request.files['pic'] is not None:
+			file = request.files['pic']
+			sfname = 'images/'+str(secure_filename(file.filename))
+			file.save(sfname)
+			functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+		
+		# check if review exists in database by bid
+		row = functions.reviewExists(conn, dormID, roomNumber, BID)
+		
+		#if user already has review for this room, then update the review 
+		if row is not None:
+			functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
+			#update the avgrating of the room. haven't tested yet
+			functions.updateRating(conn, room_rating, dormID,roomNumber)
+			flash ("You have updated your review for " + roomMsg)
+			return render_template('search.html', dormarray = dormarray)
+		else: # else insert a new review entry into database
+			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+			flash ("Review succesfully written for " + roomMsg)	
+			return render_template('search.html', dormarray = dormarray)
 			
-			# check if review exists in database by bid
-			row = functions.reviewExists(conn, dormID, roomNumber, BID)
-			
-			#if user already has review for this room, then update the review 
-			if row is not None:
-				functions.updateReview(conn, dormID, roomNumber, BID, room_rating, comment)
-				#update the avgrating of the room. haven't tested yet
-				functions.updateRating(conn, room_rating, dormID,roomNumber)
-				flash ("You have updated your review for " + roomMsg)
-         		# next, give them option to update review
-         		return render_template('search.html', dormarray = dormarray)
-        
-			# else insert a new review entry into database
-			else:
-				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
-				flash ("Review succesfully written for " + roomMsg)	
-				return render_template('search.html', dormarray = dormarray)
+		
+	else:
+		flash("Please log in!")
+		return redirect( url_for('login'))
 
-	else: 
- 		flash("Please log in!")
- 		return redirect( url_for('login'))
-
-# Room Info page                                                                                                           
+# Room Info page 
 @app.route('/room/<dormID>/<roomNumber>', methods=["GET"])
 def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
