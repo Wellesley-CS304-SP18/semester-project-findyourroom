@@ -148,8 +148,8 @@ def update():
 	dsn = functions.get_dsn()
 	conn = functions.getConn(dsn)
 	if request.method == "GET":
-		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber'])
-	else if request.method == "POST":
+		return render_template('update.html', review = functions.loadReview(conn, session['BID'], session['dormID'],session['roomNumber']))
+	elif request.method == "POST":
 		room_rating = request.form['stars']
 		comment = request.form['comment']
 		functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
