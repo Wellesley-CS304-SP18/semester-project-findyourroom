@@ -18,8 +18,6 @@ def index():
 	return render_template('index.html')
 
 #Route for signing up a user
-#in alpha/beta versions do the following :
-# to-do: implement bcrypt/session/cookies
 
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
@@ -40,7 +38,7 @@ def signup():
 				flash('The passwords you entered do not match.')
 				return redirect( url_for('signup'))
 			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
-			row = functions.usernameexists(conn, email)
+			row = functions.emailexists(conn, email)
 			
 			if row is not None: 
 				flash('That user is already taken. Please choose a different one.')
