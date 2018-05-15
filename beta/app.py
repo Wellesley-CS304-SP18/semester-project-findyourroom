@@ -43,6 +43,10 @@ app.secret_key = "123456789"  #should we have something here?
 #     	print('CAS_USERNAME is not in the session')
 #     	return render_template('index.html', username=username, is_logged_in=is_logged_in)
 
+#show basic navigation 
+@app.route('/')
+def index():
+	return render_template('index.html')
 
 #Route for signing up a user
 @app.route('/signup/', methods=["GET", "POST"])
