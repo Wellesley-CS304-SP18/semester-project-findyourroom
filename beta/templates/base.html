@@ -36,6 +36,13 @@
       </div>
     </nav>
     
+    {% if username %}
+        <!-- route defined by CAS -->
+   		<form action="/logout/"><button>logout {{username}}</button></form>
+	{% else %}
+        <!-- route defined by CAS -->
+  		 <form action="/login/"><button>login</button></form>
+	{% endif %}   
     
     {% block main_content %}
     <h1>{{ header }}</h1>  
