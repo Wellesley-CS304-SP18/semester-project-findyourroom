@@ -423,7 +423,7 @@ def roomInfo(dormID, roomNumber):
 	else: 
  		message = Markup(functions.dangerMarkup('Please log in!'))
         flash(message)
- 		return redirect( url_for('login'))
+        return redirect( url_for('login'))
 
     
 # Function to get data from conn
