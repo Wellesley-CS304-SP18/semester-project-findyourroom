@@ -120,6 +120,8 @@ def account():
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 		
 
+
+
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
 def delete():
