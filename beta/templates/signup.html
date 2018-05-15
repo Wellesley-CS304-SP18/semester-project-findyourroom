@@ -7,20 +7,36 @@
 {% extends "base.html" %}
 
 {% block main_content %}
-
-
-
-<h1>Sign Up</h1>
-<h2>To sign up, please input your Wellesley email, password of choice, BID, and class year.</h2>
-
-  <form method="post" action="">
-      <p><label>Email: <input type="text" name="email" pattern="^[A-Za-z0-9._%+-]+@wellesley.edu$" title ="input a wellesley email" ></label></p>
-      <p><label>Password: <input type="password" name="password1"></label></p>
-      <p><label>Confirm your password: <input type="password" name="password2"></label></p>
-      <p><label>BID: <input type="text" name="bid" pattern="[0-9]{8}" title ="input your 8 digit BID (excluding the 'B')"></label></p>
-      <p><label>Class Year: <input type="text" name="classyear"></label></p>
-      <p><button type="submit">submit</button></p>
-  </form>
-
-
+<div class="container login-form">
+  <div class="row">
+      <div class="col">
+	<form method="post" action="">
+	  <fieldset>
+	    <legend>Sign up</legend>
+	    <div class = "form-group">
+	      <p><label for="InputEmail1">Email: </label><input  type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email" pattern="^[A-Za-z0-9._%+ -]+@wellesley.edu$" title ="input a wellesley email" ></p>
+	    </div>
+	    
+	    <div class="form-group">
+	      <p><label for="InputPassword1">Password: </label><input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password1"></p>
+	    </div>
+	    
+	    <div class="form-group">
+	      <p><label for="InputPassword1">Confirm your password: </label><input input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" type="password" name="password2"></label></p>
+	    </div>
+	      
+	    <div class="form-group">
+	      <p><label for="BID">BID:<input class="form-control" type="text" name="bid" pattern="[0-9]{8}" placeholder="BID" title ="input your 8 digit BID (excluding the 'B')"></label></p>
+	    </div>
+	    
+	    <div class="form-group">
+	      <p><label for="classyear">Class Year: </label><input class="form-control" type="text" placeholder="Class Year" name="classyear"></p>
+	    </div>
+	    
+	    <p><button type="submit" class="btn btn-primary">Submit</button></p>
+	  </fieldset>
+	</form>
+      </div>
+  </div>
+</div>
 {% endblock %}
