@@ -6,7 +6,7 @@
 
 #do we need datetime??
 import dbconn2
-import os,sys,random, datetime, bcrypt
+import os,sys,random,bcrypt
 import functions
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup, send_from_directory
 from werkzeug import secure_filename
@@ -14,34 +14,6 @@ from flask_cas import CAS
 
 app = Flask(__name__)
 app.secret_key = "123456789"  #should we have something here?
-
-# CAS configuration
-# CAS(app)
-# app.config['CAS_SERVER'] = 'https://login.wellesley.edu:443'
-# app.config['CAS_AFTER_LOGIN'] = 'logged_in'
-# app.config['CAS_LOGIN_ROUTE'] = '/module.php/casserver/cas.php/login'
-# app.config['CAS_LOGOUT_ROUTE'] = '/module.php/casserver/cas.php/logout'
-# app.config['CAS_AFTER_LOGOUT'] = 'http://cs.wellesley.edu:1943/index'
-# app.config['CAS_VALIDATE_ROUTE'] = '/module.php/casserver/serviceValidate.php'
-# 
-# app.secret_key = "123456789"
-#         
-# #show basic navigation 
-# @app.route('/')
-# def index():
-# 	print 'Session keys: ',session.keys()
-# 	if '_CAS_TOKEN' in session:
-# 		token = session['_CAS_TOKEN']
-# 	if 'CAS_ATTRIBUTES' in session:
-# 		attribs = session['CAS_ATTRIBUTES']
-# 	if 'CAS_USERNAME' in session:
-# 		is_logged_in = True
-# 		username = session['CAS_USERNAME']
-# 	else:
-# 		is_logged_in = False
-# 		username = None
-#     	print('CAS_USERNAME is not in the session')
-#     	return render_template('index.html', username=username, is_logged_in=is_logged_in)
 
 #show basic navigation 
 @app.route('/')

@@ -11,10 +11,11 @@
     text-align:left;
 }
 
-.login-form legend{
+.login-form legend, .form-button{
     text-align:center
 }
 
 .flash{
     width: 350px
 }
+
