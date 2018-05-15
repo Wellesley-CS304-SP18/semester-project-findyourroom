@@ -147,7 +147,7 @@ def update():
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
 			print 'we went into get'
-			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber))
+			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
 		elif request.method == "POST":
 			print 'POST update'
 # 			room_rating = request.form['stars']

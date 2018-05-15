@@ -11,9 +11,12 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def getConn(db='mmuchaku_db'):
+def get_dsn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
+    return dsn
+
+def getConn(dsn):
     return dbconn2.connect(dsn)
 
 # Functions for login page 
@@ -69,6 +72,13 @@ def loadReview(conn, BID, dormID, roomNumber):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT dormID, roomNumber, rating, comment FROM review WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
 	return curs.fetchone()
+	
+def loadPhoto(conn, BID, dormID, roomNumber):
+	'''get photo from existing review '''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT path FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	return curs.fetchone()
+
 
 def inserthashed(conn, BID, hashed):
 	'''insert user hash password information into the table'''
