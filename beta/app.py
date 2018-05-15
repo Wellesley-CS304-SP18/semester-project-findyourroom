@@ -172,13 +172,18 @@ def update():
  			photo = functions.loadPhoto(conn,session['BID'], session['dormID'], session['roomNumber'])
  			#retrieve new photo
 			newpicture = request.files['pic']
+			sfname = 'images/'+str(secure_filename(newpicture.filename))
+			print sfname
+			print newpicture
 			#old photo
 			oldpicture = photo.get('path')
+			print oldpicture
 			#update the review in the database
 			functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
 			if newpicture is not None: 
   				#update path and alt of photo
-  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,newpicture)
+  				newpicture.save('static/images/'+str(secure_filename(newpicture.filename)))
+  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,sfname)
   			else:
  				#update alt of photo
  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,oldpicture) 
