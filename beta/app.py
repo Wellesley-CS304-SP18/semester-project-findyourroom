@@ -131,7 +131,13 @@ def account():
     if "logged_in" in session and session["logged_in"] is True:
     	conn = functions.getConn()
     	if request.method == "GET":
-			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+    		roomarray = functions.pullReviews(conn,session['BID'])
+    		if roomarray is None:
+    			 message = Markup(functions.dangerMarkup('There are no reviews written by you :( Please search a room to write a review!'))
+    			 flash(message)
+    			 return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+    		else:
+    			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
     else:
         message = Markup(functions.dangerMarkup('Please log in!'))
         flash(message)
@@ -140,7 +146,6 @@ def account():
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
 def delete():
-	print 'you went into delete'
 	try:
 		conn = functions.getConn()
 		dormID = request.form['dormID']  
@@ -151,6 +156,7 @@ def delete():
 		flash(message)
 		
 		return redirect( url_for('account'))
+		
 	except Exception as err:
 		print 'Error: ',err
 		message = Markup(functions.errorMarkup('error {}'.format(err)))
