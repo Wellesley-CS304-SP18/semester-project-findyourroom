@@ -8,8 +8,10 @@
 
 {% block main_content %}
 
-
-<h1>Review</h1>
+<div class="container header">
+  <h1>Review</h1>
+  {% include "flash.html" %}
+</div>
 <h2>To review, please give a rating (1-5) and comment (* required)</h2>
 
   <form method="post" enctype="multipart/form-data" action="">
