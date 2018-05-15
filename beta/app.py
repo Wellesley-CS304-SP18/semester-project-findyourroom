@@ -157,20 +157,35 @@ def update():
 	print 'we went into update'
 	try:
 		print 'we went into try'
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
+		#session['dormID'] = request.form('dormID')
+		#session['roomNumber'] = request.form('roomNumber')
 		if request.method == "GET":
+			print 'we went into get'
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
-			print 'we went into get'
 			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
 		elif request.method == "POST":
-			print 'POST update'
-# 			room_rating = request.form['stars']
-# 			comment = request.form['comment']
-# 			functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
- 			message = Markup(functions.successMarkup('Your Review has been updated'))
-			flash(message)
+			#retrieve new rating, comment, and photo description
+ 			room_rating = request.form['stars']
+ 			comment = request.form['comment']
+ 			alt = request.form['alt']
+ 			photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber)
+ 			print photo[path]
+ 			print photo
+ 			#retrieve new photo
+			newpicture = request.form['pic']
+			#old photo
+			oldpicture = photo[path]
+			#update the review in the database
+			functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+ 			if newpicture is not None: 
+ 				#update path and alt of photo
+ 				functions.updatePhoto(conn,BID,dormID,roomNumber,alt,newpicture)
+ 			else:
+ 				#update alt of photo
+ 				functions.updatePhoto(conn,BID,dormID,roomNumber,alt,oldpicture)
+ 			flash('Your Review has been updated')
 			return redirect( url_for('account'))
 	except Exception as err:
 		print 'Error: ',err

@@ -76,6 +76,10 @@ def loadPhoto(conn, BID, dormID, roomNumber):
 	curs.execute('SELECT path FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
 	return curs.fetchone()
 
+def updatePhoto(conn, BID, dormID, roomNumber, alt, path):
+	'''update path and alt of photo'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('UPDATE  photo SET path=%s, alt=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [path, alt, dormID, roomNumber, BID])
 
 def inserthashed(conn, BID, hashed):
 	'''insert user hash password information into the table'''
