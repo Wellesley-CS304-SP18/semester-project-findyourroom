@@ -14,7 +14,7 @@ import dbconn2
 def getConn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
-     return dbconn2.connect(dsn)
+    return dbconn2.connect(dsn)
 
 # Functions for login page 
 # ================================================================
@@ -73,7 +73,7 @@ def loadReview(conn, BID, dormID, roomNumber):
 def loadPhoto(conn, BID, dormID, roomNumber):
 	'''get photo from existing review '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT path FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	curs.execute('SELECT path, alt FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
 	return curs.fetchone()
 
 def updatePhoto(conn, BID, dormID, roomNumber, alt, path):
