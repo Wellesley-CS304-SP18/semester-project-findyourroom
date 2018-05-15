@@ -11,10 +11,6 @@
     text-align:left;
 }
 
-.login-form legend{
+.form legend{
     text-align:center
-}
-
-.flash{
-    width: 350px
 }

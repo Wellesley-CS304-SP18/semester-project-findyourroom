@@ -4,22 +4,27 @@
 	findYourRoom
 -->
 
+
+<!-- add info on dining hall and gym?? -->
+
+
 {% extends "base.html" %}
 
 {% block main_content %}
 
-	<h1>Summary of {{dormID}} {{roomNumber}}</h1>
-	<p>Room Type : {{roomType}}</p>
-	<p>Average Rating : {{avgRating}}</p>
-
+<h1>Summary of {{dormID}} {{roomNumber}}</h1>
+<p><b>Room Type : </b> {{roomType}}</p>
+<p><b>Gym : </b> {{gym}}</p>
+<p><b>Dining Hall : </b> {{diningHall}}</p>
+<p><b>Average Rating : </b>{{avgRating}}</p>
+<p><b>Past Residence Comments</b></p>
 {% for roominfo in roomlist %} 
-	<p>Comment : {{roominfo['comment']}}</p>
+<p>{{roominfo['comment']}}</p>
 {% endfor%}
 
+<p><b>Room Photos</b></p>
 {% for photo in photolist %} 
-	<p>Photos :
-		<!-- alt will be a description. Will be updated for beta verson --> 
-		<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="100" height="80" alt="My Pic">
-	</p>
+<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
 {% endfor%}
+
 {% endblock %}

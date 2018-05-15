@@ -11,7 +11,11 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
+<<<<<<< HEAD
+def getConn(db='rhuang_db'):
+=======
 def get_dsn(db='yourroom_db'):
+>>>>>>> 9d83a8fb5d376bd7333c1078e8f4763552a51d01
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dsn
