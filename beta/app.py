@@ -4,13 +4,16 @@
 	findYourRoom
 '''
 
+#do we need datetime??
 import dbconn2
-import os,sys,random, datetime
-import functions, bcrypt
+import os,sys,random,bcrypt
+import functions
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup, send_from_directory
 from werkzeug import secure_filename
+from flask_cas import CAS
+
 app = Flask(__name__)
-app.secret_key = "secret_key"
+app.secret_key = "123456789"  #should we have something here?
 
 #show basic navigation 
 @app.route('/')
@@ -122,8 +125,7 @@ def logout():
 def account():
 # check if user logged in:                                                                                                                  
         if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		if request.method == "GET":
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	else:
@@ -154,23 +156,37 @@ def delete():
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
-	print 'we went into update'
 	try:
-		print 'we went into try'
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		if request.method == "GET":
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
-			print 'we went into get'
+			session['dormID']=dormID
+			session['roomNumber']=roomNumber
 			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
 		elif request.method == "POST":
-			print 'POST update'
-# 			room_rating = request.form['stars']
-# 			comment = request.form['comment']
-# 			functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
- 			message = Markup(functions.successMarkup('Your Review has been updated'))
-			flash(message)
+			#retrieve new rating, comment, and photo description
+ 			room_rating = request.form['stars']
+ 			comment = request.form['comment']
+ 			alt = request.form['alt']
+ 			photo = functions.loadPhoto(conn,session['BID'], session['dormID'], session['roomNumber'])
+ 			#retrieve new photo
+			newpicture = request.files['pic']
+			sfname = 'images/'+str(secure_filename(newpicture.filename))
+			print sfname
+			print newpicture
+			#old photo
+			oldpicture = photo.get('path')
+			print oldpicture
+			#update the review in the database
+			functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+			if newpicture is not None: 
+  				#update path and alt of photo
+  				newpicture.save('static/images/'+str(secure_filename(newpicture.filename)))
+  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,sfname)
+  			else:
+ 				#update alt of photo
+ 				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,oldpicture) 
 			return redirect( url_for('account'))
 	except Exception as err:
 		print 'Error: ',err
@@ -355,6 +371,7 @@ def review(dormID, roomNumber):
 
 @app.route('/static/<sfname>')
 def pic(sfname):
+	 print sfname
 	 f = secure_filename(sfname)
 	 mime_type = f.split('.')[-1]
 	 image = send_from_directory('static',f)
@@ -376,27 +393,22 @@ def roomInfo(dormID, roomNumber):
         		roomType = rowInfo[0]['roomType']
         		avgRating = rowInfo[0]['avgRating']
         		if len(rowPhoto) >= 1:
-        			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
+        			gym = functions.getGym(conn, dormID, roomNumber)
+        			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
+        			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating, gym = gym, diningHall = diningHall )	 	
         		else:
-				messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
+        			messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
         			flash(message)
-        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
+        			gym = functions.getGym(conn, dormID, roomNumber)
+        			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
+        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating, gym = gym, diningHall = diningHall)
         	else:
-			message = Markup(functions.dangerMarkup("Currently no review for this room"))
+        		message = Markup(functions.dangerMarkup("Currently no review for this room"))
         		flash (message)
-          		roomType = functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['roomType']
+          		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+          		gym = functions.getGym(conn, dormID, roomNumber)
+        		diningHall = functions.getdiningHal(conn, dormID, roomNumber)
         		
-        		print functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]
-        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['gym']) == 0:
-        			gym = "No"
-        		else:
-        			gym = "Yes"
-        		
-        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['diningHall']) == 0:
-        			diningHall = "No"
-        		else:
-        			diningHall = "Yes"
-        			
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, gym = gym, diningHall = diningHall )	 		
 
 	else: 

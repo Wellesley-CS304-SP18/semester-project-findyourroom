@@ -27,13 +27,15 @@
       
       </label></p>
       <!-- user's existing comments on this review-->
-      <p><label>Comment: <textarea name="comment" rows="10" cols="30" maxlength="200">{{review['comment']}}</textarea>
+      <p><label>Comment: (Max 200 characters): <textarea name="comment" rows="10" cols="30" maxlength="200">{{review['comment']}}</textarea>
       
       
       <p><label>Upload Images :
       <input type="file" name="pic" accept="image/*">
-      <img src="{{photo['path']}}">
 	  </label></p>
+	  
+	  	  <p><label><b>Image Description: (Max 100 characters)</b></label></p>
+	  <textarea name="alt" rows="2" cols="40" maxlength="100"> {{photo['alt']}}</textarea>
        
       <p><button type="submit">submit</button></p>
   </form>
