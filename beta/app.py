@@ -258,7 +258,7 @@ def insert():
 						functions.addRoom(conn, dormID, roomNumber, roomType)
 						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
 						flash(message)
-						return render_template('insert.html', data=data)
+						return render_template('review.html', dormID = dormID, roomNuber = roomNumber)
 			except Exception as err:
 				message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
 				flash(message)
@@ -422,7 +422,7 @@ def roomInfo(dormID, roomNumber):
 
 	else: 
  		message = Markup(functions.dangerMarkup('Please log in!'))
-                flash(message)
+        flash(message)
  		return redirect( url_for('login'))
 
     

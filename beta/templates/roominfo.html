@@ -20,7 +20,7 @@
 
 <p><b>Room Photos</b></p>
 {% for photo in photolist %} 
-<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
+	<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
 {% endfor%}
 
 {% endblock %}

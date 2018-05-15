@@ -19,4 +19,8 @@
 <!-- <img src= "{{url_for('pic', sfname = '/images/dormmap.jpeg')}}" width="400" alt = "Wellesley College Map"> --> 
 <img src = 'static/images/dormmap.jpeg' width="600">
 
+<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
+
+
+
 {% endblock %}
