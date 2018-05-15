@@ -127,8 +127,7 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
 def addPhotos(conn, dormID, roomNumber, BID, path, alt):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path, alt) VALUES (%s, %s, %s, %s, %s)',[dormID, roomNumber, BID, path, alt]) 
-   
+	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path, alt) VALUES (%s, %s, %s, %s, %s)',[dormID, roomNumber, BID, path, alt])  
    
 # Functions for displaying roominfo
 # ================================================================
@@ -159,10 +158,11 @@ def getListOfRoomsbyDorm(conn, dormID):
     curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
     return curs.fetchall()
     
-def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall,rating): 
+#gym/dininghall/rating not updated?????
+def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall ,rating): 
     '''get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
+    curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND diningHall', [location, dormType, roomType])
     return curs.fetchall()
     
 def getListOfDorms(conn):

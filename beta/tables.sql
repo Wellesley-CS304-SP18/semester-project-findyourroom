@@ -8,33 +8,33 @@ CREATE TABLE dorm(
 	location enum("East", "West") NOT NULL,
 	dormType enum("Dorm","Apartment") NOT NULL, 
 	gym tinyint(1) NOT NULL,		/*0 if no gym, 1 if there's a gym*/
-	dinningHall tinyint(1) NOT NULL /*0 if no dinninghall, 1 if there's a dinninghall*/
+	diningHall tinyint(1) NOT NULL /*0 if no diningHall, 1 if there's a diningHall*/
 	)
 	-- table constraints follow                                              
        ENGINE = InnoDB;
 
 /*update the gym part*/
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("BAT", "Bates", "East", "Dorm", 0, 1); 
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("BEB", "Beebe", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("CAZ", "Cazenove", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("CER", "Cervantes", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("CLA", "Claflin", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("DOW", "Dower", "East", "Dorm", 0, 1); 
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("FRE", "Freeman", "East", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("FHC", "French House", "East", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("HEM", "Hemlock", "East", "Apartment", 1, 0); 
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("INS", "Instead", "East", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("LAK", "Lake House", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("MAC", "McAfee", "East", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("MUN", "Munger", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("ORC", "Orchard", "East", "Apartment", 1, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("POM", "Pomeroy", "West", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("SEV", "Severance", "West", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("SHA", "Shafer", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("SMW", "Simpson West", "East", "Apartment", 1, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("STO", "Stone Davis", "East", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("TCE", "Tower Court East", "West", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, dinningHall)  VALUES ("TCW", "Tower Court West", "West", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("BAT", "Bates", "East", "Dorm", 0, 1); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("BEB", "Beebe", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CAZ", "Cazenove", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CER", "Cervantes", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CLA", "Claflin", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("DOW", "Dower", "East", "Dorm", 0, 1); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("FRE", "Freeman", "East", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("FHC", "French House", "East", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("HEM", "Hemlock", "East", "Apartment", 1, 0); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("INS", "Instead", "East", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("LAK", "Lake House", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("MAC", "McAfee", "East", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("MUN", "Munger", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("ORC", "Orchard", "East", "Apartment", 1, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("POM", "Pomeroy", "West", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SEV", "Severance", "West", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SHA", "Shafer", "West", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SMW", "Simpson West", "East", "Apartment", 1, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("STO", "Stone Davis", "East", "Dorm", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCE", "Tower Court East", "West", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCW", "Tower Court West", "West", "Dorm", 0, 1);
 
 /* is if fine to have both foreign key and primary key?*/
 DROP TABLE IF EXISTS room;
