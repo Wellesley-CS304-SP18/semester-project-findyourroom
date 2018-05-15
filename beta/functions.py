@@ -11,12 +11,9 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='mmuchaku_db'):
+def getConn(db='mmuchaku_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
-    return dsn
-
-def getConn(dsn):
     return dbconn2.connect(dsn)
 
 # Functions for login page 

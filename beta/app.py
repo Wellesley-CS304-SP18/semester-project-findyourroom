@@ -25,8 +25,7 @@ def signup():
 	else:	
 		try:
 			#get user registration info
-			dsn = functions.get_dsn()
-			conn = functions.getConn(dsn)
+			conn = functions.getConn()
 			email = request.form['email']
 			password1 = request.form['password1']
 			password2 = request.form['password2']
@@ -66,8 +65,7 @@ def login():
 		return render_template('login.html')
 	else: 
 		try:
-			dsn = functions.get_dsn()
-			conn = functions.getConn(dsn)
+			conn = functions.getConn()
 			email = request.form["email"]
 			password = request.form["password"]
 			emailsuccess = functions.emailcorrect(conn, email) 
@@ -113,9 +111,8 @@ def logout():
 	
 #Route for viewing user's existing reviews
 @app.route('/account/', methods=["GET","POST"])
-def account():
-	dsn = functions.get_dsn()
-	conn = functions.getConn(dsn)
+def account(): 
+	conn = functions.getConn()
 	
 	if request.method == "GET":
 		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
@@ -144,8 +141,7 @@ def account():
 @app.route('/delete/', methods=["POST"])
 def delete():
 	try:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		dormID = request.form['dormID']  
 		roomNumber = request.form['roomNumber'] 
 		functions.deleteReview(conn, session['BID'],dormID,roomNumber)
@@ -159,8 +155,7 @@ def delete():
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
-	dsn = functions.get_dsn()
-	conn = functions.getConn(dsn)
+	conn = functions.getConn()
 	dormID = request.form['dormID']  
 	roomNumber = request.form['roomNumber'] 
 	
@@ -180,7 +175,7 @@ def update():
 def insert():
 	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:	
-		conn = connFromDSN(functions)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
 		if request.method == 'GET':
 				return render_template('insert.html', data=data)
@@ -232,8 +227,7 @@ def insert():
 @app.route('/search/', methods=["GET", "POST"])
 def search():
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		dormarray = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
@@ -278,8 +272,7 @@ def search():
 def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
 		dormarray = functions.getListOfDorms(conn)
 		
@@ -332,8 +325,7 @@ def pic(sfname):
 def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
         dormarray = functions.getListOfDorms(conn)
         if request.method == "GET":
@@ -362,13 +354,9 @@ def roomInfo(dormID, roomNumber):
 # ================================================================                          
 
 def dataFromDSN(fcn):
-	conn = connFromDSN(fcn)
+	conn = fcn.getConn()
 	return fcn.getListOfDorms(conn)	
-
-def connFromDSN(fcn):
-	dsn = fcn.get_dsn()
-	return fcn.getConn(dsn)
-
+    
 # ================================================================        
 if __name__ == '__main__':
 	app.debug = True
