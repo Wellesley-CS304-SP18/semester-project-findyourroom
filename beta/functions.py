@@ -204,11 +204,12 @@ def dangerMarkup(s):
     return d
 
 def successMarkup(s):
+    print "successMarkup called"
     d = "<div class='alert alert-dismissible alert-success'>"
-    d += "<strong>Well done!</strong> "
+    d += "<strong>Success!</strong> "
     d += s
     d += "</div>"
-    return s
+    return d
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,

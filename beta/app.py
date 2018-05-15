@@ -86,13 +86,13 @@ def login():
 					
 				#Checks if the password matches
 				if ((bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')))[:50]) == hashed:
-					message = Markup(functions.successMarkup('Succesfully logged in as ' + email))
-					flash(message)
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
 					session['BID'] = bidRow
-					
+					msg = functions.successMarkup("Logged in as " + email)
+					message = Markup(msg)
+					flash(message)
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
