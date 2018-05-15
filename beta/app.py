@@ -25,8 +25,7 @@ def signup():
 	else:	
 		try:
 			#get user registration info
-			dsn = functions.get_dsn()
-			conn = functions.getConn(dsn)
+			conn = functions.getConn()
 			email = request.form['email']
 			password1 = request.form['password1']
 			password2 = request.form['password2']
@@ -66,8 +65,7 @@ def login():
 		return render_template('login.html')
 	else: 
 		try:
-			dsn = functions.get_dsn()
-			conn = functions.getConn(dsn)
+			conn = functions.getConn()
 			email = request.form["email"]
 			password = request.form["password"]
 			emailsuccess = functions.emailcorrect(conn, email) 
@@ -125,8 +123,7 @@ def account():
 def delete():
 	print 'you went into delete'
 	try:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		dormID = request.form['dormID']  
 		roomNumber = request.form['roomNumber'] 
 		functions.deleteReview(conn, session['BID'],dormID,roomNumber)
@@ -169,7 +166,7 @@ def update():
 def insert():
 	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:	
-		conn = connFromDSN(functions)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
 		if request.method == 'GET':
 				return render_template('insert.html', data=data)
@@ -221,8 +218,7 @@ def insert():
 @app.route('/search/', methods=["GET", "POST"])
 def search():
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		dormarray = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
@@ -267,43 +263,41 @@ def search():
 def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
 		dormarray = functions.getListOfDorms(conn)
+		BID = session['BID']
 		
-		if request.method == "GET": 
-			return render_template('review.html')
+		if request.method == "GET":
+			# check if review exists in database by bid
+			row = functions.reviewExists(conn, dormID, roomNumber, BID)
+			print row
+			if row is not None:
+				flash ("You have already reviwed this room! Please go to your account to edit!")
+				return redirect( url_for('search'))
+			else: 
+				return render_template('review.html')
 
 		else:
 			try: 
 				room_rating = request.form['stars']
 				comment = request.form['comment']	
-				BID = session['BID']
 				roomMsg = dormID +" " +roomNumber	
 			except Exception as err:
 				flash('Please fill in all the required form : Rating and Comment')
 				return render_template('review.html')
-
-			#if user uploaded an image save them into the photo folder
+			
 			if 'pic' in request.files:
 				file = request.files['pic']
 				sfname = 'images/'+str(secure_filename(file.filename))
-				file.save('static/images/'+str(secure_filename(file.filename)))
-				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
-		
-			# check if review exists in database by bid
-			row = functions.reviewExists(conn, dormID, roomNumber, BID)
-		
-			#if user already has review for this room, then update the review 
-			if row is not None:
-				flash ("You have already reviwed this room! Please go to your account to edit!")
-				return redirect( url_for('search'))
-			else: # else insert a new review entry into database
-				functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
-				functions.updateRating(conn, room_rating, dormID,roomNumber)
-				flash ("Review succesfully written for " + roomMsg)	
-				return redirect( url_for('search'))
+				if sfname !=  'images/':
+					file.save('static/images/'+str(secure_filename(file.filename)))
+					functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+			
+			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
+			functions.updateRating(conn, room_rating, dormID,roomNumber)
+			flash ("Review succesfully written for " + roomMsg)	
+			return redirect( url_for('search'))
 		
 	else:
 		flash("Please log in!")
@@ -321,8 +315,7 @@ def pic(sfname):
 def roomInfo(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		data = dataFromDSN(functions)
         dormarray = functions.getListOfDorms(conn)
         if request.method == "GET":
@@ -339,9 +332,8 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		#To do : fix the roomType below
-        		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
-        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
+        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
 
 	else: 
  		flash("Please log in!")
@@ -352,13 +344,9 @@ def roomInfo(dormID, roomNumber):
 # ================================================================                          
 
 def dataFromDSN(fcn):
-	conn = connFromDSN(fcn)
+	conn = fcn.getConn()
 	return fcn.getListOfDorms(conn)	
-
-def connFromDSN(fcn):
-	dsn = fcn.get_dsn()
-	return fcn.getConn(dsn)
-
+    
 # ================================================================        
 if __name__ == '__main__':
 	app.debug = True

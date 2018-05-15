@@ -9,14 +9,17 @@
 
 {% block main_content %}
 
-
-<h1>Login</h1>
-
-  <form method="post" action="">
-
-      <p><label>Email: <input type="text" name="email"></label></p>
-      <p><label>Password: <input type="password" name="password"></label></p>
-      <p><button type="submit">submit</button></p>
-  </form>
-
+<div class="container login-form">
+  <div class="row align-items-end">
+    <div class="col">
+      
+      <form method="post" action="">
+	<legend>Login</legend>
+	<p><label for="emailLogin">Email: <input class="form-control" type="text" name="email" = placeholder="email"></label></p>
+	<p><label for="passWordLogin">Password: <input class="form-control" type="password" name="password" placeholder="password"></label></p>
+	<p><button class="btn btn-primary" type="submit">submit</button></p>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
