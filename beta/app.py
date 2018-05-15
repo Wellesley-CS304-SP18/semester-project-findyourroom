@@ -33,13 +33,15 @@ def signup():
 			classyear = request.form['classyear']
 			
 			if password1 != password2:
-				flash('The passwords you entered do not match.')
+				message = Markup(functions.dangerMarkup('The passwords you entered do not match.'))
+				flash(message)
 				return redirect( url_for('signup'))
 				
 			hashed = bcrypt.hashpw(password1.encode('utf-8'), bcrypt.gensalt())
 			row = functions.emailexists(conn, email)
 			if row is not None: 
-				flash('That user is already taken. Please choose a different one.')
+				message = Markup(functions.dangerMarkup('That user is already taken. Please choose a different one.'))
+				flash(message)
 				return redirect( url_for('signup') )
 			else:
 				#signup successful, add information to table
@@ -55,7 +57,8 @@ def signup():
 				return redirect(url_for('insert',email=email))		
 			
 		except Exception as err:
- 			flash('form submission error '+str(err))
+			message = Markup(functions.errorMarkup('form submission error '+str(err)))
+ 			flash(message)
  			return redirect( url_for('signup') )
   
 #Route for signing in a user
@@ -75,14 +78,16 @@ def login():
 				row = functions.gethashed(conn, bid)
 
 				if row is None:
-					flash('login incorrect. Try again or join')
+					message = Markup(functions.dangerMarkup('Incorrect login. Try again or sign up'))
+					flash(message)
 					return redirect( url_for('login'))
 				else:
 					hashed = row['hashed']
 					
 				#Checks if the password matches
 				if ((bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')))[:50]) == hashed:
-					flash('Successfully logged in as '+ email)
+					message = Markup(functions.successMarkup('Succesfully logged in as ' + email))
+					flash(message)
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
@@ -91,14 +96,17 @@ def login():
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
-					flash('Your password is incorrect. Please try again.')
+					message = Markup(functions.dangerMarkup('Your password is incorrect. Please try again.'))
+					flash(message)
 					return redirect( url_for('login'))
 			else: 
 				#the email does not exist
-				flash('The email you entered does not exist. Please try again.')
+				message = Markup(functions.dangerMarkup('The email you entered does not exist. Please try again.'))
+				flash(message)
 				return redirect( url_for('login'))
 		except Exception as err:
-			flash('form submission error ' + str(err))
+			message = Markup(functions.errorMarkup('form submission error ' + str(err)))
+			flash(message)
 			return redirect( url_for('login') )       
 
 #Route for logging out a user
@@ -127,12 +135,15 @@ def delete():
 		dormID = request.form['dormID']  
 		roomNumber = request.form['roomNumber'] 
 		functions.deleteReview(conn, session['BID'],dormID,roomNumber)
-		flash(dormID + ' ' + roomNumber + 'was successfully deleted')
+		
+		message = Markup(functions.successMarkup(dormID + ' ' + roomNumber + ' was succesfully deleted'))
+		flash(message)
 		
 		return redirect( url_for('account'))
 	except Exception as err:
 		print 'Error: ',err
-		flash('error {}'.format(err))
+		message = Markup(functions.errorMarkup('error {}'.format(err)))
+		flash(message)
 		return redirect( url_for('account'))
 	
 #route for updating review
@@ -153,11 +164,13 @@ def update():
 # 			room_rating = request.form['stars']
 # 			comment = request.form['comment']
 # 			functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
- 			flash('Your Review has been updated')
+ 			message = Markup(functions.successMarkup('Your Review has been updated'))
+			flash(message)
 			return redirect( url_for('account'))
 	except Exception as err:
 		print 'Error: ',err
-		flash('error {}'.format(err))
+		message = Markup(functions.errorMarkup('error {}'.format(err)))
+		flash(message)
 		return redirect( url_for('account'))
 
 
@@ -178,39 +191,49 @@ def insert():
 		
 				#updating if/else notifications for correct input
 				if dormID == "none" and roomType == 'none' and not roomNumber:
-				    flash('Please choose a dorm, room type, and room number.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a dorm, room type, and room number.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				elif dormID == "none" and roomType == 'none':
-				    flash('Please choose a dorm and room type.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a dorm and room type.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				elif dormID == "none" and not roomNumber:
-				    flash('Please choose a dorm and room number.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a dorm and room number.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				elif not roomNumber and roomType == 'none':
-				    flash('Please choose a room number and room type.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a room number and room type.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				elif dormID == 'none':
-				    flash('Please choose a dorm.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a dorm.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				elif not roomNumber:
-				    flash('Please choose a room number.')
-				    return render_template('insert.html', data=data)
+					message = Markup(functions.dangerMarkup('Please choose a room number.'))
+					flash(message)
+					return render_template('insert.html', data=data)
 				else: 
 					msg = dormID + " " + roomNumber
 					row = functions.roomExists(conn, dormID, roomNumber, roomType)
 					if row is not None:
-						flash(msg + ' already exists')
+						message = Markup(functions.dangerMarkup(msg + ' already exists'))
+						flash(message)
 						return render_template('insert.html', data=data)
 					else:
 						functions.addRoom(conn, dormID, roomNumber, roomType)
-						flash(msg + ' succesfully  added.')
+						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
+						flash(message)
 						return render_template('insert.html', data=data)
 			except Exception as err:
-				flash('Sorry, an error occurred.')
+				message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
+				flash(message)
 				data = dataFromDSN(functions)
 				return render_template('insert.html', data=data)
 	else: 
-		flash("Please log in!")
+		message = Markup(functions.dangerMarkup('Please log in!'))
+		flash(message)
 		return redirect( url_for('login'))
 	    
     
@@ -231,7 +254,8 @@ def search():
 					roomList += functions.getListOfRoomsbyDorm(conn,room)
 	
 			if not roomList:
-				flash("No Result Matches Your Request!")
+				message = Markup(functions.dangerMarkup("No Result Matches Your Request!"))
+				flash(message)
 				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
@@ -248,13 +272,15 @@ def search():
 			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
 			
 			if not roomList:
-				flash("No Result Matches Your Request!")
+				message = Markup(danger.Markup("No Result Matches Your Request!"))
+				flash(message)
 				return render_template('search.html', dormarray = dormarray)
 			else:
 				return render_template('result.html', roomArray = roomList)
 
 	else: 
-		flash("Please log in!")
+		message = Markup(functions.dangerMarkup('Please log in!'))
+                flash(message)
 		return redirect( url_for('login'))
 
 
@@ -273,7 +299,8 @@ def review(dormID, roomNumber):
 			row = functions.reviewExists(conn, dormID, roomNumber, BID)
 			print row
 			if row is not None:
-				flash ("You have already reviwed this room! Please go to your account to edit!")
+				message = Markup(functions.dangerMarkup("You have already reviwed this room! Please go to your account to edit!"))
+				flash (message)
 				return redirect( url_for('search'))
 			else: 
 				return render_template('review.html')
@@ -284,7 +311,8 @@ def review(dormID, roomNumber):
 				comment = request.form['comment']	
 				roomMsg = dormID +" " +roomNumber	
 			except Exception as err:
-				flash('Please fill in all the required form : Rating and Comment')
+				message = Markup(functions.errorMarkup('Please fill in all the required form : Rating and Comment'))
+				flash(message)
 				return render_template('review.html')
 			
 			if 'pic' in request.files:
@@ -296,11 +324,13 @@ def review(dormID, roomNumber):
 			
 			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 			functions.updateRating(conn, room_rating, dormID,roomNumber)
-			flash ("Review succesfully written for " + roomMsg)	
+			message = Markup(functions.successMarkup("Review succesfully written for " + roomMsg))
+			flash (message)
 			return redirect( url_for('search'))
 		
 	else:
-		flash("Please log in!")
+		message = Markup(functions.dangerMarkup('Please log in!'))
+                flash(message)
 		return redirect( url_for('login'))
 
 @app.route('/static/<sfname>')
@@ -328,15 +358,18 @@ def roomInfo(dormID, roomNumber):
         		if len(rowPhoto) >= 1:
         			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         		else:
-        			flash ("Currently no photo entry for this room")
+				messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
+        			flash(message)
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
-        		flash ("Currently no review for this room")
+			message = Markup(functions.dangerMarkup("Currently no review for this room"))
+        		flash (message)
         		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
 
 	else: 
- 		flash("Please log in!")
+ 		message = Markup(functions.dangerMarkup('Please log in!'))
+                flash(message)
  		return redirect( url_for('login'))
 
     

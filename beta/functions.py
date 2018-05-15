@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def getConn(db='mmuchaku_db'):
+def getConn(db='rhuang_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dbconn2.connect(dsn)
@@ -170,6 +170,29 @@ def getListOfDorms(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute("select dormName, dormID from dorm where dormName != 'NULL'")
     return curs.fetchall()
+
+# Functions for flashing indicators / alerts
+# ================================================================
+def errorMarkup(s):
+    d = "<div class='alert alert-dismissible alert-primary'>"
+    d += "<strong>Error.</strong> "
+    d += s
+    d += "</div>"
+    return d
+
+def dangerMarkup(s):
+    d = "<div class='alert alert-dismissible alert-danger'>"
+    d += "<strong>Oh Snap!</strong> "
+    d += s
+    d += "</div>"
+    return d
+
+def successMarkup(s):
+    d = "<div class='alert alert-dismissible alert-success'>"
+    d += "<strong>Well done!</strong> "
+    d += s
+    d += "</div>"
+    return s
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
