@@ -258,8 +258,10 @@ def insert():
 						functions.addRoom(conn, dormID, roomNumber, roomType)
 						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
 						flash(message)
-						return render_template('review.html', dormID = dormID, roomNuber = roomNumber)
+						return redirect(url_for('review'), dormID = dormID, roomNuber = roomNumber)
 			except Exception as err:
+				print err
+				print "inside here"
 				message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
 				flash(message)
 				data = dataFromDSN(functions)
@@ -342,12 +344,15 @@ def review(dormID, roomNumber):
 			try: 
 				room_rating = request.form['stars']	
 			except Exception as err:
+				print "error1"
 				message = Markup(functions.errorMarkup('Please rate the room'))
 				flash(message)
 				return render_template('review.html')
 			
 			if len(request.form['comment']) == 0 :
-				flash('Please write a comment')
+				print "error2"
+				message = Markup(functions.errorMarkup('Please write a comment'))
+				flash(message)
 				return render_template('review.html')
 			else: 
 				comment = request.form['comment'] 
@@ -358,7 +363,9 @@ def review(dormID, roomNumber):
 				if sfname !=  'images/':
 					file.save('static/images/'+str(secure_filename(file.filename)))
 					if len(request.form['alt']) == 0:
-						flash('Please fill the image description')
+						print "error3"
+						message = Markup(functions.errorMarkup('Please fill the image description'))
+						flash(message)
 						return render_template('review.html')
 					else: 
 						alt = request.form['alt']
@@ -366,6 +373,7 @@ def review(dormID, roomNumber):
 			
 			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 			functions.updateRating(conn, room_rating, dormID,roomNumber)
+			print "error4"
 			message = Markup(functions.successMarkup("Review succesfully written for " + dormID +" " +roomNumber))
 			flash (message)
 			return redirect( url_for('search'))
@@ -377,9 +385,7 @@ def review(dormID, roomNumber):
 
 @app.route('/static/<sfname>')
 def pic(sfname):
-	 print sfname
 	 f = secure_filename(sfname)
-	 print f
 	 mime_type = f.split('.')[-1]
 	 image = send_from_directory('static',f)
 	 return image
