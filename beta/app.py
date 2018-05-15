@@ -153,11 +153,8 @@ def delete():
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
-	print 'we went into update'
 	try:
-		print 'we went into try'
 		conn = functions.getConn()
-		
 		if request.method == "GET":
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
