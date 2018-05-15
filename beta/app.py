@@ -379,6 +379,7 @@ def review(dormID, roomNumber):
 def pic(sfname):
 	 print sfname
 	 f = secure_filename(sfname)
+	 print f
 	 mime_type = f.split('.')[-1]
 	 image = send_from_directory('static',f)
 	 return image
