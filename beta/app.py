@@ -4,18 +4,45 @@
 	findYourRoom
 '''
 
+#do we need datetime??
 import dbconn2
-import os,sys,random, datetime
-import functions, bcrypt
+import os,sys,random, datetime, bcrypt
+import functions
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup, send_from_directory
 from werkzeug import secure_filename
-app = Flask(__name__)
-app.secret_key = "secret_key"
+from flask_cas import CAS
 
-#show basic navigation 
-@app.route('/')
-def index():
-	return render_template('index.html')
+app = Flask(__name__)
+app.secret_key = "123456789"  #should we have something here?
+
+# CAS configuration
+# CAS(app)
+# app.config['CAS_SERVER'] = 'https://login.wellesley.edu:443'
+# app.config['CAS_AFTER_LOGIN'] = 'logged_in'
+# app.config['CAS_LOGIN_ROUTE'] = '/module.php/casserver/cas.php/login'
+# app.config['CAS_LOGOUT_ROUTE'] = '/module.php/casserver/cas.php/logout'
+# app.config['CAS_AFTER_LOGOUT'] = 'http://cs.wellesley.edu:1943/index'
+# app.config['CAS_VALIDATE_ROUTE'] = '/module.php/casserver/serviceValidate.php'
+# 
+# app.secret_key = "123456789"
+#         
+# #show basic navigation 
+# @app.route('/')
+# def index():
+# 	print 'Session keys: ',session.keys()
+# 	if '_CAS_TOKEN' in session:
+# 		token = session['_CAS_TOKEN']
+# 	if 'CAS_ATTRIBUTES' in session:
+# 		attribs = session['CAS_ATTRIBUTES']
+# 	if 'CAS_USERNAME' in session:
+# 		is_logged_in = True
+# 		username = session['CAS_USERNAME']
+# 	else:
+# 		is_logged_in = False
+# 		username = None
+#     	print('CAS_USERNAME is not in the session')
+#     	return render_template('index.html', username=username, is_logged_in=is_logged_in)
+
 
 #Route for signing up a user
 @app.route('/signup/', methods=["GET", "POST"])
@@ -355,6 +382,7 @@ def review(dormID, roomNumber):
 
 @app.route('/static/<sfname>')
 def pic(sfname):
+	 print sfname
 	 f = secure_filename(sfname)
 	 mime_type = f.split('.')[-1]
 	 image = send_from_directory('static',f)
@@ -376,27 +404,22 @@ def roomInfo(dormID, roomNumber):
         		roomType = rowInfo[0]['roomType']
         		avgRating = rowInfo[0]['avgRating']
         		if len(rowPhoto) >= 1:
-        			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
+        			gym = functions.getGym(conn, dormID, roomNumber)
+        			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
+        			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating, gym = gym, diningHall = diningHall )	 	
         		else:
-				messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
+        			messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
         			flash(message)
-        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
+        			gym = functions.getGym(conn, dormID, roomNumber)
+        			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
+        			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating, gym = gym, diningHall = diningHall)
         	else:
-			message = Markup(functions.dangerMarkup("Currently no review for this room"))
+        		message = Markup(functions.dangerMarkup("Currently no review for this room"))
         		flash (message)
-          		roomType = functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['roomType']
+          		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+          		gym = functions.getGym(conn, dormID, roomNumber)
+        		diningHall = functions.getdiningHal(conn, dormID, roomNumber)
         		
-        		print functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]
-        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['gym']) == 0:
-        			gym = "No"
-        		else:
-        			gym = "Yes"
-        		
-        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['diningHall']) == 0:
-        			diningHall = "No"
-        		else:
-        			diningHall = "Yes"
-        			
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, gym = gym, diningHall = diningHall )	 		
 
 	else: 
