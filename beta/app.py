@@ -258,7 +258,7 @@ def insert():
 						functions.addRoom(conn, dormID, roomNumber, roomType)
 						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
 						flash(message)
-						return redirect(url_for('review'), dormID = dormID, roomNumber = roomNumber)
+						return redirect(url_for('review'), dormID = dormID, roomNumber = roomNumber))
 			except Exception as err:
 				print err
 				print "inside here"
