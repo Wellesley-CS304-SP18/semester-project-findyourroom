@@ -120,16 +120,11 @@ def logout():
 #Route for viewing user's existing reviews
 @app.route('/account/', methods=["GET","POST"])
 def account():
-# check if user logged in:                                                                                                                  
-        if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
-		if request.method == "GET":
-			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-	else:
-                message = Markup(functions.dangerMarkup('Please log in!'))
-                flash(message)
-                return redirect( url_for('login'))
+	dsn = functions.get_dsn()
+	conn = functions.getConn(dsn)
+	if request.method == "GET":
+		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+
 
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
@@ -307,7 +302,7 @@ def review(dormID, roomNumber):
 			row = functions.reviewExists(conn, dormID, roomNumber, BID)
 			
 			if row is not None:
-				message = Markup(functions.dangerMarkup("You have already reviewed this room! Please go to your account to edit!"))
+				message = Markup(functions.dangerMarkup("You have already reviwed this room! Please go to your account to edit!"))
 				flash (message)
 				return redirect( url_for('search'))
 			else: 
@@ -317,8 +312,12 @@ def review(dormID, roomNumber):
 			try: 
 				room_rating = request.form['stars']	
 			except Exception as err:
-				message = Markup(functions.errorMarkup('Please rate the room'))
+<<<<<<< HEAD
+				message = Markup(functions.errorMarkup('Please fill in all the required form : Rating and Comment'))
 				flash(message)
+=======
+				flash('Please rate the room')
+>>>>>>> 9d83a8fb5d376bd7333c1078e8f4763552a51d01
 				return render_template('review.html')
 			
 			if len(request.form['comment']) == 0 :
@@ -341,8 +340,13 @@ def review(dormID, roomNumber):
 			
 			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 			functions.updateRating(conn, room_rating, dormID,roomNumber)
-			message = Markup(functions.successMarkup("Review succesfully written for " + dormID +" " +roomNumber))
+<<<<<<< HEAD
+			message = Markup(functions.successMarkup("Review succesfully written for " + roomMsg))
 			flash (message)
+=======
+			
+			flash ("Review succesfully written for " + dormID +" " +roomNumber)	
+>>>>>>> 9d83a8fb5d376bd7333c1078e8f4763552a51d01
 			return redirect( url_for('search'))
 		
 	else:
@@ -382,9 +386,14 @@ def roomInfo(dormID, roomNumber):
         			flash(message)
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
+<<<<<<< HEAD
 			message = Markup(functions.dangerMarkup("Currently no review for this room"))
         		flash (message)
-          		roomType = functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['roomType']
+        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
+=======
+        		flash ("Currently no review for this room")
+        		roomType = functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['roomType']
         		
         		print functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]
         		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['gym']) == 0:
@@ -398,6 +407,7 @@ def roomInfo(dormID, roomNumber):
         			diningHall = "Yes"
         			
         		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, gym = gym, diningHall = diningHall )	 		
+>>>>>>> 9d83a8fb5d376bd7333c1078e8f4763552a51d01
 
 	else: 
  		message = Markup(functions.dangerMarkup('Please log in!'))

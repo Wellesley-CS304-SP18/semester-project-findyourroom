@@ -12,20 +12,19 @@
 
 {% block main_content %}
 
-	<h1>Summary of {{dormID}} {{roomNumber}}</h1>
-	<p><b>Room Type : </b> {{roomType}}</p>
-	<p><b>Gym : </b> {{gym}}</p>
-	<p><b>Dining Hall : </b> {{diningHall}}</p>
-	<p><b>Average Rating : </b>{{avgRating}}</p>
-	<p><b>Past Residence Comments</b></p>
-		{% for roominfo in roomlist %} 
-			<p>{{roominfo['comment']}}</p>
-		{% endfor%}
+<h1>Summary of {{dormID}} {{roomNumber}}</h1>
+<p><b>Room Type : </b> {{roomType}}</p>
+<p><b>Gym : </b> {{gym}}</p>
+<p><b>Dining Hall : </b> {{diningHall}}</p>
+<p><b>Average Rating : </b>{{avgRating}}</p>
+<p><b>Past Residence Comments</b></p>
+{% for roominfo in roomlist %} 
+<p>{{roominfo['comment']}}</p>
+{% endfor%}
 
-	<p><b>Room Photos</b></p>
-		{% for photo in photolist %} 
-		<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
-		{% endfor%}
+<p><b>Room Photos</b></p>
+{% for photo in photolist %} 
+<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
+{% endfor%}
 
 {% endblock %}
-

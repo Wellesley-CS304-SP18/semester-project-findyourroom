@@ -35,22 +35,12 @@
 	</ul>
       </div>
     </nav>
-        
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div id="messages">
-      {% for msg in messages %}
-      <p>{{msg}}</p>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-
+    
+    
     {% block main_content %}
-    	<h1>{{ header }}</h1>  
-    	<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>    
+    <h1>{{ header }}</h1>  
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>    
     {% endblock %}
-
+    
   </body>
 </html>
