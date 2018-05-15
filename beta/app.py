@@ -295,13 +295,13 @@ def review(dormID, roomNumber):
 			except Exception as err:
 				flash('Please fill in all the required form : Rating and Comment')
 				return render_template('review.html')
-
-			#if user uploaded an image save them into the photo folder
+			
 			if 'pic' in request.files:
 				file = request.files['pic']
 				sfname = 'images/'+str(secure_filename(file.filename))
-				file.save('static/images/'+str(secure_filename(file.filename)))
-				functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+				if sfname !=  'images/':
+					file.save('static/images/'+str(secure_filename(file.filename)))
+					functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
 		
 			# check if review exists in database by bid
 			row = functions.reviewExists(conn, dormID, roomNumber, BID)
@@ -350,9 +350,8 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		#To do : fix the roomType below
-        		#roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
-        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = "Single", avgRating = "N/A" )	 		
+        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
 
 	else: 
  		flash("Please log in!")
