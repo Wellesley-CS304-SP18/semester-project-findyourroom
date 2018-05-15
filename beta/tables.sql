@@ -14,27 +14,27 @@ CREATE TABLE dorm(
        ENGINE = InnoDB;
 
 /*update the gym part*/
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("BAT", "Bates", "East", "Dorm", 0, 1); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("BAT", "Bates", "East", "Dorm", 1, 1); 
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("BEB", "Beebe", "West", "Dorm", 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CAZ", "Cazenove", "West", "Dorm", 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CER", "Cervantes", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CLA", "Claflin", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("DOW", "Dower", "East", "Dorm", 0, 1); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("CLA", "Claflin", "West", "Dorm", 1, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("DOW", "Dower", "East", "Dorm", 0, 0); 
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("FRE", "Freeman", "East", "Dorm", 0, 1);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("FHC", "French House", "East", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("HEM", "Hemlock", "East", "Apartment", 1, 0); 
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("HEM", "Hemlock", "East", "Apartment", 0, 0); 
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("INS", "Instead", "East", "Dorm", 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("LAK", "Lake House", "West", "Dorm", 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("MAC", "McAfee", "East", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("MUN", "Munger", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("ORC", "Orchard", "East", "Apartment", 1, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("MUN", "Munger", "West", "Dorm", 1, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("ORC", "Orchard", "East", "Apartment", 0, 0);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("POM", "Pomeroy", "West", "Dorm", 0, 1);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SEV", "Severance", "West", "Dorm", 0, 1);
 INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SHA", "Shafer", "West", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SMW", "Simpson West", "East", "Apartment", 1, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("STO", "Stone Davis", "East", "Dorm", 0, 0);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCE", "Tower Court East", "West", "Dorm", 0, 1);
-INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCW", "Tower Court West", "West", "Dorm", 0, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("SMW", "Simpson West", "East", "Apartment", 0, 0);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("STO", "Stone Davis", "East", "Dorm", 1, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCE", "Tower Court East", "West", "Dorm", 1, 1);
+INSERT INTO dorm (dormID, dormName, location, dormType, gym, diningHall)  VALUES ("TCW", "Tower Court West", "West", "Dorm", 1, 1);
 
 /* is if fine to have both foreign key and primary key?*/
 DROP TABLE IF EXISTS room;

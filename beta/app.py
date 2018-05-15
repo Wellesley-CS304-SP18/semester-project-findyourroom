@@ -366,9 +366,6 @@ def review(dormID, roomNumber):
                 flash(message)
 		return redirect( url_for('login'))
 
-#currently without any commment it is loading 
-#image alt part error should be flashed and dealt 
-
 @app.route('/static/<sfname>')
 def pic(sfname):
 	 print sfname
