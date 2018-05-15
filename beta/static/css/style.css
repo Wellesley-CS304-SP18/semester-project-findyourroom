@@ -19,3 +19,18 @@
     width: 350px
 }
 
+.center-block{
+    display: flex;
+    justify-content: center;
+    margin-top:15px
+}
+
+.search-btn{
+ box-shadow:0px 0px 0px 1px rgba(255,255,255, 0.9);
+ border-radius:5px;
+} 
+
+.formsection{
+    padding: 12px 20px;
+    display:inline-block
+}
