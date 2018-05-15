@@ -4,7 +4,6 @@
 	findYourRoom
 '''
 
-#do we need datetime??
 import dbconn2
 import os,sys,random,bcrypt
 import functions
@@ -303,7 +302,7 @@ def search():
 				roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
 			
 			if not roomList:
-				message = Markup(functions.dangerMarkup("No Result Matches Your Request!"))
+				message = Markup(functions.dangerMarkup('No Result Matches Your Request!'))
 				flash(message)
 				return render_template('search.html', dormarray = dormarray)
 			else:
