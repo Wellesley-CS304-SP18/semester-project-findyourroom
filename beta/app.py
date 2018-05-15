@@ -113,13 +113,13 @@ def login():
 					
 				#Checks if the password matches
 				if ((bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')))[:50]) == hashed:
-					message = Markup(functions.successMarkup('Succesfully logged in as ' + email))
-					flash(message)
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
 					session['BID'] = bidRow
-					
+					msg = functions.successMarkup("Logged in as " + email)
+					message = Markup(msg)
+					flash(message)
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
@@ -149,8 +149,7 @@ def logout():
 def account():
 # check if user logged in:                                                                                                                  
         if "logged_in" in session and session["logged_in"] is True:
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		if request.method == "GET":
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
 	else:
@@ -181,23 +180,32 @@ def delete():
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
-	print 'we went into update'
 	try:
-		print 'we went into try'
-		dsn = functions.get_dsn()
-		conn = functions.getConn(dsn)
+		conn = functions.getConn()
 		if request.method == "GET":
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
-			print 'we went into get'
+			session['dormID']=dormID
+			session['roomNumber']=roomNumber
 			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
 		elif request.method == "POST":
-			print 'POST update'
-# 			room_rating = request.form['stars']
-# 			comment = request.form['comment']
-# 			functions.updateReview(conn, dormID, roomNumber, comment, room_rating, session['BID'])
- 			message = Markup(functions.successMarkup('Your Review has been updated'))
-			flash(message)
+			#retrieve new rating, comment, and photo description
+ 			room_rating = request.form['stars']
+ 			comment = request.form['comment']
+ 			alt = request.form['alt']
+ 			photo = functions.loadPhoto(conn,session['BID'], session['dormID'], session['roomNumber'])
+ 			#retrieve new photo
+			newpicture = request.files['pic']
+			#old photo
+			oldpicture = photo.get('path')
+			#update the review in the database
+			functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+			if newpicture is not None: 
+  				#update path and alt of photo
+  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,newpicture)
+  			else:
+ 				#update alt of photo
+ 				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,oldpicture) 
 			return redirect( url_for('account'))
 	except Exception as err:
 		print 'Error: ',err

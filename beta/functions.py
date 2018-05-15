@@ -73,9 +73,13 @@ def loadReview(conn, BID, dormID, roomNumber):
 def loadPhoto(conn, BID, dormID, roomNumber):
 	'''get photo from existing review '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT path FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	curs.execute('SELECT path, alt FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
 	return curs.fetchone()
 
+def updatePhoto(conn, BID, dormID, roomNumber, alt, path):
+	'''update path and alt of photo'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('UPDATE  photo SET path=%s, alt=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [path, alt, dormID, roomNumber, BID])
 
 def inserthashed(conn, BID, hashed):
 	'''insert user hash password information into the table'''
@@ -220,11 +224,12 @@ def dangerMarkup(s):
     return d
 
 def successMarkup(s):
+    print "successMarkup called"
     d = "<div class='alert alert-dismissible alert-success'>"
-    d += "<strong>Well done!</strong> "
+    d += "<strong>Success!</strong> "
     d += s
     d += "</div>"
-    return s
+    return d
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,

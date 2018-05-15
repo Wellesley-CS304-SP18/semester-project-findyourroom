@@ -43,7 +43,11 @@
 	  </select>
 	</div>
 	
+<<<<<<< HEAD
 	<div class="form-button form-group">
+=======
+	<div class="form-group">
+>>>>>>> e65c16a616c5e7eb714dceae572001610f48f433
 	  <!--<p><input type="submit" name="submit" value="insert">-->
 	  <button type="submit" class="btn btn-primary" name="submit" value="insert">Insert</button>
 	  </div>
