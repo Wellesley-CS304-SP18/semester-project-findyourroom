@@ -124,10 +124,10 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
 
 # add photos 
 # to-do : implement alt
-def addPhotos(conn, dormID, roomNumber, BID, path):
+def addPhotos(conn, dormID, roomNumber, BID, path, alt):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path) VALUES (%s, %s, %s, %s)',[dormID, roomNumber, BID, path]) 
+	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path, alt) VALUES (%s, %s, %s, %s, %s)',[dormID, roomNumber, BID, path, alt]) 
    
    
 # Functions for displaying roominfo
@@ -141,7 +141,7 @@ def getroomInfo(conn, dormID, roomNumber):
 def getroomPhoto(conn, dormID, roomNumber):
     '''get photo of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT path FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
+    curs.execute('SELECT path, alt FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
     
 def getroomType(conn, dormID, roomNumber):

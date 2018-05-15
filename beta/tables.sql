@@ -101,6 +101,7 @@ CREATE TABLE photo(
 	roomNumber char(3) NOT NULL,
 	BID char(8) NOT NULL,
 	path varchar(100) NOT NULL,
+	alt varchar(100) NOT NULL, 
 	FOREIGN KEY (dormID) REFERENCES dorm(dormID) ON DELETE CASCADE,
 	FOREIGN KEY (roomNumber) REFERENCES room(roomNumber) ON DELETE CASCADE, 
 	FOREIGN KEY (BID) REFERENCES user(BID) ON DELETE CASCADE
