@@ -195,12 +195,6 @@ def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall ,
     curs.execute('SELECT room.dormID, dormName, roomNumber, dorm.gym, dorm.diningHall from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND dorm.gym=%s AND dorm.diningHall=%s AND room.avgRating>=%s ', [location, dormType, roomType, gym, diningHall, rating])
     return curs.fetchall()
 
-def getListOfRoomsbyFilterNoRating(conn, location, dormType, roomType, gym, diningHall): 
-    '''get all the list of rooms based on user preference'''
-    curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT room.dormID, dormName, roomNumber, dorm.gym, dorm.diningHall from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND dorm.gym=%s AND dorm.diningHall=%s', [location, dormType, roomType, gym, diningHall])
-    return curs.fetchall()
-    
 def getListOfDorms(conn):
     '''get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)

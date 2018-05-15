@@ -302,10 +302,7 @@ def search():
 			diningHall = request.form['diningHall']
 			rating = request.form['rating']
 
-	 		if rating == "All":
-	 			roomList = functions.getListOfRoomsbyFilterNoRating(conn, location, dormType, roomType, gym, diningHall)
-	 		else: 
-				roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
+			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
 			
 			if not roomList:
 				message = Markup(functions.dangerMarkup('No Result Matches Your Request!'))

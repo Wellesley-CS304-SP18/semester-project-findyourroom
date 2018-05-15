@@ -16,11 +16,7 @@
 <ol> Step 1 : Sign up or Login  </ol>
 <ol> Step 2 : Search rooms or Review rooms or Insert a new room</ol>
 
-<!-- <img src= "{{url_for('pic', sfname = '/images/dormmap.jpeg')}}" width="400" alt = "Wellesley College Map"> --> 
-<img src = 'static/images/dormmap.jpeg' width="600">
-
-<img src= "{{ url_for('pic', sfname = photo['path'])}}" width="400" alt = "{{photo['alt']}}">
-
+<img src= "{{url_for('static', filename = '/images/dormmap.jpeg')}}" width="400" alt = "Wellesley College Map"> 
 
 
 {% endblock %}
