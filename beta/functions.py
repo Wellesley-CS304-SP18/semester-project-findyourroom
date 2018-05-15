@@ -11,12 +11,9 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def get_dsn(db='yourroom_db'):
+def getConn(db='rhuang_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
-    return dsn
-
-def getConn(dsn):
     return dbconn2.connect(dsn)
 
 # Functions for login page 
@@ -203,11 +200,12 @@ def dangerMarkup(s):
     return d
 
 def successMarkup(s):
+    print "successMarkup called"
     d = "<div class='alert alert-dismissible alert-success'>"
-    d += "<strong>Well done!</strong> "
+    d += "<strong>Success!</strong> "
     d += s
     d += "</div>"
-    return s
+    return d
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
