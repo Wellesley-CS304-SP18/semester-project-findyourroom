@@ -124,11 +124,10 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
 
 # add photos 
 # to-do : implement alt
-def addPhotos(conn, dormID, roomNumber, BID, path):
+def addPhotos(conn, dormID, roomNumber, BID, path, alt):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path) VALUES (%s, %s, %s, %s)',[dormID, roomNumber, BID, path]) 
-   
+	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path, alt) VALUES (%s, %s, %s, %s, %s)',[dormID, roomNumber, BID, path, alt])  
    
 # Functions for displaying roominfo
 # ================================================================
@@ -141,7 +140,7 @@ def getroomInfo(conn, dormID, roomNumber):
 def getroomPhoto(conn, dormID, roomNumber):
     '''get photo of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT path FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
+    curs.execute('SELECT path, alt FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
     return curs.fetchall()
     
 def getroomType(conn, dormID, roomNumber):
@@ -159,10 +158,11 @@ def getListOfRoomsbyDorm(conn, dormID):
     curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
     return curs.fetchall()
     
-def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall,rating): 
+#gym/dininghall/rating not updated?????
+def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall ,rating): 
     '''get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s', [location, dormType, roomType])
+    curs.execute('SELECT room.dormID, dormName, roomNumber from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND diningHall', [location, dormType, roomType])
     return curs.fetchall()
     
 def getListOfDorms(conn):

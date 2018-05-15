@@ -242,10 +242,10 @@ def search():
 			dormType = request.form['dormType']
 			roomType = request.form['roomType']
 			gym = request.form['gym']
-			dinningHall = request.form['dinningHall']
+			diningHall = request.form['diningHall']
 			rating = request.form['rating']
 	 
-			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, dinningHall, rating)
+			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
 			
 			if not roomList:
 				flash("No Result Matches Your Request!")
@@ -271,7 +271,7 @@ def review(dormID, roomNumber):
 		if request.method == "GET":
 			# check if review exists in database by bid
 			row = functions.reviewExists(conn, dormID, roomNumber, BID)
-			print row
+			
 			if row is not None:
 				flash ("You have already reviwed this room! Please go to your account to edit!")
 				return redirect( url_for('search'))
@@ -280,28 +280,41 @@ def review(dormID, roomNumber):
 
 		else:
 			try: 
-				room_rating = request.form['stars']
-				comment = request.form['comment']	
-				roomMsg = dormID +" " +roomNumber	
+				room_rating = request.form['stars']	
 			except Exception as err:
-				flash('Please fill in all the required form : Rating and Comment')
+				flash('Please rate the room')
 				return render_template('review.html')
 			
+			if len(request.form['comment']) == 0 :
+				flash('Please write a comment')
+				return render_template('review.html')
+			else: 
+				comment = request.form['comment'] 
+				
 			if 'pic' in request.files:
 				file = request.files['pic']
 				sfname = 'images/'+str(secure_filename(file.filename))
 				if sfname !=  'images/':
 					file.save('static/images/'+str(secure_filename(file.filename)))
-					functions.addPhotos(conn, dormID, roomNumber, BID,sfname)
+					if len(request.form['alt']) == 0:
+						flash('Please fill the image description')
+						return render_template('review.html')
+					else: 
+						alt = request.form['alt']
+						functions.addPhotos(conn, dormID, roomNumber, BID, sfname, alt)
 			
 			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 			functions.updateRating(conn, room_rating, dormID,roomNumber)
-			flash ("Review succesfully written for " + roomMsg)	
+			
+			flash ("Review succesfully written for " + dormID +" " +roomNumber)	
 			return redirect( url_for('search'))
 		
 	else:
 		flash("Please log in!")
 		return redirect( url_for('login'))
+
+#currently without any commment it is loading 
+#image alt part error should be flashed and dealt 
 
 @app.route('/static/<sfname>')
 def pic(sfname):
@@ -321,7 +334,7 @@ def roomInfo(dormID, roomNumber):
         if request.method == "GET":
         	rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
         	rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
-        	
+        
         	if len(rowInfo) >= 1:
         		roomType = rowInfo[0]['roomType']
         		avgRating = rowInfo[0]['avgRating']

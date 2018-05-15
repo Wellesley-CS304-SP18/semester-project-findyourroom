@@ -11,10 +11,10 @@
 
 
 <h1>Review</h1>
-<h2>To review, please give a rating (1-5), comment, review type (pro/cons).</h2>
+<h2>To review, please give a rating (1-5) and comment (* required)</h2>
 
   <form method="post" enctype="multipart/form-data" action="">
-      <p><label>Rating:         
+      <p><label><b>Rating:(*) </b></label></p> 
           <label>1 <input type="radio" name="stars" value="1"></label>
           
           <label>2 <input type="radio" name="stars" value="2"></label>
@@ -24,14 +24,16 @@
           <label>4 <input type="radio" name="stars" value="4"></label>
           
           <label>5 <input type="radio" name="stars" value="5"></label>
-      </label></p>
       
-      <p><label>Comment: <textarea name="comment" rows="10" cols="30" maxlength="200">Your review/comments here.</textarea>
+      <p><label><b>Comment: (Max 200 characters)(*)</b></label></p>
+      <textarea name="comment" rows="10" cols="40" maxlength="200"></textarea>
       
-      <p><label>Upload Images :
+      <p><label><b>Upload Images :</b></label></p>
       <input type="file" name="pic" accept="image/*">
-	  </label></p>
-       
+	  
+	  <p><label><b>Image Description: (Max 100 characters)</b></label></p>
+	  <textarea name="alt" rows="2" cols="40" maxlength="100"></textarea>
+	  
       <p><button type="submit">submit</button></p>
   </form>
 
