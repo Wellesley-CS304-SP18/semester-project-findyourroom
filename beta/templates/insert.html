@@ -11,44 +11,44 @@
 
 <div class="container login-form">
   <div class="row">
-      <div class="col">	
-	{% include "flash.html" %}
-	<form method="post" action="">
-	  <legend>Insert Room</legend>
-	  <div class="form-group">
-	    <p><label for="roomNumber">Room Number: </label><input type="text" name="roomNumber" pattern="[0-9]{3}" class="form-control" placeholder="Room Number" title ="input your 3 digit room number"></p>
-	  </div>
-	  
-	  <div class="form-group">
-	    <label for="menuDorm">
-	      Dorm:
+    <div class="col">	
+      {% include "flash.html" %}
+      <form method="post" action="">
+	<legend>Insert Room</legend>
+	<div class="form-group">
+	  <p><label for="roomNumber">Room Number: </label><input type="text" name="roomNumber" pattern="[0-9]{3}" class="form-control" placeholder="Room Number" title ="input your 3 digit room number"></p>
+	</div>
+	
+	<div class="form-group">
+	  <label for="menuDorm">
+	    Dorm:
 	    </label>
-	    <select class="form-control" id="exampleSelect1"  name="menu-dorm">
-    	      <option value="none">Choose One</option>
-     	      {% for item in data %}
-    	      <option value="{{item['dormID']}}">{{item['dormName']}}</option>
-     	      {% endfor %}   
-	    </select>   
-	  </div>
+	  <select class="form-control" id="exampleSelect1"  name="menu-dorm">
+    	    <option value="none">Choose One</option>
+     	    {% for item in data %}
+    	    <option value="{{item['dormID']}}">{{item['dormName']}}</option>
+     	    {% endfor %}   
+	  </select>   
+	</div>
 	  
-	  <div class="form-group">
-	    <label for="roomType">Room Type: </label>
-	    <select name="menu-room-type" class="form-control">
-    	      <option value="none">Choose One</option>
-      	      <option value ="Single">Single</option>
-      	      <option value ="Double">Double</option>
+	<div class="form-group">
+	  <label for="roomType">Room Type: </label>
+	  <select name="menu-room-type" class="form-control">
+    	    <option value="none">Choose One</option>
+      	    <option value ="Single">Single</option>
+      	    <option value ="Double">Double</option>
       	      <option value ="Triple">Triple</option>
-      	      <option value ="Suite">Suite</option>
-      	      <option value ="First Year">First Year</option>
-	    </select>
+      	    <option value ="Suite">Suite</option>
+      	    <option value ="First Year">First Year</option>
+	  </select>
+	</div>
+	
+	<div class="form-button form-group">
+	  <!--<p><input type="submit" name="submit" value="insert">-->
+	  <button type="submit" class="btn btn-primary" name="submit" value="insert">Insert</button>
 	  </div>
-	  
-	  <div class="form-group">
-	    <!--<p><input type="submit" name="submit" value="insert">-->
-	    <button type="submit" class="btn btn-primary" name="submit" value="insert">Insert</button>
-	  </div>
-	</form>
-      </div>
+      </form>
+    </div>
   </div>
 </div>
 

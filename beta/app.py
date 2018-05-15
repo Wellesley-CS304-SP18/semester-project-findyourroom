@@ -86,13 +86,13 @@ def login():
 					
 				#Checks if the password matches
 				if ((bcrypt.hashpw(password.encode('utf-8'),hashed.encode('utf-8')))[:50]) == hashed:
-					message = Markup(functions.successMarkup('Succesfully logged in as ' + email))
-					flash(message)
 					session['email'] = email
 					session['logged_in'] = True
 					bidRow = functions.getBID(conn, email)	
 					session['BID'] = bidRow
-					
+					msg = functions.successMarkup("Logged in as " + email)
+					message = Markup(msg)
+					flash(message)
 					return redirect( url_for('insert', email=email) ) 
 				else: 
 					#no match between username and password 
@@ -120,11 +120,16 @@ def logout():
 #Route for viewing user's existing reviews
 @app.route('/account/', methods=["GET","POST"])
 def account():
-	dsn = functions.get_dsn()
-	conn = functions.getConn(dsn)
-	if request.method == "GET":
-		return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-
+# check if user logged in:                                                                                                                  
+        if "logged_in" in session and session["logged_in"] is True:
+		dsn = functions.get_dsn()
+		conn = functions.getConn(dsn)
+		if request.method == "GET":
+			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+	else:
+                message = Markup(functions.dangerMarkup('Please log in!'))
+                flash(message)
+                return redirect( url_for('login'))
 
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
