@@ -244,8 +244,11 @@ def search():
 			gym = request.form['gym']
 			diningHall = request.form['diningHall']
 			rating = request.form['rating']
-	 
-			roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
+
+	 		if rating == "All":
+	 			roomList = functions.getListOfRoomsbyFilterNoRating(conn, location, dormType, roomType, gym, diningHall)
+	 		else: 
+				roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
 			
 			if not roomList:
 				flash("No Result Matches Your Request!")
@@ -345,8 +348,20 @@ def roomInfo(dormID, roomNumber):
         			return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating )
         	else:
         		flash ("Currently no review for this room")
-        		roomType = functions.getroomType(conn, dormID, roomNumber)[0]['roomType']
-        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = "N/A" )	 		
+        		roomType = functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['roomType']
+        		
+        		print functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]
+        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['gym']) == 0:
+        			gym = "No"
+        		else:
+        			gym = "Yes"
+        		
+        		if (functions.getroomGeneralInfo(conn, dormID, roomNumber)[0]['diningHall']) == 0:
+        			diningHall = "No"
+        		else:
+        			diningHall = "Yes"
+        			
+        		return render_template('roominfo.html', roomlist = rowInfo, dormID = dormID, roomNumber = roomNumber, roomType = roomType, gym = gym, diningHall = diningHall )	 		
 
 	else: 
  		flash("Please log in!")

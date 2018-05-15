@@ -4,12 +4,18 @@
 	findYourRoom
 -->
 
+
+<!-- add info on dining hall and gym?? -->
+
+
 {% extends "base.html" %}
 
 {% block main_content %}
 
 	<h1>Summary of {{dormID}} {{roomNumber}}</h1>
 	<p><b>Room Type : </b> {{roomType}}</p>
+	<p><b>Gym : </b> {{gym}}</p>
+	<p><b>Dining Hall : </b> {{diningHall}}</p>
 	<p><b>Average Rating : </b>{{avgRating}}</p>
 	<p><b>Past Residence Comments</b></p>
 		{% for roominfo in roomlist %} 
@@ -22,3 +28,4 @@
 		{% endfor%}
 
 {% endblock %}
+
