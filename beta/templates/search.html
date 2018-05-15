@@ -8,97 +8,120 @@
 
 {% block main_content %}
 
-<h1>Search Room</h1>
-<h2> Choose a sorting method! </h2>
-<h2> (1) Choose from dorm name</h2>
-
-<!-- To-Do : Currently gives an error if user select multiple rooms, functions to be updated to accomodate this-->
-
-<form method="post" action="">
-<div class= "row">
-	<div class="formlabel" style="font-weight:bold;">Dorm</div>
-	<div class="formsection"> 
-		{% for item in dormarray %}
-		<input type="checkbox" name="dorm" value="{{item['dormID']}}"> {{item['dormName']}}</input>
-		{% endfor %}
-   	</div>
-   	</div>
-   	
-   	<p><button type="submit" name="submit" value="dorm">Submit</button></p>   
+<h1 style="text-align:center; margin-top:15px">Search Room</h1>
+<div class="container">
+<div class="row">
+  <!-- search 1 -->
+  <div class="col-sm-6 center-block">
+    <!-- To-Do : Currently gives an error if user select multiple rooms, functions to be updated to accomodate this-->
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+      <div class="card-header">Choose From Dorm Name(s)</div>
+      <div class="card-body">
+	<p class="card-text">
+	  <div class="container">
+	    <div class="row">
+	      <form method="post" action="">
+		<div class = "form-group">
+		  {% for item in dormarray %}
+		  <input type="checkbox" name="dorm" value="{{item['dormID']}}"> {{item['dormName']}}</input>
+		  {% endfor %}
+   		</div>
+	    </div>
+	    <div class="form-group form-button">
+   	      <p><button class="btn btn-primary search-btn"  type="submit" name="submit" value="dorm">Submit</button></p>
+	    </div>
+	    </form>
+	  </div>
+	</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- search 2 -->
+  <div class="col-sm-6 center-block">
+    <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+      <div class="card-header">Choose from Preference(s)</div>
+      <div class="card-body">
+	<p class="card-text">
+	  <div class="container">
+	    <div class="row">
+	      <form method="post" action="">
+	    	
+		<!-- add option all -->
+   		<!-- location -->
+		<div class = "form-group">
+		  <label>Location</label>	
+   		  <select name="location">
+ 		    <option value="East">East Side</option>
+		    <option value="West">West Side</option>	
+   		  </select>
+   		</div>
+	    		
+		<!-- Dorm Type -->
+		<!-- add option all -->
+		<div class="form-group">
+ 		  <label>Dorm Type</label>
+		  <select name="dormType">
+ 		    <option value="Dorm" selected>Dorm</option>
+ 		    <option value="Apartment">Apartment</option>
+   		  </select>
+		</div>
+	    
+	      	<!-- Room Type -->
+		<div class="form-group">
+		  <label>Room Type</label>
+		  <select name="roomType">
+		    <option value="Single" selected>Single</option>
+		    <option value="Double">Upper Class Double</option>
+		    <option value="Triple">Upper Class Triple</option>
+		    <option value="Suite">Suite</option>
+		    <option value="FirstYear">First Year</option>
+		  </select>
+		</div>
+	      
+	      		
+		<!-- Gym -->
+		<div class="form-group">
+		  <label>Gym</label>
+		  <select name="gym">
+		    <option value="0" selected>No</option>	
+		    <option value="1" >Yes</option>
+		  </select>
+		</div>
+	    		
+		<!-- Dining Hall -->
+		<div class = "form-group">
+		  <label>Dining Hall</label>
+		  <select name="diningHall" >
+		    <option value="0" selected>No</option>
+		    <option value="1">Yes</option>	
+		  </select>
+		</div>
+	    
+		<!-- Rating -->
+		<div class = "form-group">
+		  <label>Rating</label>
+		  <select name="rating">
+		    <option value="All" selected>All</option>
+		    <option value="1">Greater than 1</option>
+		    <option value="2">Greater than 2</option>
+		    <option value="3">Greater than 3</option>	
+		    <option value="4">Greater than 4</option>
+		    <option value="5">Greater than 5</option>		
+		  </select>
+		</div>
+	    	    
+		<div class="form-group form-button search">
+		  <p><button  class="btn btn-primary search-btn" type="submit" name="submit" value="filter">Submit</button></p>	  
+		</div>
+	      </form>	
+	    </div>
+	  </div>
+	</p>
+      </div>
+    </div>
+  </div>
 </div>
-</form>
-
-<h2> (2) Choose from preference</h2>
-	
-<form method="post" action="">
-<div class= "row">   
-	<!-- add option all -->
-   	<div class="formlabel" style="font-weight:bold;">Location</div>	
-   	<div class="formsection">
-		<select name="location">
- 			<option value="East">East Side</option>
-			<option value="West">West Side</option>	
-   		</select>
-   	</div>
-   	</div>
-   	
-   	<!-- add option all -->
-   	<div class="formlabel" style="font-weight:bold;">Dorm Type</div>	
-   	<div class="formsection">
- 		<select name="dormType">
- 			<option value="Dorm" selected>Dorm</option>
- 			<option value="Apartment">Apartment</option>
-   		</select>
-   	</div>
-   	</div>
-   	
-   	<div class="formlabel" style="font-weight:bold;">Room Type</div>	
-   	<div class="formsection">
- 		<select name="roomType">
- 			<option value="Single" selected>Single</option>
- 			<option value="Double">Upper Class Double</option>
- 			<option value="Triple">Upper Class Triple</option>
- 			<option value="Suite">Suite</option>
- 			<option value="FirstYear">First Year</option>
-   		</select>
-   	</div>
-   	</div>
-   
-   <div class="formlabel" style="font-weight:bold;">Gym</div>	
-   <div class="formsection">
- 		<select name="gym">
- 			<option value="0" selected>No</option>	
- 			<option value="1" >Yes</option>
-   		</select>
-   	</div>
-   	</div>
-   	
-   <div class="formlabel" style="font-weight:bold;">Dining Hall</div>	
-   <div class="formsection">
- 		<select name="diningHall" >
- 			<option value="0" selected>No</option>
- 			<option value="1">Yes</option>	
-   		</select>
-   	</div>
-   	</div>
-   	
-   	<div class="formlabel" style="font-weight:bold;">Rating</div>	
-   <div class="formsection">
- 		<select name="rating">
- 			<option value="All" selected>All</option>
- 			<option value="1">Greater than 1</option>
- 			<option value="2">Greater than 2</option>
-			<option value="3">Greater than 3</option>	
-			<option value="4">Greater than 4</option>
-			<option value="5">Greater than 5</option>		
-   		</select>
-   	</div>
-   	</div>
-   			
-   	<p><button type="submit" name="submit" value="filter">Submit</button></p>
-</div>
-</form>	
-
 {% endblock %}
-    
+
 

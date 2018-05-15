@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def getConn(db='mmuchaku_db'):
+def getConn(db='yourroom_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dbconn2.connect(dsn)

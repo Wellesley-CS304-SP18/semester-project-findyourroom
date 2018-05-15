@@ -115,23 +115,28 @@ def login():
 #Route for logging out a user
 @app.route('/logout/')
 def logout():
-	#clear sessions
-	session['logged_in'] = False
-	session.clear()
-	return render_template('logout.html')
+	if "logged_in" in session and session["logged_in"] is True:
+		#clear sessions
+		session['logged_in'] = False
+		session.clear()
+		return render_template('logout.html')
+	else:
+		message = Markup(functions.dangerMarkup('Please log in!'))
+        flash(message)
+        return redirect( url_for('login'))
 	
 #Route for viewing user's existing reviews
 @app.route('/account/', methods=["GET","POST"])
 def account():
 # check if user logged in:                                                                                                                  
-        if "logged_in" in session and session["logged_in"] is True:
-		conn = functions.getConn()
-		if request.method == "GET":
+    if "logged_in" in session and session["logged_in"] is True:
+    	conn = functions.getConn()
+    	if request.method == "GET":
 			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
-	else:
-                message = Markup(functions.dangerMarkup('Please log in!'))
-                flash(message)
-                return redirect( url_for('login'))
+    else:
+        message = Markup(functions.dangerMarkup('Please log in!'))
+        flash(message)
+        return redirect( url_for('login'))
 
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
@@ -164,22 +169,24 @@ def update():
 			session['dormID']=dormID
 			session['roomNumber']=roomNumber
 			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
-		elif request.method == "POST":
+		
+		else:
 			#retrieve new rating, comment, and photo description
  			room_rating = request.form['stars']
  			comment = request.form['comment']
  			alt = request.form['alt']
  			photo = functions.loadPhoto(conn,session['BID'], session['dormID'], session['roomNumber'])
+ 			
  			#retrieve new photo
 			newpicture = request.files['pic']
 			sfname = 'images/'+str(secure_filename(newpicture.filename))
-			print sfname
-			print newpicture
+
 			#old photo
 			oldpicture = photo.get('path')
-			print oldpicture
+			
 			#update the review in the database
 			functions.updateReview(conn, session['dormID'], session['roomNumber'], comment, room_rating, session['BID'])
+			
 			if newpicture is not None: 
   				#update path and alt of photo
   				newpicture.save('static/images/'+str(secure_filename(newpicture.filename)))
@@ -296,7 +303,7 @@ def search():
 				roomList = functions.getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall, rating)
 			
 			if not roomList:
-				message = Markup(danger.Markup("No Result Matches Your Request!"))
+				message = Markup(functions.dangerMarkup("No Result Matches Your Request!"))
 				flash(message)
 				return render_template('search.html', dormarray = dormarray)
 			else:
@@ -365,9 +372,6 @@ def review(dormID, roomNumber):
 		message = Markup(functions.dangerMarkup('Please log in!'))
                 flash(message)
 		return redirect( url_for('login'))
-
-#currently without any commment it is loading 
-#image alt part error should be flashed and dealt 
 
 @app.route('/static/<sfname>')
 def pic(sfname):
