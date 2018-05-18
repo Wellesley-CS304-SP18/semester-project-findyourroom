@@ -64,8 +64,8 @@ INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TCE", "504", "First Ye
 DROP TABLE IF EXISTS user;
 CREATE TABLE user(
 	BID char(8) NOT NULL PRIMARY KEY, 
-	email varchar(30) NOT NULL,  
-	pwd varchar(20) NOT NULL,
+	email varchar(100) NOT NULL,  
+	pwd varchar(100) NOT NULL,
 	classYear int(4)NOT NULL
 	)
 	-- table constraints follow                                              
