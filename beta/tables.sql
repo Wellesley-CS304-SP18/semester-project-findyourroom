@@ -49,18 +49,6 @@ CREATE TABLE room(
 	-- table constraints follow                                              
        ENGINE = InnoDB;
 
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("MUN", "234", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("MUN", "334", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("MUN", "125", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("SEV", "125", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("POM", "504", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("BEB", "200", "Double");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("DOW", "001", "Triple");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("STO", "334", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("HEM", "125", "Single");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TCW", "125", "Double");
-INSERT INTO room (dormID, roomNumber, roomType)  VALUES ("TCE", "504", "First Year");
-
 DROP TABLE IF EXISTS user;
 CREATE TABLE user(
 	BID char(8) NOT NULL PRIMARY KEY, 
