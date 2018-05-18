@@ -49,8 +49,7 @@ def signup():
 				#signup successful, add information to table
 				functions.insertinfo(conn, email, password1, bid, classyear)
 				functions.inserthashed(conn, bid, hashed)
-				
-				#session will be updated in the later version 
+				 
 				session['email'] = email
 				session['logged_in'] = True
 				session['BID'] = bid
