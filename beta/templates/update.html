@@ -7,41 +7,59 @@
 {% extends "base.html" %}
 
 {% block main_content %}
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <h1 style="margin: 25px 0px">Update Your Review</h1>
+      {% include "flash.html" %}
+      <div class="card border-primary mb-3" style="min-width: 25rem;max-width: 25rem;">
+        <div class="card-header">Update Review</div>
+        <div class="card-body">
+          <div class="form-group">
+            <ol style="padding-left:20px">
+              <form method="post" enctype="multipart/form-data" action="">
+
+                <!-- user's existing comments on this review-->
+                <label>Comment: (Max 200 characters): <br><textarea placeholder="Here you may alter the information you have put in your review." name="comment" rows="10" col\
+s="30" maxlength="200">{{review['comment']}}</textarea></label>
+
+                <br>
+                <label>Rating:
+                  <!-- user's existing rating on this review-->
+                  <label>1 <input type="radio" name="stars" value="1" {{ 'checked' if review['rating']==1}} ></label>
+
+                  <label>2 <input type="radio" name="stars" value="2" {{ 'checked' if review['rating']==2}} ></label>
+
+                  <label>3 <input type="radio" name="stars" value="3" {{ 'checked' if review['rating']==3}} ></label>
+
+                  <label>4 <input type="radio" name="stars" value="4" {{ 'checked' if review['rating']==4}} ></label>
+
+                  <label>5 <input type="radio" name="stars" value="5" {{ 'checked' if review['rating']==5}} ></label>
+
+                </label>
+                <br>
+		      
+                <label>Upload Images :
+                    <input type="file" name="pic" accept="image/*">
+                </label>
+                <br>
+                <label><b>Image Description: (Max 100 characters)</b></label>
+                <textarea placeholder="image description" name="alt" rows="2" cols="40" maxlength="100"> {{photo['alt']}}</textarea>
+                <br>
+                <button class="btn btn-primary"  type="submit">submit</button>
+              </form>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-<h1>Update Your Review</h1>
-<h2>Here you may alter the information you have put in your review.</h2>
-
-  <form method="post" enctype="multipart/form-data" action="">
-      <p><label>Rating:       
-		  <!-- user's existing rating on this review-->
-          <label>1 <input type="radio" name="stars" value="1" {{ 'checked' if review['rating']==1}} ></label>
-          
-          <label>2 <input type="radio" name="stars" value="2" {{ 'checked' if review['rating']==2}} ></label>
-       
-          <label>3 <input type="radio" name="stars" value="3" {{ 'checked' if review['rating']==3}} ></label>
-
-          <label>4 <input type="radio" name="stars" value="4" {{ 'checked' if review['rating']==4}} ></label>
-          
-          <label>5 <input type="radio" name="stars" value="5" {{ 'checked' if review['rating']==5}} ></label>
-      
-      </label></p>
-      <!-- user's existing comments on this review-->
-      <p><label>Comment: (Max 200 characters): <textarea name="comment" rows="10" cols="30" maxlength="200">{{review['comment']}}</textarea>
-      
-      
-      <p><label>Upload Images :
-      <input type="file" name="pic" accept="image/*"> Current Image = {{filename}}
-	  </label></p>
-	  
-	  	  <p><label><b>Image Description: (Max 100 characters)</b></label></p>
-	  <textarea name="alt" rows="2" cols="40" maxlength="100"> {{photo['alt']}}</textarea>
-       
-      <p><button type="submit">submit</button></p>
-  </form>
-
-
-
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 
 {% endblock %}
+
+
+
