@@ -214,63 +214,64 @@ def update():
 @app.route('/insert/', methods=["GET", "POST"])
 def insert():
 	# check if user logged in:
-	if "logged_in" in session and session["logged_in"] is True:	
+	if not ("logged_in" in session and session["logged_in"] is True):
+		message = Markup(functions.dangerMarkup('Please log in!'))
+		flash(message)
+		return redirect( url_for('login'))
+		
 		data = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
 				return render_template('insert.html', data=data)
-		else: 
-			try:
-				roomNumber = request.form['roomNumber']
-				roomType = request.form['menu-room-type']  
-				dormID = request.form['menu-dorm']
 		
-				#updating if/else notifications for correct input
-				if dormID == "none" and roomType == 'none' and not roomNumber:
-					message = Markup(functions.dangerMarkup('Please choose a dorm, room type, and room number.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				elif dormID == "none" and roomType == 'none':
-					message = Markup(functions.dangerMarkup('Please choose a dorm and room type.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				elif dormID == "none" and not roomNumber:
-					message = Markup(functions.dangerMarkup('Please choose a dorm and room number.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				elif not roomNumber and roomType == 'none':
-					message = Markup(functions.dangerMarkup('Please choose a room number and room type.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				elif dormID == 'none':
-					message = Markup(functions.dangerMarkup('Please choose a dorm.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				elif not roomNumber:
-					message = Markup(functions.dangerMarkup('Please choose a room number.'))
-					flash(message)
-					return render_template('insert.html', data=data)
-				else: 
-					msg = dormID + " " + roomNumber
-					row = functions.roomExists(conn, dormID, roomNumber, roomType)
-					if row is not None:
-						message = Markup(functions.dangerMarkup(msg + ' already exists'))
-						flash(message)
-						return render_template('insert.html', data=data)
-					else:
-						functions.addRoom(conn, dormID, roomNumber, roomType)
-						message = Markup(functions.successMarkup(msg + ' will be added once you submit a review.'))
-						flash(message)
-						return redirect(url_for('review', dormID = dormID, roomNumber = roomNumber))
-			
-			except Exception as err:
-				message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
+		try:
+			roomNumber = request.form['roomNumber']
+			roomType = request.form['menu-room-type']  
+			dormID = request.form['menu-dorm']
+	
+			#updating if/else notifications for correct input
+			if dormID == "none" and roomType == 'none' and not roomNumber:
+				message = Markup(functions.dangerMarkup('Please choose a dorm, room type, and room number.'))
 				flash(message)
 				return render_template('insert.html', data=data)
-	else: 
-		message = Markup(functions.dangerMarkup('Please log in!'))
-		flash(message)
-		return redirect( url_for('login'))
+			elif dormID == "none" and roomType == 'none':
+				message = Markup(functions.dangerMarkup('Please choose a dorm and room type.'))
+				flash(message)
+				return render_template('insert.html', data=data)
+			elif dormID == "none" and not roomNumber:
+				message = Markup(functions.dangerMarkup('Please choose a dorm and room number.'))
+				flash(message)
+				return render_template('insert.html', data=data)
+			elif not roomNumber and roomType == 'none':
+				message = Markup(functions.dangerMarkup('Please choose a room number and room type.'))
+				flash(message)
+				return render_template('insert.html', data=data)
+			elif dormID == 'none':
+				message = Markup(functions.dangerMarkup('Please choose a dorm.'))
+				flash(message)
+				return render_template('insert.html', data=data)
+			elif not roomNumber:
+				message = Markup(functions.dangerMarkup('Please choose a room number.'))
+				flash(message)
+				return render_template('insert.html', data=data)
+			else: 
+				msg = dormID + " " + roomNumber
+				row = functions.roomExists(conn, dormID, roomNumber, roomType)
+				if row is not None:
+					message = Markup(functions.dangerMarkup(msg + ' already exists'))
+					flash(message)
+					return render_template('insert.html', data=data)
+				else:
+					functions.addRoom(conn, dormID, roomNumber, roomType)
+					message = Markup(functions.successMarkup(msg + ' will be added once you submit a review.'))
+					flash(message)
+					return redirect(url_for('review', dormID = dormID, roomNumber = roomNumber))
+		
+		except Exception as err:
+			message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
+			flash(message)
+			return render_template('insert.html', data=data)
+=
 	    
     
 # Route for search room options
@@ -282,7 +283,7 @@ def search():
 		if request.method == 'GET':
 			return render_template('search.html', dormarray = dormarray)
 	
-		elif request.form['submit'] == 'dorm': #if user search room through dorm name 
+		elif request.form['submit'] == 'dorm': #if user search rooms via dorm name 
 			roomList =[]
 			for room in request.form.getlist("dorm"):
 				if room is not None:
