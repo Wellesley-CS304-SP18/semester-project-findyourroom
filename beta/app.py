@@ -162,13 +162,20 @@ def delete():
 #route for updating review
 @app.route('/update/', methods=["GET","POST"])
 def update():
-	try:
+	try:		
 		if request.method == "GET":
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
 			session['dormID']=dormID
 			session['roomNumber']=roomNumber
-			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber))
+			
+			if functions.loadPhoto(conn,session['BID'], dormID, roomNumber) is not None:
+				photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber)
+				filename = photo.get('path')
+			else:
+				filename = "N/A"
+				
+			return render_template('update.html', review = functions.loadReview(conn, session['BID'], dormID, roomNumber), photo = functions.loadPhoto(conn,session['BID'], dormID, roomNumber), filename = filename )
 		
 		else:
 			#retrieve new rating, comment, and photo description
