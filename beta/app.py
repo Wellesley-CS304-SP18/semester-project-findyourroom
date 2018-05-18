@@ -259,7 +259,7 @@ def insert():
 						return render_template('insert.html', data=data)
 					else:
 						functions.addRoom(conn, dormID, roomNumber, roomType)
-						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
+						message = Markup(functions.successMarkup(msg + ' will be added once you submit a review.'))
 						flash(message)
 						return redirect(url_for('review', dormID = dormID, roomNumber = roomNumber))
 			
@@ -400,7 +400,7 @@ def roomInfo(dormID, roomNumber):
         			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
         			return render_template('roominfo.html', roomlist = rowInfo, photolist = rowPhoto, dormID = dormID, roomNumber = roomNumber, roomType = roomType, avgRating = avgRating, gym = gym, diningHall = diningHall )	 	
         		else:
-        			messsage = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
+        			message = Markup(functions.dangerMarkup("Currently no photo entry for this room"))
         			flash(message)
         			gym = functions.getGym(conn, dormID, roomNumber)
         			diningHall = functions.getdiningHal(conn, dormID, roomNumber)
