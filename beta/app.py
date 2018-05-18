@@ -196,7 +196,8 @@ def update():
 			
 			if newpicture is not None: 
   				#update path and alt of photo
-  				newpicture.save('static/images/'+str(secure_filename(newpicture.filename)))
+  				#save the picture with a unique name of dormID_roomNumber_BID
+  				newpicture.save('static/images/'+str(session['dormID']+'_'+session['roomNumber']+'_'+session['BID'] + '.jpg'))
   				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,sfname)
   			else:
  				#update alt of photo
@@ -355,7 +356,7 @@ def review(dormID, roomNumber):
 				file = request.files['pic']
 				sfname = 'images/'+str(secure_filename(file.filename))
 				if sfname !=  'images/':
-					file.save('static/images/'+str(secure_filename(file.filename)))
+					file.save('static/images/'+str(secure_filename(dormID + '_' + roomNumber + '_' + BID+ '.jpg')))
 					if len(request.form['alt']) == 0:
 						message = Markup(functions.errorMarkup('Please fill the image description'))
 						flash(message)
