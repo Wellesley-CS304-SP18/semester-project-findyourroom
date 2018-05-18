@@ -11,7 +11,7 @@ import dbconn2
 # Functions to connect to the database 
 # ================================================================
 
-def getConn(db='yourroom_db'):
+def getConn(db='mmuchaku_db'):
     dsn = dbconn2.read_cnf()
     dsn['db'] = db
     return dbconn2.connect(dsn)
@@ -86,10 +86,10 @@ def inserthashed(conn, BID, hashed):
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into userpass(BID ,hashed) VALUES(%s,%s)',[BID, hashed])
 
-def gethashed(conn, BID):
+def gethashed(conn, email):
 	'''get hash password'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT hashed FROM userpass WHERE BID = %s',[BID])
+	curs.execute('SELECT hashed FROM userpass inner join (user) on user.BID = userpass.BID WHERE email = %s',[email])
 	return curs.fetchone() 
 		
 # Functions for insert room page 
@@ -134,7 +134,6 @@ def updateReview(conn, dormID, roomNumber, comment, rating, BID):
     curs.execute('UPDATE review SET dormID=%s, roomNumber=%s, BID=%s, comment=%s, rating=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
 
 # add photos 
-# to-do : implement alt
 def addPhotos(conn, dormID, roomNumber, BID, path, alt):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
