@@ -20,8 +20,9 @@
               <form method="post" enctype="multipart/form-data" action="">
 
                 <!-- user's existing comments on this review-->
-                <label>Comment: (Max 200 characters): <br><textarea placeholder="Here you may alter the information you have put in your review." name="comment" rows="10" col\
-s="30" maxlength="200">{{review['comment']}}</textarea></label>
+                <label>Comment: (Max 200 characters): 
+                <br><textarea placeholder="Here you may alter the information you have put in your review." name="comment" rows="10" cols="30" maxlength="200">{{review['comment']}}</textarea>
+                </label>
 
                 <br>
                 <label>Rating:
@@ -39,8 +40,8 @@ s="30" maxlength="200">{{review['comment']}}</textarea></label>
                 </label>
                 <br>
 		      
-                <label>Upload Images :
-                    <input type="file" name="pic" accept="image/*">
+                <label>Upload Images : 
+                    <input type="file" name="pic" accept="image/*"> Current image = {{filename}}
                 </label>
                 <br>
                 <label><b>Image Description: (Max 100 characters)</b></label>
@@ -56,8 +57,6 @@ s="30" maxlength="200">{{review['comment']}}</textarea></label>
   </div>
 </div>
 
-
-<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
 
 {% endblock %}
 
