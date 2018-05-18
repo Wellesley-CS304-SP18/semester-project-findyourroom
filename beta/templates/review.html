@@ -7,37 +7,44 @@
 {% extends "base.html" %}
 
 {% block main_content %}
-
-<div class="container header">
-  <h1>Review</h1>
-  {% include "flash.html" %}
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <h1 style="margin: 25px 0px">Review</h1>
+      {% include "flash.html" %}
+      <div class="card border-primary mb-3" style="max-width: 25rem;">
+        <div class="card-header">Review</div>
+       <div class="card-body">
+         <div class="form-group"> 
+	   <ol style="padding-left:20px">
+	     <form method="post" enctype="multipart/form-data" action="">
+	       <label><b>Comment: (Max 200 characters)(*)</b></label>
+               <textarea placeholder="To review, please give a rating (1-5) and comment (* required)"  name="comment" rows="10" cols="40" maxlength="200"></textarea>
+	       <br>
+	       <label><b>Rating:(*) </b></label>
+               <label>1 <input type="radio" name="stars" value="1"></label>
+               
+               <label>2 <input type="radio" name="stars" value="2"></label>
+               
+               <label>3 <input type="radio" name="stars" value="3"></label>
+              
+               <label>4 <input type="radio" name="stars" value="4"></label>
+               
+               <label>5 <input type="radio" name="stars" value="5"></label>
+	       <br>
+	       <label><b>Upload Images :</b></label>
+	       <input type="file" name="pic" accept="image/*">
+	       <br>
+	       <label><b>Image Description: (Max 100 characters)</b></label>
+	       <textarea placeholder="image description"  name="alt" rows="2" cols="40" maxlength="100"></textarea>
+	       
+	       <p><button class="btn btn-primary"  type="submit">submit</button></p>
+	     </form>
+	   </ol>
+	 </div>
+       </div>
+      </div>
+    </div>
+  </div>
 </div>
-<h2>To review, please give a rating (1-5) and comment (* required)</h2>
-
-  <form method="post" enctype="multipart/form-data" action="">
-      <p><label><b>Rating:(*) </b></label></p> 
-          <label>1 <input type="radio" name="stars" value="1"></label>
-          
-          <label>2 <input type="radio" name="stars" value="2"></label>
-          
-          <label>3 <input type="radio" name="stars" value="3"></label>
-          
-          <label>4 <input type="radio" name="stars" value="4"></label>
-          
-          <label>5 <input type="radio" name="stars" value="5"></label>
-      
-      <p><label><b>Comment: (Max 200 characters)(*)</b></label></p>
-      <textarea name="comment" rows="10" cols="40" maxlength="200"></textarea>
-      
-      <p><label><b>Upload Images :</b></label></p>
-      <input type="file" name="pic" accept="image/*">
-	  
-	  <p><label><b>Image Description: (Max 100 characters)</b></label></p>
-	  <textarea name="alt" rows="2" cols="40" maxlength="100"></textarea>
-	  
-      <p><button type="submit">submit</button></p>
-  </form>
-
-
-
 {% endblock %}

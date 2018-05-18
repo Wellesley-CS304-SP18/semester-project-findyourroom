@@ -34,3 +34,39 @@
     padding: 12px 20px;
     display:inline-block
 }
+
+.card, .card form{
+min-width:100%;
+}
+
+
+.tab-content {
+    border-left: 1px solid #EB6864;
+    border-right: 1px solid #EB6864;
+    border-bottom: 1px solid #EB6864;
+    padding: 10px;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+
+.nav-item{
+    border-top: 1px solid #EB6864;
+    border-left: 1px solid #EB6864;
+    border-right: 1px solid #EB6864;
+    padding: 10px;
+    border-top-left-radius: 25px;
+    border-top-right-radius:25px;
+}
+
+.center{
+    margin-left: auto;
+    margin-right:auto;
+}
+
+.home{
+    display:flex;
+    flex-direction:column;
+}
+

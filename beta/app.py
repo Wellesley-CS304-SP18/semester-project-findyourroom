@@ -14,6 +14,8 @@ from flask_cas import CAS
 app = Flask(__name__)
 app.secret_key = "123456789"  #should we have something here?
 
+conn = functions.getConn()
+
 #show basic navigation 
 @app.route('/')
 def index():
@@ -27,7 +29,6 @@ def signup():
 	else:	
 		try:
 			#get user registration info
-			conn = functions.getConn()
 			email = request.form['email']
 			password1 = request.form['password1']
 			password2 = request.form['password2']
@@ -69,14 +70,12 @@ def login():
 		return render_template('login.html')
 	else: 
 		try:
-			conn = functions.getConn()
 			email = request.form["email"]
 			password = request.form["password"]
 			emailsuccess = functions.emailcorrect(conn, email) 
 			
 			if emailsuccess:
-				bid = functions.getBID(conn, email) 
-				row = functions.gethashed(conn, bid)
+				row = functions.gethashed(conn, email)
 
 				if row is None:
 					message = Markup(functions.dangerMarkup('Incorrect login. Try again or sign up'))
@@ -128,7 +127,6 @@ def logout():
 def account():
 # check if user logged in:                                                                                                                  
     if "logged_in" in session and session["logged_in"] is True:
-    	conn = functions.getConn()
     	if request.method == "GET":
     		roomarray = functions.pullReviews(conn,session['BID'])
     		if roomarray is None:
@@ -146,7 +144,6 @@ def account():
 @app.route('/delete/', methods=["POST"])
 def delete():
 	try:
-		conn = functions.getConn()
 		dormID = request.form['dormID']  
 		roomNumber = request.form['roomNumber'] 
 		functions.deleteReview(conn, session['BID'],dormID,roomNumber)
@@ -166,7 +163,6 @@ def delete():
 @app.route('/update/', methods=["GET","POST"])
 def update():
 	try:
-		conn = functions.getConn()
 		if request.method == "GET":
 			dormID = request.args.get('dormID')
 			roomNumber = request.args.get('roomNumber')
@@ -211,8 +207,8 @@ def update():
 def insert():
 	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:	
-		conn = functions.getConn()
-		data = dataFromDSN(functions)
+		data = functions.getListOfDorms(conn)
+		
 		if request.method == 'GET':
 				return render_template('insert.html', data=data)
 		else: 
@@ -258,12 +254,10 @@ def insert():
 						message = Markup(functions.successMarkup(msg + ' succesfully  added.'))
 						flash(message)
 						return redirect(url_for('review', dormID = dormID, roomNumber = roomNumber))
+			
 			except Exception as err:
-				print err
-				print "inside here"
 				message = Markup(functions.errorMarkup('Sorry, an error occurred.'))
 				flash(message)
-				data = dataFromDSN(functions)
 				return render_template('insert.html', data=data)
 	else: 
 		message = Markup(functions.dangerMarkup('Please log in!'))
@@ -275,7 +269,6 @@ def insert():
 @app.route('/search/', methods=["GET", "POST"])
 def search():
 	if "logged_in" in session and session["logged_in"] is True:
-		conn = functions.getConn()
 		dormarray = functions.getListOfDorms(conn)
 		
 		if request.method == 'GET':
@@ -323,9 +316,6 @@ def search():
 def review(dormID, roomNumber):
 	# check if user logged in:                                       
 	if "logged_in" in session and session["logged_in"] is True:
-		conn = functions.getConn()
-		data = dataFromDSN(functions)
-		dormarray = functions.getListOfDorms(conn)
 		BID = session['BID']
 		
 		if request.method == "GET":
@@ -343,13 +333,11 @@ def review(dormID, roomNumber):
 			try: 
 				room_rating = request.form['stars']	
 			except Exception as err:
-				print "error1"
 				message = Markup(functions.errorMarkup('Please rate the room'))
 				flash(message)
 				return render_template('review.html')
 			
 			if len(request.form['comment']) == 0 :
-				print "error2"
 				message = Markup(functions.errorMarkup('Please write a comment'))
 				flash(message)
 				return render_template('review.html')
@@ -362,7 +350,6 @@ def review(dormID, roomNumber):
 				if sfname !=  'images/':
 					file.save('static/images/'+str(secure_filename(file.filename)))
 					if len(request.form['alt']) == 0:
-						print "error3"
 						message = Markup(functions.errorMarkup('Please fill the image description'))
 						flash(message)
 						return render_template('review.html')
@@ -372,7 +359,7 @@ def review(dormID, roomNumber):
 			
 			functions.insertReview(conn,dormID, roomNumber,BID, room_rating, comment)
 			functions.updateRating(conn, room_rating, dormID,roomNumber)
-			print "error4"
+			
 			message = Markup(functions.successMarkup("Review succesfully written for " + dormID +" " +roomNumber))
 			flash (message)
 			return redirect( url_for('search'))
@@ -385,20 +372,16 @@ def review(dormID, roomNumber):
 @app.route('/static/<sfname>')
 def pic(sfname):
 	 f = secure_filename(sfname)
-	 mime_type = f.split('.')[-1]
 	 image = send_from_directory('static',f)
 	 return image
 
 # Room Info page 
 @app.route('/room/<dormID>/<roomNumber>', methods=["GET"])
 def roomInfo(dormID, roomNumber):
-	# check if user logged in:                                       
+	# check if user logged in:
 	if "logged_in" in session and session["logged_in"] is True:
-		conn = functions.getConn()
-		data = dataFromDSN(functions)
-        dormarray = functions.getListOfDorms(conn)
-        if request.method == "GET":
-        	rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
+		if request.method == "GET":
+			rowInfo = functions.getroomInfo(conn, dormID, roomNumber)
         	rowPhoto = functions.getroomPhoto(conn, dormID, roomNumber)
         
         	if len(rowInfo) >= 1:
@@ -428,14 +411,6 @@ def roomInfo(dormID, roomNumber):
         flash(message)
         return redirect( url_for('login'))
 
-    
-# Function to get data from conn
-# ================================================================                          
-
-def dataFromDSN(fcn):
-	conn = fcn.getConn()
-	return fcn.getListOfDorms(conn)	
-    
 # ================================================================        
 if __name__ == '__main__':
 	app.debug = True

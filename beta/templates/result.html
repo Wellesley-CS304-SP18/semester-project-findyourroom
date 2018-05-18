@@ -7,19 +7,29 @@
 {% extends "base.html" %}
 
 {% block main_content %}
-
-<h1>Search Result</h1>
-
-<form method="post" action="">
-	{% for item in roomArray %}
-		<ol>
-   		{{item['dormID']}} {{item['roomNumber']}}
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <h1 style="margin: 25px 0px">Search Result</h1>
+     <div class="card border-primary mb-3" style="max-width: 25rem;">
+        <div class="card-header">Results</div>
+        <div class="card-body">
+          <div class="form-group">
+	    <form method="post" action="">
+	      {% for item in roomArray %}
+	      <ul>
+   		<li>{{item['dormID']}} {{item['roomNumber']}}
    		<a class="button" href="{{url_for('review', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">EDIT</a>
-   		<a class="button" href="{{url_for('roomInfo', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">VIEW</a>	
-   		</ol>
-	{% endfor %}
-</form>
-
+   		<a class="button" href="{{url_for('roomInfo', dormID=item['dormID'] ,roomNumber=item['roomNumber']) }}">VIEW</a></li>
+	      </ul>
+	      {% endfor %}
+	    </form>
+	  </div>
+	</div>
+     </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
     
