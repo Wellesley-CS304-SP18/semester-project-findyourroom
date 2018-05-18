@@ -26,9 +26,9 @@ def emailcorrect(conn, email):
 	rows = curs.fetchall()
 	return len(rows)==1
     
-# get bid from email and password, we have already checked that email & password exists/is correct
+
 def getBID(conn, email):
-	'''get user's BID'''
+	'''get bid from user's email and password, we have already checked that email & password exists/is correct'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute("select BID from user where email=%s", [email])
 	row = curs.fetchone()
@@ -37,22 +37,22 @@ def getBID(conn, email):
 # Functions for signup page 
 # ================================================================
 
-#return dict/row
 def emailexists(conn, email): 
-	'''check if the email chosen by user already exists'''
+	'''check if the email chosen by user already exists, returns dict/row'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	row = curs.fetchone()
 	return row
 
-#returns nothing 
+
 def insertinfo(conn, email, password, bid, classyear): 
-	'''insert user information into the table'''
+	'''insert user information into the table, returns nothing'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into user(email, pwd, BID, classYear) VALUES(%s,%s,%s,%s)', [email, password, bid, classyear])
 
 # Functions for account  page 
 # ================================================================
+
 def pullReviews(conn, BID):
 	'''get reviews that the user has written '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -67,19 +67,23 @@ def deleteReview(conn, BID, dormID, roomNumber):
 def loadReview(conn, BID, dormID, roomNumber):
 	'''get information on an existing review'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT dormID, roomNumber, rating, comment FROM review WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	curs.execute("""SELECT dormID, roomNumber, rating, comment 
+					FROM review WHERE dormID=%s AND roomNumber=%s 
+					AND BID=%s""", [dormID, roomNumber, BID])
 	return curs.fetchone()
 	
 def loadPhoto(conn, BID, dormID, roomNumber):
 	'''get photo from existing review '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT path, alt FROM photo WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID])
+	curs.execute("""SELECT path, alt FROM photo WHERE dormID=%s 
+					AND roomNumber=%s AND BID=%s""", [dormID, roomNumber, BID])
 	return curs.fetchone()
 
 def updatePhoto(conn, BID, dormID, roomNumber, alt, path):
 	'''update path and alt of photo'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('UPDATE  photo SET path=%s, alt=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [path, alt, dormID, roomNumber, BID])
+	curs.execute("""UPDATE  photo SET path=%s, alt=%s WHERE 
+					dormID=%s AND roomNumber=%s AND BID=%s""", [path, alt, dormID, roomNumber, BID])
 
 def inserthashed(conn, BID, hashed):
 	'''insert user hash password information into the table'''
@@ -112,7 +116,10 @@ def addRoom(conn, dormID,roomNumber, roomType):
 def updateRating(conn, rating, dormID, roomNumber):
     '''recalculate a room's average rating'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('UPDATE room SET avgRating = (SELECT AVG(rating) FROM review WHERE review.dormID=%s AND review.roomNumber=%s) WHERE room.dormID=%s AND room.roomNumber =%s',[dormID, roomNumber, dormID, roomNumber])
+    curs.execute("""UPDATE room SET avgRating = (SELECT AVG(rating) 
+    				FROM review WHERE review.dormID=%s AND 
+    				review.roomNumber=%s) WHERE room.dormID=%s AND 
+    				room.roomNumber =%s""",[dormID, roomNumber, dormID, roomNumber])
  
 # check if the review table associated with the room exists already 
 def reviewExists(conn, dormID, roomNum, BID):
@@ -125,45 +132,60 @@ def reviewExists(conn, dormID, roomNum, BID):
 def insertReview(conn, dormID, roomNumber, comment, rating, BID):
      '''add Review'''
      curs = conn.cursor(MySQLdb.cursors.DictCursor)
-     curs.execute('INSERT INTO review (dormID, roomNumber, BID, rating, comment) VALUES (%s, %s, %s, %s, %s)', [dormID, roomNumber, comment, rating, BID]);
+     curs.execute("""INSERT INTO review (dormID, roomNumber, BID, 
+     				rating, comment) VALUES (%s, %s, %s, %s, %s)""", [dormID, roomNumber, comment, rating, BID]);
 
 # update review, add photos functionality
 def updateReview(conn, dormID, roomNumber, comment, rating, BID):
     '''update review'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('UPDATE review SET dormID=%s, roomNumber=%s, BID=%s, comment=%s, rating=%s WHERE dormID=%s AND roomNumber=%s AND BID=%s', [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
+    curs.execute("""UPDATE review SET dormID=%s, roomNumber=%s, 
+    				BID=%s, comment=%s, rating=%s WHERE dormID=%s 
+    				AND roomNumber=%s AND BID=%s""", [dormID, roomNumber, BID, comment, rating, dormID, roomNumber, BID])
 
 # add photos 
 # to-do : implement alt
 def addPhotos(conn, dormID, roomNumber, BID, path, alt):
 	'''update images associated with the room'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('INSERT INTO photo (dormID, roomNumber, BID, path, alt) VALUES (%s, %s, %s, %s, %s)',[dormID, roomNumber, BID, path, alt])  
+	curs.execute("""INSERT INTO photo (dormID, roomNumber, BID, path, alt)
+					 VALUES (%s, %s, %s, %s, %s)""",[dormID, roomNumber, BID, path, alt])  
    
 # Functions for displaying roominfo
 # ================================================================
+
 def getroomInfo(conn, dormID, roomNumber):
     '''get informaiton of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT roomType, avgRating, comment FROM review INNER JOIN room on review.dormID = room.dormID AND review.roomNumber = room.roomNumber WHERE review.dormID=%s AND review.roomNumber=%s', [dormID, roomNumber])
+    curs.execute("""SELECT roomType, avgRating, comment FROM review 
+    				INNER JOIN room on review.dormID = room.dormID 
+    				AND review.roomNumber = room.roomNumber WHERE 
+    				review.dormID=%s AND review.roomNumber=%s"""
+    				, [dormID, roomNumber])
     return curs.fetchall()
 
 def getroomPhoto(conn, dormID, roomNumber):
     '''get photo of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT path, alt FROM photo INNER JOIN room on photo.dormID = room.dormID AND photo.roomNumber = room.roomNumber WHERE photo.dormID=%s AND photo.roomNumber=%s', [dormID, roomNumber])
+    curs.execute("""SELECT path, alt FROM photo INNER JOIN room on 
+    				photo.dormID = room.dormID AND photo.roomNumber 
+    				= room.roomNumber WHERE photo.dormID=%s AND 
+    				photo.roomNumber=%s""", [dormID, roomNumber])
     return curs.fetchall()
     
 def getroomType(conn, dormID, roomNumber):
     '''get roomType of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT roomType FROM room WHERE room.dormID=%s AND room.roomNumber=%s', [dormID, roomNumber])
+    curs.execute("""SELECT roomType FROM room WHERE room.dormID=%s 
+    				AND room.roomNumber=%s""", [dormID, roomNumber])
     return curs.fetchall()
 
 def getdiningHal(conn, dormID, roomNumber):
     '''get diningHall info of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT dorm.diningHall FROM room INNER JOIN dorm on dorm.dormID = room.dormID WHERE room.dormID=%s AND room.roomNumber=%s', [dormID, roomNumber])
+    curs.execute("""SELECT dorm.diningHall FROM room INNER JOIN dorm 
+    				on dorm.dormID = room.dormID WHERE room.dormID=%s 
+    				AND room.roomNumber=%s""", [dormID, roomNumber])
     rows = curs.fetchall()
     if (rows[0]['diningHall'] == 0):
     	return "No"
@@ -173,7 +195,9 @@ def getdiningHal(conn, dormID, roomNumber):
 def getGym(conn, dormID, roomNumber):
     '''get Gym info of the room'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT dorm.gym FROM room INNER JOIN dorm on dorm.dormID = room.dormID WHERE room.dormID=%s AND room.roomNumber=%s', [dormID, roomNumber])
+    curs.execute("""SELECT dorm.gym FROM room INNER JOIN dorm on 
+    				dorm.dormID = room.dormID WHERE room.dormID=%s 
+    				AND room.roomNumber=%s""", [dormID, roomNumber])
     rows = curs.fetchall()
     if (rows[0]['gym'] == 0):
     	return "No"
@@ -186,13 +210,19 @@ def getGym(conn, dormID, roomNumber):
 def getListOfRoomsbyDorm(conn, dormID):
     '''get all the list of rooms based on dormID'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('SELECT room.dormID, dormName, roomNumber, dorm.gym, dorm.diningHall from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE room.dormID=%s',[dormID])
+    curs.execute("""SELECT room.dormID, dormName, roomNumber, dorm.gym, 
+    				dorm.diningHall from room INNER JOIN dorm ON 
+    				room.dormID = dorm.dormID WHERE room.dormID=%s""",[dormID])
     return curs.fetchall()
     
 def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall ,rating): 
     '''get all the list of rooms based on user preference'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor) 
-    curs.execute('SELECT room.dormID, dormName, roomNumber, dorm.gym, dorm.diningHall from room INNER JOIN dorm ON room.dormID = dorm.dormID WHERE location= %s AND dorm.dormType=%s AND room.roomType =%s AND dorm.gym=%s AND dorm.diningHall=%s AND room.avgRating>=%s ', [location, dormType, roomType, gym, diningHall, rating])
+    curs.execute("""SELECT room.dormID, dormName, roomNumber, dorm.gym, 
+    				dorm.diningHall from room INNER JOIN dorm ON room.dormID 
+    				= dorm.dormID WHERE location= %s AND dorm.dormType=%s AND 
+    				room.roomType =%s AND dorm.gym=%s AND dorm.diningHall=%s 
+    				AND room.avgRating>=%s """, [location, dormType, roomType, gym, diningHall, rating])
     return curs.fetchall()
 
 def getListOfDorms(conn):
@@ -203,6 +233,7 @@ def getListOfDorms(conn):
 
 # Functions for flashing indicators / alerts
 # ================================================================
+
 def errorMarkup(s):
     d = "<div class='alert alert-dismissible alert-primary'>"
     d += "<strong>Error.</strong> "
