@@ -55,10 +55,10 @@ var alt;
 var pic;
 $("#review").on('click',function (event) {
   $target = $(event.target);
-  comment = $("commentid").val();
+  comment = $("#commentid").val();
   stars= $(this).attr('value');
-  pic= $("imageid").val();
-  alt= $("altid").val();
+  pic= $("#imageid").val();
+  alt= $("#altid").val();
   console.log("comment=" , comment, "stars=", stars, "pics=", pic, "alt=", alt);
   });
 
