@@ -17,10 +17,10 @@
        <div class="card-body">
          <div class="form-group"> 
 	   <ol style="padding-left:20px">
-	     <form method="post" enctype="multipart/form-data" action="">
+	     <form id="review" method="post" enctype="multipart/form-data" action="">
 	       	<h6>To review, please give a rating (1-5) and comment (* required)</h6>
 		<label><b>Comment: (Max 200 characters)(*)</b></label>
-               	<textarea name="comment" rows="10" cols="40" maxlength="200"></textarea>
+               	<textarea id="commentid" name="comment" rows="10" cols="40" maxlength="200"></textarea>
 	       	<br>
 	       <label><b>Rating:(*) </b></label>
                <label>1 <input type="radio" name="stars" value="1"></label>
@@ -34,10 +34,10 @@
                <label>5 <input type="radio" name="stars" value="5"></label>
 	       <br>
 	       <label><b>Upload Images :</b></label>
-	       <input type="file" name="pic" accept="image/*">
+	       <input id="imageid" type="file" name="pic" accept="image/*">
 	       <br>
 	       <label><b>Image Description: (Max 100 characters)</b></label>
-	       <textarea placeholder="image description"  name="alt" rows="2" cols="40" maxlength="100"></textarea>
+	       <textarea id="altid" placeholder="image description"  name="alt" rows="2" cols="40" maxlength="100"></textarea>
 	       
 	       <p><button class="btn btn-primary"  type="submit">submit</button></p>
 	     </form>
