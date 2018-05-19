@@ -13,7 +13,7 @@
     <div class="col-8">
       <h1 style="margin: 25px 0px">Account Details</h1>
       <div class="card border-primary mb-3" style="max-width: 25rem;">
-	<div class="card-header">Your Reviews</div>
+	<div class="card-header">Your Reviews : You have {{revNumber}} reviews</div>
 	<div class="card-body">
 	  <ol style="padding-left:20px">
 	  {% for item in roomarray %}
@@ -31,7 +31,7 @@
 		</div>
 		
 		<div class="col-sm-4">
-		  <form action='/delete/' method="post">
+		  <form id="delete" action='/delete/' method="post">
 		    <input type="hidden" name="dormID" value="{{item['dormID']}}">
 		    <input type="hidden" name="roomNumber" value="{{item['roomNumber']}}">
 		    <input class="btn btn-primary" type="submit" name="submit" value="delete">
@@ -47,4 +47,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}

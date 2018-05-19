@@ -143,13 +143,14 @@ def account():
     		if roomarray is None:
     			 message = Markup(functions.dangerMarkup('There are no reviews written by you :( Please search a room to write a review!'))
     			 flash(message)
-    			 return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+    			 return render_template('account.html', roomarray = roomarray, revNumber = len(roomarray))
     		else:
-    			return render_template('account.html', roomarray = functions.pullReviews(conn,session['BID']))
+    			return render_template('account.html', roomarray = roomarray, revNumber = len(roomarray))
     else:
         message = Markup(functions.dangerMarkup('Please log in!'))
         flash(message)
         return redirect( url_for('login'))
+    
 
 #route for deleting review	
 @app.route('/delete/', methods=["POST"])
@@ -165,7 +166,6 @@ def delete():
 		return redirect( url_for('account'))
 		
 	except Exception as err:
-		print 'Error: ',err
 		message = Markup(functions.errorMarkup('error {}'.format(err)))
 		flash(message)
 		return redirect( url_for('account'))
@@ -215,7 +215,6 @@ def update():
  				functions.updatePhoto(conn,session['BID'],session['dormID'],session['roomNumber'],alt,oldpicture) 
 			return redirect( url_for('account'))
 	except Exception as err:
-		print 'Error: ',err
 		message = Markup(functions.errorMarkup('error {}'.format(err)))
 		flash(message)
 		return redirect( url_for('account'))
@@ -329,18 +328,6 @@ def search():
 		message = Markup(functions.dangerMarkup('Please log in!'))
                 flash(message)
 		return redirect( url_for('login'))
-
-
-@app.route('/likePostAjax/', methods = ['POST'])
-def likePostAjax():
-    conn = dbconn2.connect(DSN)
-    username = session['username']
-    post_id = request.form.get('post_id')
-    #update the likes for the post
-    newsfeedOps.updateLikes(conn,post_id,username)
-    #get the new number movie information
-    newLikes = newsfeedOps.getnewLikes(conn,post_id)
-    return jsonify({"likes": newLikes})
 
 # Review  Room Info                                                                                                            
 @app.route('/review/<dormID>/<roomNumber>', methods=["GET", "POST"])

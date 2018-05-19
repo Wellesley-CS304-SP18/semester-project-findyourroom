@@ -48,40 +48,5 @@
     </div>
   </div>
 </div>
-<script>
 
-//post the information to the backend
-// test if anything is missing
-// if so flash the message
-
-/* 
-url_for_review= "{{ url_for('review',dormID = dormID,roomNumber = roomNumber)}}"
-var jsonString = JSON.stringify(url_for_review);
-
-
-$("#review").submit(function (event) {
-  $target = $(event.target); 
-  console.log(jsonString)
-  var comment = $("#commentid").val();
-  var stars= $('input[name=stars]:checked').val();
-  var alt = $("#altid").val();
-  var pic = $("#imageid").val();
- 
- console.log("comment=" , comment, "stars=", stars, "pics=", pic, "alt=", alt)
-
-
-  $.post('/review/MUG/115',
-   {'comment': comment},
-   function(resp){ //when the backend responds, perform the following code
-   	 console.log("response" + resp)
-   	 
-     $("commentid").text(resp['comment']);
-     $target.find("stars").text(resp['stars']);
-     $("altid").text(resp['alt']);
-    });
-});  
- */
-
-
-</script>
 {% endblock %}
