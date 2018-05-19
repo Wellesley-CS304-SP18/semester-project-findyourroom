@@ -366,12 +366,30 @@ def review(dormID, roomNumber):
 			except Exception as err:
 				message = Markup(functions.errorMarkup('Please rate the room'))
 				flash(message)
-				return render_template('review.html', dormID = dormID, roomNumber = roomNumber)
+				
+				if len(request.form['comment']) != 0 :
+					comment = request.form['comment']
+				else:
+					comment = ""
+					
+				if 'pic' in request.files:
+					file = request.files['pic']
+					sfname = str(secure_filename(file.filename))
+				else :
+					file = ""
+			
+				return render_template('review.html', dormID = dormID, roomNumber = roomNumber, comment = comment, fileName = sfname)
 			
 			if len(request.form['comment']) == 0 :
 				message = Markup(functions.errorMarkup('Please write a comment'))
 				flash(message)
-				return render_template('review.html', dormID = dormID, roomNumber = roomNumber)
+				
+				if 'pic' in request.files:
+					file = request.files['pic']
+					sfname = str(secure_filename(file.filename))
+				else :
+					file = ""		
+				return render_template('review.html', dormID = dormID, roomNumber = roomNumber, rating = room_rating, fileName = sfname)
 			else: 
 				comment = request.form['comment'] 
 				
@@ -383,7 +401,7 @@ def review(dormID, roomNumber):
 					if len(request.form['alt']) == 0:
 						message = Markup(functions.errorMarkup('Please fill the image description'))
 						flash(message)
-						return render_template('review.html', dormID = dormID, roomNumber = roomNumber)
+						return render_template('review.html', dormID = dormID, roomNumber = roomNumber, comment=comment, rating = room_rating, fileName = file)
 					else: 
 						alt = request.form['alt']
 						functions.addPhotos(conn, dormID, roomNumber, BID, sfname, alt)
