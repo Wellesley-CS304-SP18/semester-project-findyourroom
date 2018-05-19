@@ -49,26 +49,37 @@
   </div>
 </div>
 <script>
-var comment;
-var stars;
-var alt;
-var pic;
-$("#review").on('click',function (event) {
-  $target = $(event.target);
-  comment = $("#commentid").val();
-  stars= $(this).attr('value');
-  pic= $("#imageid").val();
-  alt= $("#altid").val();
-  console.log("comment=" , comment, "stars=", stars, "pics=", pic, "alt=", alt);
-  });
 
-$.post('/review/',
-   {'comment': comment,'stars': stars,'pic': pic,'alt': alt},
+//post the information to the backend
+// test if anything is missing
+// if so flash the message
+
+url_for_review= "{{ url_for('review',dormID = dormID,roomNumber = roomNumber)}}"
+var jsonString = JSON.stringify(url_for_review);
+
+
+$("#review").submit(function (event) {
+  $target = $(event.target); 
+  console.log(jsonString)
+  var comment = $("#commentid").val();
+  var stars= $('input[name=stars]:checked').val();
+  var alt = $("#altid").val();
+  var pic = $("#imageid").val();
+ 
+ console.log("comment=" , comment, "stars=", stars, "pics=", pic, "alt=", alt)
+
+
+  $.post('/review/MUG/115',
+   {'comment': comment},
    function(resp){ //when the backend responds, perform the following code
-     $("commentid").text(resp['newAvg']['rating']);
-     $target.find(".rating").text(resp['newAvg']['rating']);
-     $("imageid").text(resp['newAvg']['rating']);
-     $("altid").text(resp['newAvg']['rating']);
-   });
+   	 console.log("response" + resp)
+   	 
+     $("commentid").text(resp['comment']);
+     $target.find("stars").text(resp['stars']);
+     $("altid").text(resp['alt']);
+    });
+});  
+
+
 </script>
 {% endblock %}

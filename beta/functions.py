@@ -227,7 +227,7 @@ def getListOfRoomsbyFilter(conn, location, dormType, roomType, gym, diningHall ,
 def getListOfDorms(conn):
     '''get list of all dorms'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute("select dormName, dormID from dorm where dormName != 'NULL'")
+    curs.execute("select dormName, dormID from dorm")
     return curs.fetchall()
 
 # Functions for flashing indicators / alerts

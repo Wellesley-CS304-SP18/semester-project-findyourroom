@@ -7,12 +7,23 @@
 import dbconn2
 import os,sys,random,bcrypt
 import functions
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify, session, Markup, send_from_directory
+from flask import (Flask, render_template, request, redirect, url_for, flash, make_response, 
+					jsonify, session, Markup, send_from_directory)
 from werkzeug import secure_filename
 from flask_cas import CAS
 
 app = Flask(__name__)
-app.secret_key = "123456789"  #should we have something here?
+
+app.secret_key = 'your secret here'
+# replace that with a random key
+app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
+                                          'abcdefghijklmnopqrstuvxyz' +
+                                          '0123456789'))
+                           for i in range(20) ])
+                           
+# This gets us better error messages for certain common request errors
+app.config['TRAP_BAD_REQUEST_ERRORS'] = True
+
 
 conn = functions.getConn()
 
@@ -320,6 +331,17 @@ def search():
 		return redirect( url_for('login'))
 
 
+@app.route('/likePostAjax/', methods = ['POST'])
+def likePostAjax():
+    conn = dbconn2.connect(DSN)
+    username = session['username']
+    post_id = request.form.get('post_id')
+    #update the likes for the post
+    newsfeedOps.updateLikes(conn,post_id,username)
+    #get the new number movie information
+    newLikes = newsfeedOps.getnewLikes(conn,post_id)
+    return jsonify({"likes": newLikes})
+
 # Review  Room Info                                                                                                            
 @app.route('/review/<dormID>/<roomNumber>', methods=["GET", "POST"])
 def review(dormID, roomNumber):
@@ -377,6 +399,7 @@ def review(dormID, roomNumber):
 		message = Markup(functions.dangerMarkup('Please log in!'))
                 flash(message)
 		return redirect( url_for('login'))
+
 
 @app.route('/static/<sfname>')
 def pic(sfname):
