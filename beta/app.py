@@ -66,6 +66,8 @@ def signup():
 				session['logged_in'] = True
 				session['BID'] = bid
 				
+				message = Markup(successMarkup('Successful Login!'))
+				flash(message)
 				#lead user back to home page or to search page
 				return redirect(url_for('insert',email=email))		
 			
